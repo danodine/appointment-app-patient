@@ -23,7 +23,7 @@ import { COLORS } from "../../styles/theme";
 const LoginScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
   const { user, loading, error } = useSelector((state) => state.auth);
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,7 +36,11 @@ const LoginScreen = ({ navigation }) => {
   );
 
   const handleLogin = () => {
-    dispatch(loginUser({ email, password }));
+    try {
+      dispatch(loginUser({ email, password }));
+    } catch (error) {
+      console.log("Error Block", error);
+    }
   };
   const handleSingUp = () => {
     navigation.reset({
@@ -64,7 +68,7 @@ const LoginScreen = ({ navigation }) => {
           colors={COLORS.main}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={{ flex: 1}}
+          style={{ flex: 1 }}
         >
           <ScrollView
             contentContainerStyle={styles.container}
@@ -103,9 +107,9 @@ const LoginScreen = ({ navigation }) => {
               {STRINGS[language].login.forgotPassword}
             </Text>
             <TouchableOpacity onPress={handleSingUp}>
-            <Text style={styles.signup}>
-              {STRINGS[language].login.createAccount}
-            </Text>
+              <Text style={styles.signup}>
+                {STRINGS[language].login.createAccount}
+              </Text>
             </TouchableOpacity>
           </ScrollView>
         </LinearGradient>

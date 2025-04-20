@@ -52,8 +52,9 @@ export const isStrongPassword = (password) => {
 };
 
 export const formatDate = (date) => {
-  const day = date.getDate().toString().padStart(2, "0");
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const year = date.getFullYear();
+  const formatedDate = new Date(date);
+  const day = formatedDate.getDate().toString().padStart(2, "0");
+  const month = (formatedDate.getMonth() + 1).toString().padStart(2, "0");
+  const year = formatedDate.getFullYear();
   return `${day}/${month}/${year}`;
 };

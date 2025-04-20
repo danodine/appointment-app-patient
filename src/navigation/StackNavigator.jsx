@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SingUpScreen from "../screens/auth/SingUpScreen";
 import TabNavigator from "./TabNavigator";
+import DoctorSearch from "../screens/dashboard/DoctorSearchScreen";
 // import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
@@ -31,6 +32,7 @@ const StackNavigator = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SingUp" component={SingUpScreen} />
       <Stack.Screen name="Dashboard" component={TabNavigator} />
+      <Stack.Screen name="DoctorSearch" component={DoctorSearch} />
     </Stack.Navigator>
   );
 };

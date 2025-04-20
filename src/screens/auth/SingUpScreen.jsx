@@ -88,6 +88,7 @@ const SingUpScreen = ({ navigation }) => {
 
       navigation.navigate("Login");
     } catch (error) {
+      console.log("Error Block", error);
       Alert.alert(text.error1, error.toString());
 
       setName("");

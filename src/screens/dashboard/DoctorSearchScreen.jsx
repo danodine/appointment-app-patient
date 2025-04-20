@@ -1,16 +1,48 @@
+import React, { useState } from "react";
 import {
-    Text,
-    Image,
-    TouchableOpacity,
-    View,
-    TextInput,
-    FlatList,
-  } from "react-native";
-  import { Ionicons } from "@expo/vector-icons";
-  import styles from "../../../styles/homeSearchStyles";
-  import PropTypes from "prop-types";
+  Text,
+  Image,
+  TouchableOpacity,
+  View,
+  TextInput,
+  FlatList,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { searchDoctors, clearSearch } from "../../redux/doctorSlice";
+import { Ionicons } from "@expo/vector-icons";
+import styles from "../../styles/doctorSearchStyles";
+import PropTypes from "prop-types";
 
-const HomeSearch = ({handleChangeSearch, handleSelect, list, handleBack, searchTerm}) => {
+const HomeSearch = ({ navigation }) => {
+  const { doctorsList } = useSelector((state) => state.doctor);
+
+  const dispatch = useDispatch();
+
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleChangeSearch = (text) => {
+    setSearchTerm(text);
+    try {
+      if (text.length < 3) {
+        dispatch(clearSearch());
+      }
+      if (text.length >= 3) {
+        dispatch(searchDoctors({ text }));
+      }
+    } catch (error) {
+      console.log("Error Block", error);
+    }
+  };
+
+  const handleSelect = (data) => {
+    console.log(data);
+  };
+
+  const handleBack = () => {
+    setSearchTerm("");
+    dispatch(clearSearch());
+    navigation.goBack();
+  };
   return (
     <View style={styles.containerCard} keyboardShouldPersistTaps="handled">
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -27,7 +59,7 @@ const HomeSearch = ({handleChangeSearch, handleSelect, list, handleBack, searchT
         autoCorrect={false}
       />
       <FlatList
-        data={list}
+        data={doctorsList}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity
@@ -35,7 +67,7 @@ const HomeSearch = ({handleChangeSearch, handleSelect, list, handleBack, searchT
             onPress={() => handleSelect(item)}
           >
             <Image
-              source={require("../../../assets/icons/icono-cardio.png")}
+              source={require("../../assets/icons/icono-cardio.png")}
               style={styles.cardIcon}
             />
             <View>
@@ -53,11 +85,9 @@ const HomeSearch = ({handleChangeSearch, handleSelect, list, handleBack, searchT
   );
 };
 HomeSearch.propTypes = {
-  handleChangeSearch: PropTypes.func,
-  handleSelect: PropTypes.func,
-  list: PropTypes.array,
-  handleBack: PropTypes.func,
-  searchTerm: PropTypes.string,
+  navigation: PropTypes.shape({
+    goBack: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default HomeSearch;

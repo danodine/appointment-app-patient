@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// const API_URL = 'http://192.168.0.63:3000/api/v1/doctors';
-
 export const searchDoctors = createAsyncThunk(
   "doctors/searchDoctors",
   async ({ text }, { rejectWithValue }) => {
@@ -20,13 +18,13 @@ export const searchDoctors = createAsyncThunk(
 const doctorSlice = createSlice({
   name: "doctors",
   initialState: {
-    list: [],
+    doctorsList: [],
     loading: false,
     error: null,
   },
     reducers: {
       clearSearch: (state) => {
-        state.list = [];
+        state.doctorsList = [];
         state.loading = false;
         state.error = null;
       },
@@ -40,7 +38,7 @@ const doctorSlice = createSlice({
       })
       .addCase(searchDoctors.fulfilled, (state, action) => {
         state.loading = false;
-        state.list = action.payload.data;
+        state.doctorsList = action.payload.data;
       })
       .addCase(searchDoctors.rejected, (state, action) => {
         state.loading = false;
