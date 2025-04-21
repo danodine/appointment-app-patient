@@ -70,7 +70,7 @@ const AppointmentsScreen = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>
-        {STRINGS[language].appointments.myAppointmets}
+        {STRINGS[language].appointments.myAppointments}
       </Text>
 
       <View style={styles.tabRow}>
@@ -85,7 +85,7 @@ const AppointmentsScreen = () => {
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={handlePasstAppointments}>
           <Text style={styles.tabText}>
-            {STRINGS[language].appointments.passtAppointments}
+            {STRINGS[language].appointments.pastAppointments}
           </Text>
           {activeTab === 1 && <View style={styles.underline} />}
         </TouchableOpacity>

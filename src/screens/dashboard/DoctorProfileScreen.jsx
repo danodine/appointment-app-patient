@@ -143,7 +143,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       </Section>
       {<View style={styles.underline} />}
       <Section
-        title={STRINGS[language].doctorProfile.inshurance}
+        title={STRINGS[language].doctorProfile.insurance}
         icon={ICONS.shieldCheckmark}
       >
         {doctor?.profile?.insurances?.map((label, index) => (

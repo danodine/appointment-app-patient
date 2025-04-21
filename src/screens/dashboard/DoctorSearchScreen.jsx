@@ -72,7 +72,7 @@ const HomeSearch = ({ navigation }) => {
       </Text>
       <TextInput
         style={styles.searchInput}
-        placeholder={STRINGS[language].doctorSearch.seacrhPlaceholder}
+        placeholder={STRINGS[language].doctorSearch.searchPlaceholder}
         value={searchTerm}
         onChangeText={(text) => handleChangeSearch(text)}
         autoCapitalize="none"
