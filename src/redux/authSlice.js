@@ -66,6 +66,10 @@ export const singupUser = createAsyncThunk(
   }
 );
 
+export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
+  await SecureStore.deleteItemAsync("token");
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -75,11 +79,6 @@ const authSlice = createSlice({
     error: null,
   },
   reducers: {
-    logout: (state) => {
-      state.token = null;
-      state.user = null;
-      SecureStore.deleteItemAsync("token");
-    },
     clearError: (state) => {
       state.error = null;
     },
@@ -98,9 +97,13 @@ const authSlice = createSlice({
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      })
+      .addCase(logoutUser.fulfilled, (state) => {
+        state.token = null;
+        state.user = null;
       });
   },
 });
 
-export const { logout, clearError } = authSlice.actions;
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;

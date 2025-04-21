@@ -1,7 +1,6 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
-import HomeScreen from "../screens/dashboard/HomeScreen";
+import HomeStackNavigator from "./HomeStackNavigator";
 import AppointmentsScreen from "../screens/dashboard/AppointmentsScreen";
 import AccountScreen from "../screens/dashboard/AccountScreen";
 import { Ionicons } from "@expo/vector-icons";
@@ -32,7 +31,7 @@ const TabNavigator = ({ route }) => {
         tabBarStyle: {
           backgroundColor: COLORS.secondary,
           borderTopWidth: 1,
-          borderColor: COLORS.black, 
+          borderColor: COLORS.black,
         },
         headerShown: false,
         tabBarActiveTintColor: COLORS.selectedMenuItem,
@@ -41,14 +40,24 @@ const TabNavigator = ({ route }) => {
           getTabBarIcon(route.name, focused, color, size),
       })}
     >
-      <Tab.Screen name="Inicio">
-        {(props) => <HomeScreen {...props} role={role} />}
-      </Tab.Screen>
+      <Tab.Screen
+        name="Inicio"
+        component={HomeStackNavigator}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("Inicio", {
+              screen: "HomeMain",
+            });
+          },
+        })}
+      />
       <Tab.Screen name="Citas" component={AppointmentsScreen} />
       <Tab.Screen name="Cuenta" component={AccountScreen} />
     </Tab.Navigator>
   );
 };
+
 TabNavigator.propTypes = {
   route: PropTypes.shape({
     params: PropTypes.shape({

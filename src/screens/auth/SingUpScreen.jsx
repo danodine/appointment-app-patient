@@ -63,12 +63,6 @@ const SingUpScreen = ({ navigation }) => {
   const [street, setStreet] = useState("");
   const [age, setAge] = useState("");
 
-  const provinciasEcuador = [
-    { label: "Apple", value: "apple" },
-    { label: "Banana", value: "banana" },
-    { label: "Mango", value: "mango" },
-  ];
-
   const handleRegister = async () => {
     try {
       await dispatch(

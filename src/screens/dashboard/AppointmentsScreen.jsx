@@ -1,14 +1,5 @@
-// screens/AppointmentsScreen.js
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-} from "react-native";
+import React, { useEffect, useState, useCallback } from "react";
+import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getUpcommingAppointments,
@@ -17,16 +8,16 @@ import {
   clearPasstAppointments,
 } from "../../redux/appointmentsSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import { useCallback } from "react";
 import { formatDate } from "../../utils/helpers";
-
-const screenWidth = Dimensions.get("window").width;
+import STRINGS from "../../constants/strings";
+import styles from "../../styles/appointmentScreenStyles";
 
 const AppointmentsScreen = () => {
   const { user } = useSelector((state) => state.auth);
   const { upcommingAppointmentsList, passtAppointmentsList } = useSelector(
     (state) => state.appointments
   );
+  const language = useSelector((state) => state.language.language);
 
   const [appointments, setAppointments] = useState(upcommingAppointmentsList);
   const dispatch = useDispatch();
@@ -37,7 +28,7 @@ const AppointmentsScreen = () => {
   useFocusEffect(
     useCallback(() => {
       setActiveTab(0);
-      setHasFetchedPasstAppointments(false)
+      setHasFetchedPasstAppointments(false);
       try {
         dispatch(getUpcommingAppointments({ userId: user._id }));
       } catch (error) {
@@ -78,7 +69,9 @@ const AppointmentsScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Mis Citas</Text>
+      <Text style={styles.title}>
+        {STRINGS[language].appointments.myAppointmets}
+      </Text>
 
       <View style={styles.tabRow}>
         <TouchableOpacity
@@ -86,12 +79,14 @@ const AppointmentsScreen = () => {
           onPress={handleUpcomingAppointments}
         >
           <Text style={[styles.tabText, styles.activeTabText]}>
-            Proximas Citas
+            {STRINGS[language].appointments.nextAppointments}
           </Text>
           {activeTab === 0 && <View style={styles.underline} />}
         </TouchableOpacity>
         <TouchableOpacity style={styles.tab} onPress={handlePasstAppointments}>
-          <Text style={styles.tabText}>Citas Pasadas</Text>
+          <Text style={styles.tabText}>
+            {STRINGS[language].appointments.passtAppointments}
+          </Text>
           {activeTab === 1 && <View style={styles.underline} />}
         </TouchableOpacity>
       </View>
@@ -126,72 +121,5 @@ const AppointmentsScreen = () => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    paddingTop: 50,
-    paddingHorizontal: 16,
-    backgroundColor: "#fff",
-    flex: 1,
-  },
-  title: {
-    fontWeight: "bold",
-    fontSize: 22,
-    marginBottom: 20,
-  },
-  tabRow: {
-    flexDirection: "row",
-    marginBottom: 20,
-    justifyContent: "space-around",
-  },
-  tab: {
-    fontSize: 16,
-    marginRight: 20,
-  },
-  tabText: {
-    color: "black",
-  },
-  underline: {
-    marginTop: 4,
-    height: 3,
-    width: "100%",
-    backgroundColor: "#007AFF",
-    borderRadius: 2,
-  },
-  cardItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    width: screenWidth - 40,
-    marginBottom: 16,
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
-    transition: "transform 0.2s ease-in-out",
-  },
-  cardIcon: {
-    width: 40,
-    height: 40,
-    marginRight: 20,
-    marginLeft: 5,
-  },
-  item1: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-  // newCard: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   marginTop: 20,
-  // },
-  // newText: {
-  //   fontSize: 16,
-  //   color: "#444",
-  // },
-});
 
 export default AppointmentsScreen;

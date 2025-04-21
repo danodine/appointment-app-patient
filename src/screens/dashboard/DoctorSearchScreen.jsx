@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   Text,
   Image,
@@ -12,13 +13,25 @@ import { searchDoctors, clearSearch } from "../../redux/doctorSlice";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "../../styles/doctorSearchStyles";
 import PropTypes from "prop-types";
+import STRINGS from "../../constants/strings";
+import { ICONS, COLORS, SIZES } from "../../styles/theme";
 
 const HomeSearch = ({ navigation }) => {
   const { doctorsList } = useSelector((state) => state.doctor);
+  const language = useSelector((state) => state.language.language);
 
   const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState("");
+
+  useFocusEffect(
+    useCallback(() => {
+      setSearchTerm("");
+      return () => {
+        dispatch(clearSearch());
+      };
+    }, [])
+  );
 
   const handleChangeSearch = (text) => {
     setSearchTerm(text);
@@ -34,8 +47,8 @@ const HomeSearch = ({ navigation }) => {
     }
   };
 
-  const handleSelect = (data) => {
-    console.log(data);
+  const handleSelect = (doctor) => {
+    navigation.navigate("DoctorProfile", { doctor });
   };
 
   const handleBack = () => {
@@ -43,16 +56,23 @@ const HomeSearch = ({ navigation }) => {
     dispatch(clearSearch());
     navigation.goBack();
   };
+
   return (
     <View style={styles.containerCard} keyboardShouldPersistTaps="handled">
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        <Ionicons name="arrow-back-outline" size={20} color="#000" />
+        <Ionicons
+          name={ICONS.backArrow}
+          size={SIZES.icon20}
+          color={COLORS.black}
+        />
       </TouchableOpacity>
 
-      <Text style={styles.inputText}>Nombre, Especialidad</Text>
+      <Text style={styles.inputText}>
+        {STRINGS[language].doctorSearch.searchLabel}
+      </Text>
       <TextInput
         style={styles.searchInput}
-        placeholder="Buscar"
+        placeholder={STRINGS[language].doctorSearch.seacrhPlaceholder}
         value={searchTerm}
         onChangeText={(text) => handleChangeSearch(text)}
         autoCapitalize="none"
@@ -72,7 +92,7 @@ const HomeSearch = ({ navigation }) => {
             />
             <View>
               <Text style={styles.doctorName}>{item.name}</Text>
-              <Text>{item.profile.specialty}</Text>
+              <Text>{item?.profile?.specialty}</Text>
               <Text>
                 {item.profile.address.city} {item.profile.address.country}
               </Text>
@@ -87,6 +107,7 @@ const HomeSearch = ({ navigation }) => {
 HomeSearch.propTypes = {
   navigation: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 };
 

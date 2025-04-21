@@ -3,13 +3,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/auth/LoginScreen";
 import SingUpScreen from "../screens/auth/SingUpScreen";
 import TabNavigator from "./TabNavigator";
-import DoctorSearch from "../screens/dashboard/DoctorSearchScreen";
-// import { useSelector } from "react-redux";
+import DoctorSearchScreen from "../screens/dashboard/DoctorSearchScreen";
+import DoctorProfileScreen from "../screens/dashboard/DoctorProfileScreen";
 
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-  // const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     const loadToken = async () => {
@@ -24,7 +23,6 @@ const StackNavigator = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName="Login"
       screenOptions={{
         headerShown: false,
       }}
@@ -32,7 +30,8 @@ const StackNavigator = () => {
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="SingUp" component={SingUpScreen} />
       <Stack.Screen name="Dashboard" component={TabNavigator} />
-      <Stack.Screen name="DoctorSearch" component={DoctorSearch} />
+      <Stack.Screen name="DoctorSearch" component={DoctorSearchScreen} />
+      <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
     </Stack.Navigator>
   );
 };

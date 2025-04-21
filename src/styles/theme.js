@@ -18,4 +18,18 @@ const FONTS = {
   bold: "bold",
 };
 
-export { COLORS, FONTS };
+const SIZES = {
+  icon50: 50,
+  icon20: 20,
+};
+
+const ICONS = {
+  backArrow: "arrow-back-outline",
+  userCircle: "user-circle-o",
+  time: "time-outline",
+  globe: "globe-outline",
+  cash: "cash-outline",
+  shieldCheckmark: "shield-checkmark-outline",
+};
+
+export { COLORS, FONTS, SIZES, ICONS };

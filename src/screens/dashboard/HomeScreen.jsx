@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import styles from "../../styles/homeScreenStyles";
 import STRINGS from "../../constants/strings";
 
-const HomeScreen = ({ navigation, role }) => {
+const HomeScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
 
   const handleSearch = () => {

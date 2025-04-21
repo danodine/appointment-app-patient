@@ -78,6 +78,25 @@ const STRINGS = {
         { label: "Zamora Chinchipe", value: "zamora_chinchipe" },
       ],
     },
+    doctorSearch: {
+      searchLabel: "Nombre, Especialidad",
+      seacrhPlaceholder: "Buscar",
+    },
+    doctorProfile: {
+      bookAppointment: "Agendar Cita",
+      selectLocation: "Selecciona un consultorio:",
+      phone: "Telefono:",
+      email: "Correo:",
+      schedule: "Horarios",
+      languages: "Idiomas",
+      paymentMethod: "Metodos de Pago",
+      inshurance: "Compañías de seguros",
+    },
+    appointments: {
+      myAppointmets: "Mis Citas",
+      nextAppointments: "Proximas Citas",
+      passtAppointments: "Citas Pasadas"
+    },
   },
   en: {
     login: {
@@ -99,9 +118,7 @@ const STRINGS = {
       surgestion:
         '"Sleeping well, eating well, and \n breathing deeply is also \n productivity."',
     },
-    singupUser: {
-      
-    },
+    singupUser: {},
   },
 };
 
