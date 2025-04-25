@@ -1,11 +1,11 @@
-#holadoc
+# holadoc
 
 Tis is a eork in progress.
 holadoc is a healthcare appointment booking application. It enables users to search for doctors, view profiles, and book appointments, while allowing doctors to manage their availability and profile information.
 
 -------------------------------------------------------------
 
-##Features
+## Features
 
 🔍 Doctor Search: Browse and filter doctors by specialty or name.
 
@@ -19,8 +19,9 @@ holadoc is a healthcare appointment booking application. It enables users to sea
 
 -------------------------------------------------------------
 
-##Project Structure
+## Project Structure
 
+<pre> <code>
 src/
 │
 ├── screens/
@@ -37,24 +38,26 @@ src/
 ├── utils/              # Utility functions
 ├── App.jsx             # Root app component
 └── index.js            # Entry point
+</code> </pre>
 
 -------------------------------------------------------------
-##Getting Started
+## Getting Started
 
-###Prerequisites
+### Prerequisites
 Node.js >= 16
+
 npm or yarn
 
 -------------------------------------------------------------
 
-##License
+## License
 
 This project is proprietary and all rights are reserved by the author.
 See LICENSE.md for full details.
 
 -------------------------------------------------------------
 
-##Author
+## Author
 
 David Nodine
 
