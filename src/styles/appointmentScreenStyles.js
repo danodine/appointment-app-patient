@@ -1,4 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
+import { COLORS, FONTS } from "./theme";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -6,7 +7,6 @@ const styles = StyleSheet.create({
   container: {
     paddingTop: 50,
     paddingHorizontal: 16,
-    // backgroundColor: "#fff",
     flex: 1,
   },
   title: {
@@ -58,15 +58,50 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-  // newCard: {
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   marginTop: 20,
-  // },
-  // newText: {
-  //   fontSize: 16,
-  //   color: "#444",
-  // },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "rgba(0,0,0,0.4)",
+  },
+  modalContent: {
+    marginHorizontal: 30,
+    padding: 20,
+    borderRadius: 10,
+    backgroundColor: "white",
+    elevation: 10,
+  },
+  cancel: {
+    marginTop: 20,
+    alignItems: "center",
+  },
+  cancelText: { color: COLORS.error },
+  typeButton: {
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    backgroundColor: COLORS.secondary,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    alignSelf: "center",
+    marginBottom: 10,
+  },
+  typeButtonText: {
+    fontWeight: FONTS.boldFont,
+    color: COLORS.black,
+  },
+  buttonInactive: {
+    opacity: 0.5,
+  },
+  statusIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+  iconSize: {
+    width: 20,
+    height: 20,
+  },
 });
 
 export default styles;

@@ -7,6 +7,7 @@ import {
   Dimensions,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import PropTypes from "prop-types";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -21,7 +22,7 @@ const AccountElement = ({
   return (
     <TouchableOpacity style={styles.cardItem} onPress={handleClick}>
       {icon ? (
-        <Ionicons name={icon} size={iconSize ? iconSize : 20} color="#000" />
+        <Ionicons name={icon} size={iconSize || 20} color="#000" />
       ) : null}
       <View style={styles.textItem}>
         {title ? <Text style={styles.item1}>{title}</Text> : null}
@@ -62,5 +63,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
 });
+AccountElement.propTypes = {
+  icon: PropTypes.string,
+  iconSize: PropTypes.number,
+  title: PropTypes.string,
+  subtitle: PropTypes.string,
+  subtitle2: PropTypes.string,
+  handleClick: PropTypes.func,
+};
 
 export default AccountElement;

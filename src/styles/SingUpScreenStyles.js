@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "./theme";
+import { COLORS, SIZES, FONTS } from "./theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,10 +8,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: 28,
+    fontSize: SIZES.titleSize,
     color: COLORS.black,
     textAlign: "center",
-    fontWeight: "300",
     paddingTop: 30,
     paddingBottom: 30,
   },
@@ -22,7 +21,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 4,
     color: COLORS.black,
-    fontWeight: "600",
+    fontWeight: FONTS.boldFont,
     letterSpacing: 1,
   },
   input: {
@@ -41,23 +40,23 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: COLORS.black,
-    fontWeight: "600",
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
   },
   errorBorder: {
-    borderColor: "red",
+    borderColor: COLORS.error,
     borderWidth: 1,
     borderRadius: 8,
   },
   errorText: {
-    color: "red",
+    color: COLORS.error,
     marginBottom: 8,
     marginTop: 4,
   },
   backButton: {
     position: "absolute",
-    top: 50,
-    left: 20,
+    top: SIZES.backButtonSpacingTop,
+    left: SIZES.backButtonSpacingLeft,
     zIndex: 1,
   },
   datePickerContainerView: {
@@ -76,6 +75,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginTop: 20,
   },
+  buttonOpacity: { opacity: SIZES.inactiveButtonOpacity },
 });
 
 export default styles;

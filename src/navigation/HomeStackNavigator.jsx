@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/dashboard/HomeScreen";
 import DoctorSearchScreen from "../screens/dashboard/DoctorSearchScreen";
 import DoctorProfileScreen from "../screens/dashboard/DoctorProfileScreen";
+import BookAppointmentScreen from "../screens/dashboard/BookAppointmentScreen";
 import PropTypes from "prop-types";
 
 const Stack = createNativeStackNavigator();
@@ -17,6 +18,7 @@ const HomeStackNavigator = ({ route }) => {
       </Stack.Screen>
       <Stack.Screen name="DoctorSearch" component={DoctorSearchScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
+      <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
     </Stack.Navigator>
   );
 };

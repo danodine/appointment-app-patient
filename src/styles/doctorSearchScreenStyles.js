@@ -1,19 +1,19 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS } from "./theme";
+import { COLORS, FONTS, SIZES } from "./theme";
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   backButton: {
     position: "absolute",
-    top: 50,
-    left: 20,
+    top: SIZES.backButtonSpacingTop,
+    left: SIZES.backButtonSpacingLeft,
     backgroundColor: COLORS.secondary,
-    padding: 10,
-    borderRadius: 50,
+    padding: SIZES.coloredButtonPadding,
+    borderRadius: SIZES.coloredButtonBorderRadius,
   },
   containerCard: {
     flex: 1,
-    paddingTop: 90,
+    paddingTop: SIZES.mainContainerPaddingTop90,
     paddingHorizontal: 20,
   },
   inputText: {
@@ -26,12 +26,12 @@ const styles = StyleSheet.create({
   doctorItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.white,
     width: screenWidth - 40,
     marginBottom: 16,
     padding: 16,
     borderRadius: 12,
-    shadowColor: "#000",
+    shadowColor: COLORS.width,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   doctorName: {
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
   },
   searchInput: {

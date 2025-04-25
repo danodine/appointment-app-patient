@@ -5,6 +5,7 @@ import SingUpScreen from "../screens/auth/SingUpScreen";
 import TabNavigator from "./TabNavigator";
 import DoctorSearchScreen from "../screens/dashboard/DoctorSearchScreen";
 import DoctorProfileScreen from "../screens/dashboard/DoctorProfileScreen";
+import BookAppointmentScreen from "../screens/dashboard/BookAppointmentScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ const StackNavigator = () => {
       <Stack.Screen name="Dashboard" component={TabNavigator} />
       <Stack.Screen name="DoctorSearch" component={DoctorSearchScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
+      <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
     </Stack.Navigator>
   );
 };

@@ -1,12 +1,11 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { COLORS } from "./theme";
-const screenWidth = Dimensions.get('window').width;
+import { StyleSheet } from 'react-native';
+import { COLORS, FONTS, SIZES } from "./theme";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: 90,
+    paddingTop: SIZES.mainContainerPaddingTop90,
     paddingHorizontal: 20,
   },
   logoContainer: {
@@ -28,18 +27,18 @@ const styles = StyleSheet.create({
     marginBottom: 60,
   },
   searchText: {
-    color: "white",
+    color: COLORS.white,
     marginLeft: 8,
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
   },
   healthPartner: {
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
     paddingTop: 40
   },
   healthPartnerTwo: {
     paddingBottom: 20,
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
   },
   icon: {

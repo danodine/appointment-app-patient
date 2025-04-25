@@ -1,14 +1,13 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS } from "./theme";
+import { COLORS, FONTS, SIZES } from "./theme";
 
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
     paddingHorizontal: 20,
-    paddingTop: 70,
+    paddingTop: SIZES.mainContainerPaddingTop,
   },
   logoContainer: {
     alignItems: "center",
@@ -21,11 +20,11 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
-    fontSize: 18,
+    fontSize: SIZES.subTitleSize,
     letterSpacing: 2,
     marginVertical: 20,
     color: COLORS.textColorMain,
-    fontWeight: "600",
+    fontWeight: FONTS.boldFont,
     paddingBottom: 10,
   },
   input: {
@@ -46,17 +45,17 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: COLORS.black,
-    fontWeight: FONTS.bold,
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
   },
   forgotPassword: {
     color: COLORS.link,
     marginTop: "10%",
     marginBottom: "6%",
-    fontWeight: FONTS.bold,
+    fontWeight: FONTS.boldFont,
   },
   signup: {
-    fontWeight: FONTS.bold,
+    fontWeight: FONTS.boldFont,
     color: COLORS.link,
   },
   footer: {
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   bold: {
-    fontWeight: FONTS.bold,
+    fontWeight: FONTS.boldFont,
   },
   error: {
     color: COLORS.error,

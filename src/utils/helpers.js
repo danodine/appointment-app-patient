@@ -1,10 +1,14 @@
-import { store } from '../redux/store'; // make sure your store is exported as named export
-import { setLanguage } from '../redux/languageSlice';
+import { store } from "../redux/store"; // make sure your store is exported as named export
+import { setLanguage } from "../redux/languageSlice";
 
 export const toggleLanguage = () => {
   const currentLang = store.getState().language.language;
-  const newLang = currentLang === 'es' ? 'en' : 'es';
+  const newLang = currentLang === "es" ? "en" : "es";
   store.dispatch(setLanguage(newLang));
+};
+
+export const setLanguageTo = (language) => {
+  store.dispatch(setLanguage(language));
 };
 
 export const validateEcuadorianCedula = (cedula) => {
@@ -19,7 +23,7 @@ export const validateEcuadorianCedula = (cedula) => {
     return false;
   }
 
-  const digits = cedula.split('').map(Number);
+  const digits = cedula.split("").map(Number);
   let total = 0;
 
   for (let i = 0; i < 9; i++) {
@@ -58,3 +62,19 @@ export const formatDate = (date) => {
   const year = formatedDate.getFullYear();
   return `${day}/${month}/${year}`;
 };
+
+export const formatDateTime = (isoDateStr) => {
+  const date = new Date(isoDateStr);
+
+  const day = String(date.getUTCDate()).padStart(2, '0');
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const year = date.getUTCFullYear();
+
+  const hours = String(date.getUTCHours()).padStart(2, '0');
+  const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year} - ${hours}:${minutes}`;
+};
+
+
+

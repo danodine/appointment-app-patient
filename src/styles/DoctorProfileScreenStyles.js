@@ -1,10 +1,9 @@
 import { StyleSheet } from "react-native";
-import { COLORS } from "../styles/theme";
+import { COLORS, FONTS } from "./theme";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
     padding: 16,
   },
   header: {
@@ -15,30 +14,44 @@ const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
     marginVertical: 16,
-    marginTop: 40,
+    marginTop: 50,
   },
   name: {
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
     fontSize: 18,
     marginTop: 8,
   },
   specialty: {
     fontSize: 16,
-    color: "#555",
-    marginVertical: 4,
+    color: COLORS.greyText,
+    fontWeight: FONTS.boldFont,
+    marginVertical: 10,
   },
   button: {
     paddingVertical: 8,
     paddingHorizontal: 16,
     backgroundColor: COLORS.secondary,
     borderRadius: 20,
+    marginBottom: 10,
   },
   buttonText: {
-    fontWeight: "bold",
-    color: "#000",
+    fontWeight: FONTS.boldFont,
+    color: COLORS.black,
   },
   section: {
     marginBottom: 20,
+  },
+  address: {
+    paddingBottom: 7,
+  },
+  selectorText: {
+    paddingBottom: 7,
+    fontWeight: FONTS.boldFont,
+  },
+  radioButtons: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginVertical: 5,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -46,7 +59,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionTitle: {
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
     marginLeft: 8,
   },
@@ -59,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   tag: {
-    backgroundColor: "#e6f2f2",
+    backgroundColor: COLORS.tagColor,
     borderRadius: 16,
     paddingHorizontal: 12,
     paddingVertical: 4,
@@ -77,11 +90,11 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   underline: {
-    marginTop: 4,
-    marginBottom: 10,
-    height: 3,
+    marginTop: -3,
+    marginBottom: 15,
+    height: 1,
     width: "100%",
-    backgroundColor: "#007AFF",
+    backgroundColor: COLORS.black,
     borderRadius: 2,
   },
   locotionView: {
@@ -89,7 +102,7 @@ const styles = StyleSheet.create({
     width: 20,
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#444",
+    borderColor: COLORS.black,
     alignItems: "center",
     justifyContent: "center",
     marginRight: 10,
@@ -98,8 +111,18 @@ const styles = StyleSheet.create({
     height: 10,
     width: 10,
     borderRadius: 5,
-    backgroundColor: "#444",
+    backgroundColor: COLORS.black,
   },
+  bold: {
+    fontWeight: FONTS.boldFont
+  },
+  phoneText: {
+    marginBottom: 7,
+    marginTop: 7
+  },
+  itemsText: {
+    marginBottom: 7,
+  }
 });
 
 export default styles;

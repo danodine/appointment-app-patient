@@ -15,6 +15,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import PropTypes from "prop-types";
 import { LinearGradient } from "expo-linear-gradient";
 import { singupUser } from "../../redux/authSlice";
+import {provinces} from "../../constants/vars"
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -23,7 +24,7 @@ import {
   isStrongPassword,
   formatDate,
 } from "../../utils/helpers";
-import styles from "../../styles/SingUpScreenStyles";
+import styles from "../../styles/singUpScreenStyles";
 import STRINGS from "../../constants/strings";
 import { COLORS } from "../../styles/theme";
 
@@ -327,7 +328,7 @@ const SingUpScreen = ({ navigation }) => {
           <Text style={styles.label}>{text.province}</Text>
           <Dropdown
             style={styles.input}
-            data={text.provinces}
+            data={provinces}
             labelField="label"
             valueField="value"
             value={city}
@@ -394,7 +395,7 @@ const SingUpScreen = ({ navigation }) => {
           )}
 
           <TouchableOpacity
-            style={[styles.button, !isFormValid && { opacity: 0.5 }]}
+            style={[styles.button, !isFormValid && styles.buttonOpacity]}
             onPress={handleRegister}
             disabled={!isFormValid}
           >

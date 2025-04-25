@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeStackNavigator from "./HomeStackNavigator";
 import AppointmentsScreen from "../screens/dashboard/AppointmentsScreen";
@@ -11,19 +12,20 @@ const Tab = createBottomTabNavigator();
 
 const getTabBarIcon = (routeName, focused, color, size) => {
   let iconName;
-  if (routeName === "Inicio") {
+  if (routeName === "Inicio" || routeName === "Start") {
     iconName = focused ? "home" : "home-outline";
-  } else if (routeName === "Citas") {
+  } else if (routeName === "Citas" || routeName === "Appointments") {
     iconName = focused ? "calendar" : "calendar-outline";
-  } else if (routeName === "Cuenta") {
+  } else if (routeName === "Cuenta" || routeName === "Account") {
     iconName = focused ? "person" : "person-outline";
   }
 
   return <Ionicons name={iconName} size={size} color={color} />;
 };
 
-const TabNavigator = ({ route }) => {
-  const role = route?.params?.role;
+const TabNavigator = () => {
+
+  const language = useSelector((state) => state.language.language);
 
   return (
     <Tab.Navigator
@@ -41,19 +43,22 @@ const TabNavigator = ({ route }) => {
       })}
     >
       <Tab.Screen
-        name="Inicio"
+        name={language === "es" ? "Inicio" : "Start"}
         component={HomeStackNavigator}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate("Inicio", {
+            navigation.navigate(language === "es" ? "Inicio" : "Start", {
               screen: "HomeMain",
             });
           },
         })}
       />
-      <Tab.Screen name="Citas" component={AppointmentsScreen} />
-      <Tab.Screen name="Cuenta" component={AccountScreen} />
+      <Tab.Screen
+        name={language === "es" ? "Citas" : "Appointments"}
+        component={AppointmentsScreen}
+      />
+      <Tab.Screen name={language === "es" ? "Cuenta" : "Account"} component={AccountScreen} />
     </Tab.Navigator>
   );
 };

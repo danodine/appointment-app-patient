@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { View, Text, TouchableOpacity, ScrollView } from "react-native";
+import { useSelector } from "react-redux";
+import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import PropTypes from "prop-types";
 import STRINGS from "../../constants/strings";
 import { ICONS, COLORS, SIZES } from "../../styles/theme";
-import styles from "../../styles/DoctorProfileScreenStyles";
+import styles from "../../styles/doctorProfileScreenStyles";
 
 const DoctorProfileScreen = ({ route, navigation }) => {
   const { doctor } = route.params;
@@ -14,7 +15,6 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [times, setTimes] = useState([]);
-
   const locationList = useMemo(() => {
     if (!doctor?.profile?.availability) return [];
 
@@ -24,6 +24,13 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 
     return [...new Set(allLocations)];
   }, [doctor]);
+
+  useEffect(() => {
+    if(locationList.length == 1){
+      setSelectedLocation(locationList[0])
+    }
+  }, [])
+  
 
   useEffect(() => {
     const dayMap = new Map();
@@ -45,8 +52,20 @@ const DoctorProfileScreen = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const handleBookAppointment = () => {};
-
+  const handleBookAppointment = () => {
+    if (selectedLocation) {
+      try {
+        navigation.navigate("BookAppointment", {
+          doctor,
+          location: selectedLocation,
+        });
+      } catch (err) {
+        console.log("Error Block", err);
+      }
+    } else {
+      Alert.alert("Porfavor seleccione un consultorio");
+    }
+  };
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -58,9 +77,11 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
-        <FontAwesome name={userCircle} size={80} />
+        <FontAwesome name={ICONS.userCircle} size={80} />
         <Text style={styles.name}>{doctor?.name}</Text>
-        <Text style={styles.specialty}>{doctor?.specialty}</Text>
+        <Text style={styles.specialty}>
+          {STRINGS[language]?.speciality[doctor?.profile?.specialtyId]}
+        </Text>
 
         <TouchableOpacity style={styles.button} onPress={handleBookAppointment}>
           <Text style={styles.buttonText}>
@@ -69,22 +90,23 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <Section title="Ubicación" icon="location-outline">
-        <Text>
+      <Section
+        title={STRINGS[language].doctorProfile.location}
+        icon="location-outline"
+      >
+        <Text style={styles.address}>
           {doctor?.profile?.address?.city} {doctor?.profile?.address?.country}
         </Text>
         {locationList.length > 1 ? (
           <View>
-            <Text>{STRINGS[language].doctorProfile.selectLocation}</Text>
+            <Text style={styles.selectorText}>
+              {STRINGS[language].doctorProfile.selectLocation}
+            </Text>
             {locationList.map((location, index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => setSelectedLocation(location)}
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginVertical: 5,
-                }}
+                style={styles.radioButtons}
               >
                 <View style={styles.locotionView}>
                   {selectedLocation === location && (
@@ -98,15 +120,24 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         ) : (
           <Text>{locationList[0]}</Text>
         )}
-        <Text>
-          {STRINGS[language].doctorProfile.phone} {doctor?.phone}
+        <Text style={styles.phoneText}>
+          <Text style={styles.bold}>
+            {STRINGS[language].doctorProfile.phone}
+          </Text>{" "}
+          {doctor?.phone}
         </Text>
         <Text>
-          {STRINGS[language].doctorProfile.email} {doctor?.email}
+          <Text style={styles.bold}>
+            {STRINGS[language].doctorProfile.email}
+          </Text>{" "}
+          {doctor?.email}
         </Text>
       </Section>
       {<View style={styles.underline} />}
-      <Section title="Perfil profesional" icon="person-outline">
+      <Section
+        title={STRINGS[language].doctorProfile.profile}
+        icon="person-outline"
+      >
         <Text>{doctor?.profile?.biography}</Text>
         <View style={styles.tagContainer}>
           {doctor?.profile?.treatments?.map((label, index) => (
@@ -117,28 +148,41 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         </View>
       </Section>
       {<View style={styles.underline} />}
-      <Section title={STRINGS[language].doctorProfile.schedule} icon={ICONS.time}>
+      <Section
+        title={STRINGS[language].doctorProfile.schedule}
+        icon={ICONS.time}
+      >
         {times?.map((label, index) => (
           <View key={index}>
-            <Text>{label?.day}</Text>
+            <Text style={styles.bold}>{label?.day}</Text>
             {label?.slots?.map((slot, slotIndex) => (
-              <Text key={slotIndex}>
-                {slot?.from} - {slot?.to}
+              <Text key={slotIndex} style={styles.itemsText}>
+                • {slot?.from} - {slot?.to}
               </Text>
             ))}
           </View>
         ))}
       </Section>
       {<View style={styles.underline} />}
-      <Section title={STRINGS[language].doctorProfile.languages} icon={ICONS.globe}>
+      <Section
+        title={STRINGS[language].doctorProfile.languages}
+        icon={ICONS.globe}
+      >
         {doctor?.profile?.languages?.map((label, index) => (
-          <Text key={index}>• {label}</Text>
+          <Text key={index} style={styles.itemsText}>
+            • {label}
+          </Text>
         ))}
       </Section>
       {<View style={styles.underline} />}
-      <Section title={STRINGS[language].doctorProfile.paymentMethod} icon={ICONS.cash}>
+      <Section
+        title={STRINGS[language].doctorProfile.paymentMethod}
+        icon={ICONS.cash}
+      >
         {doctor?.profile?.paymentMethods?.map((label, index) => (
-          <Text key={index}>• {label}</Text>
+          <Text key={index} style={styles.itemsText}>
+            • {label}
+          </Text>
         ))}
       </Section>
       {<View style={styles.underline} />}
@@ -147,7 +191,9 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         icon={ICONS.shieldCheckmark}
       >
         {doctor?.profile?.insurances?.map((label, index) => (
-          <Text key={index}>• {label}</Text>
+          <Text key={index} style={styles.itemsText}>
+            • {label}
+          </Text>
         ))}
       </Section>
     </ScrollView>
@@ -174,18 +220,18 @@ DoctorProfileScreen.propTypes = {
   route: PropTypes.shape({
     params: PropTypes.shape({
       doctor: PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        specialty: PropTypes.string.isRequired,
-        profile: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        specialtyId: PropTypes.string,
+        profile: PropTypes.any,
         phone: PropTypes.any,
-        email: PropTypes.string.isRequired,
+        email: PropTypes.string,
       }).isRequired,
-    }).isRequired,
+    }),
   }).isRequired,
   navigation: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
+    navigate: PropTypes.func,
   }).isRequired,
-
 };
 
 export default DoctorProfileScreen;

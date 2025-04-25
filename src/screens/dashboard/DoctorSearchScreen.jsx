@@ -11,7 +11,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { searchDoctors, clearSearch } from "../../redux/doctorSlice";
 import { Ionicons } from "@expo/vector-icons";
-import styles from "../../styles/doctorSearchStyles";
+import styles from "../../styles/doctorSearchScreenStyles";
 import PropTypes from "prop-types";
 import STRINGS from "../../constants/strings";
 import { ICONS, COLORS, SIZES } from "../../styles/theme";
@@ -72,7 +72,7 @@ const HomeSearch = ({ navigation }) => {
       </Text>
       <TextInput
         style={styles.searchInput}
-        placeholder={STRINGS[language].doctorSearch.searchPlaceholder}
+        placeholder={STRINGS[language].doctorSearch.seacrhPlaceholder}
         value={searchTerm}
         onChangeText={(text) => handleChangeSearch(text)}
         autoCapitalize="none"
@@ -92,7 +92,9 @@ const HomeSearch = ({ navigation }) => {
             />
             <View>
               <Text style={styles.doctorName}>{item.name}</Text>
-              <Text>{item?.profile?.specialty}</Text>
+              <Text>
+                {STRINGS[language].speciality[item?.profile?.specialtyId]}
+              </Text>
               <Text>
                 {item.profile.address.city} {item.profile.address.country}
               </Text>
