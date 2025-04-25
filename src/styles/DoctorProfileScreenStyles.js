@@ -1,11 +1,12 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS } from "./theme";
+import { COLORS, FONTS, VALUES } from "./theme";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 20,
   },
+  backButton: VALUES.backButtonColor,
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -80,14 +81,6 @@ const styles = StyleSheet.create({
   },
   tagText: {
     fontSize: 12,
-  },
-  backButton: {
-    position: "absolute",
-    top: 50,
-    left: 20,
-    backgroundColor: COLORS.secondary,
-    padding: 10,
-    borderRadius: 50,
   },
   underline: {
     marginTop: -3,

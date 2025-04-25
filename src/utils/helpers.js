@@ -1,5 +1,6 @@
 import { store } from "../redux/store"; // make sure your store is exported as named export
 import { setLanguage } from "../redux/languageSlice";
+import STRINGS from "../constants/strings";
 
 export const toggleLanguage = () => {
   const currentLang = store.getState().language.language;
@@ -63,15 +64,15 @@ export const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-export const formatDateTime = (isoDateStr) => {
+export const formatDateTime = (isoDateStr, language) => {
   const date = new Date(isoDateStr);
 
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const dayName = STRINGS[language].daysOfWeek[date.getUTCDay()];
+  const day = String(date.getUTCDate());
   const year = date.getUTCFullYear();
 
   const hours = String(date.getUTCHours()).padStart(2, "0");
   const minutes = String(date.getUTCMinutes()).padStart(2, "0");
 
-  return `${day}/${month}/${year} - ${hours}:${minutes}`;
+  return `${dayName} ${day} ${year} - ${hours}:${minutes}`;
 };

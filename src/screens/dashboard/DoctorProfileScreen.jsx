@@ -19,7 +19,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
     if (!doctor?.profile?.availability) return [];
 
     const allLocations = doctor?.profile?.availability?.flatMap(
-      (item) => item?.timeSlots?.map((val) => val.location) || [],
+      (item) => item?.timeSlots?.map((val) => val.location) || []
     );
 
     return [...new Set(allLocations)];
@@ -53,14 +53,10 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 
   const handleBookAppointment = () => {
     if (selectedLocation) {
-      try {
-        navigation.navigate("BookAppointment", {
-          doctor,
-          location: selectedLocation,
-        });
-      } catch (err) {
-        console.log("Error Block", err);
-      }
+      navigation.navigate("BookAppointment", {
+        doctor,
+        location: selectedLocation,
+      });
     } else {
       Alert.alert("Porfavor seleccione un consultorio");
     }

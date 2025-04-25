@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Alert,
-  StyleSheet,
 } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { useDispatch, useSelector } from "react-redux";
@@ -47,7 +46,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     if (!availableDates.includes(dateStr)) {
       Alert.alert(
         "Unavailable",
-        "There are no available appointments on this date.",
+        "There are no available appointments on this date."
       );
       return;
     }
@@ -86,10 +85,10 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           doctorName: doctor.name,
           doctorSpeciality: doctor.profile.specialtyId,
           dateTime: new Date(
-            `${selectedDate}T${selectedTime}:00.000Z`,
+            `${selectedDate}T${selectedTime}:00.000Z`
           ).toISOString(),
           location,
-        }),
+        })
       );
       navigation.navigate(language === "es" ? "Citas" : "Appointments");
     } catch (err) {
@@ -125,10 +124,10 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         ))}
       </View>
     ) : (
-      <Text>No slots available for this day.</Text>
+      <Text>{STRINGS[language].bookAppointment.noSlots}</Text>
     );
   };
-
+  
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -140,12 +139,16 @@ const BookAppointmentScreen = ({ route, navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.doctorCard}>
-        <Text style={styles.doctorName}>Dr. Lisa Müller</Text>
-        <Text style={styles.doctorSubtitle}>Dermatologist • Berlin</Text>
-        <Text style={styles.doctorSubtitle}>av. xxxx</Text>
+        <Text style={styles.doctorName}>{doctor?.name}</Text>
+        <Text style={styles.doctorSubtitle}>
+          {doctor?.profile?.address?.city} - {doctor?.profile?.address?.country}
+        </Text>
+        <Text style={styles.doctorSubtitle}>{location}</Text>
       </View>
 
-      <Text style={styles.sectionTitle}>Select a Date</Text>
+      <Text style={styles.sectionTitle}>
+        {STRINGS[language].bookAppointment.selectDate}
+      </Text>
 
       <Calendar
         onDayPress={onDateSelected}
@@ -155,13 +158,15 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         minDate={new Date().toISOString().split("T")[0]}
         maxDate={futureDate.toISOString().split("T")[0]}
         theme={{
-          selectedDayBackgroundColor: "#2563EB",
-          selectedDayTextColor: "#fff",
-          todayTextColor: "#2563EB",
+          selectedDayBackgroundColor: COLORS.selectedItem,
+          selectedDayTextColor: COLORS.white,
+          todayTextColor: COLORS.selectedItem,
         }}
       />
 
-      <Text style={styles.sectionTitle}>Available Times</Text>
+      <Text style={styles.sectionTitle}>
+        {STRINGS[language].bookAppointment.timeSlots}
+      </Text>
 
       {calendarLoading ? <ActivityIndicator size="large" /> : calendarElement()}
 
@@ -173,10 +178,12 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           (!selectedDate || !selectedTime) && styles.confirmButtonDisabled,
         ]}
       >
-        <Text style={styles.confirmButtonText}>Confirm Appointment</Text>
+        <Text style={styles.confirmButtonText}>
+          {STRINGS[language].bookAppointment.confirmAppointment}
+        </Text>
       </TouchableOpacity>
 
-      {error && <Text style={styles.errorText}>{error}</Text>}
+      {/* {error && <Text style={styles.errorText}>{error}</Text>} */}
     </ScrollView>
   );
 };
@@ -190,6 +197,7 @@ BookAppointmentScreen.propTypes = {
   }).isRequired,
   navigation: PropTypes.shape({
     goBack: PropTypes.func.isRequired,
+    navigate: PropTypes.func.isRequired,
   }).isRequired,
 };
 

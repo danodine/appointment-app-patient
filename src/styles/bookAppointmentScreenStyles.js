@@ -1,21 +1,17 @@
+import { StyleSheet } from "react-native";
+import { COLORS, FONTS, VALUES } from "./theme";
+
 const styles = StyleSheet.create({
   container: {
-    padding: 16,
-    backgroundColor: "#fff",
+    flex: 1,
+    paddingHorizontal: 20,
   },
-  backButton: {
-    position: "absolute",
-    top: 50,
-    backgroundColor: "#70C1E3",
-    padding: 10,
-    borderRadius: 50,
-    zIndex: 10,
-  },
+  backButton: VALUES.backButtonColor,
   doctorCard: {
-    backgroundColor: "#F3F4F6",
+    backgroundColor: COLORS.white,
     borderRadius: 20,
     padding: 16,
-    shadowColor: "#000",
+    shadowColor: COLORS.black,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -23,15 +19,15 @@ const styles = StyleSheet.create({
   },
   doctorName: {
     fontSize: 20,
-    fontWeight: "600",
+    fontWeight: FONTS.boldFont,
     marginBottom: 4,
   },
   doctorSubtitle: {
-    color: "#6B7280",
+    color: COLORS.greyText,
   },
   sectionTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: FONTS.boldFont,
     marginTop: 24,
     marginBottom: 8,
   },
@@ -45,22 +41,22 @@ const styles = StyleSheet.create({
     margin: 4,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "#fff",
+    borderColor: COLORS.greyBorder,
+    backgroundColor: COLORS.white,
   },
   timeSlotSelected: {
-    backgroundColor: "#2563EB",
-    borderColor: "#2563EB",
+    backgroundColor: COLORS.selectedItem,
+    borderColor: COLORS.selectedItem,
   },
   timeSlotText: {
-    color: "#000",
+    color: COLORS.black,
   },
   timeSlotTextSelected: {
-    color: "#fff",
+    color: COLORS.white,
   },
   confirmButton: {
     alignSelf: "center",
-    backgroundColor: "#70C1E3",
+    backgroundColor: COLORS.secondary,
     borderRadius: 50,
     paddingHorizontal: 20,
     paddingVertical: 10,
@@ -68,16 +64,16 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   confirmButtonText: {
-    color: "black",
-    fontWeight: "600",
+    color: COLORS.black,
+    fontWeight: FONTS.boldFont,
     fontSize: 16,
   },
   confirmButtonDisabled: {
-    opacity: 0.5,
+    opacity: VALUES.inactiveButtonOpacity,
   },
   errorText: {
     marginTop: 20,
-    color: "red",
+    color: COLORS.error,
     textAlign: "center",
   },
 });

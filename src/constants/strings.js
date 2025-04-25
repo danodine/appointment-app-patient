@@ -1,3 +1,5 @@
+import { bookAppointment } from "../redux/appointmentsSlice";
+
 const STRINGS = {
   es: {
     speciality: {
@@ -87,7 +89,6 @@ const STRINGS = {
       languages: "Idiomas",
       paymentMethod: "Metodos de Pago",
       insurance: "Compañías de seguros",
-      // nuevos no estan en engles
       profile: "Perfil profesional",
       location: "Ubicación",
     },
@@ -95,12 +96,11 @@ const STRINGS = {
       myAppointments: "Mis Citas",
       nextAppointments: "Proximas Citas",
       pastAppointments: "Citas Pasadas",
-      // nuevo no traducido
       name: "Nombre:",
-      speciality: "Especialidad:",
-      timeDate: "Fecha y hora:",
-      location: "Lugar:",
-      status: "Estado:",
+      speciality: "Especialidad: ",
+      timeDate: "Fecha y hora: ",
+      location: "Lugar: ",
+      status: "Estado: ",
       dateError:
         "Las citas solo se pueden cancelar por este medio hasta 12h antes de la consulta, pasado este tiempo debera comunicar se con el medico",
       cancelAppointment: "Cancelar Cita",
@@ -108,6 +108,15 @@ const STRINGS = {
       cancelationMessage: "Esta seguro que desea cancelar su cita?",
       confirmButton: "Confirmar",
       closeButton: "Cerrar",
+      scheduled: {
+        cero: "Agendada",
+        uno: "Finalizada",
+      },
+      cancelled: {
+        cero: "Cancelada",
+        uno: "Cancelada",
+      },
+      bookNewAppointment: "Agendar cita",
     },
     account: {
       myProfile: "Mi perfil",
@@ -116,11 +125,20 @@ const STRINGS = {
       language: "Idioma",
       selectedLanguage: "Espanol",
       logOut: "Cerrar session",
-      // nuevo no traducido
       confirmLogOut: "Esta seguro?",
       languageSelect: "Selecione su idioma",
       closeButton: "Cerrar",
     },
+    bookAppointment: {
+      noSlots: "No se encuentran horarios disponibles para esta fecha",
+      selectDate: "Seleccione una fehca",
+      timeSlots: "Horarios disponibles",
+      confirmAppointment: "Confirmar Cita",
+    },
+    daysOfWeek: [
+      "Domingo", "Lunes", "Martes", "Miercoles",
+      "Jueves", "Viernes", "Sabado"
+    ],
   },
   en: {
     login: {
@@ -164,7 +182,6 @@ const STRINGS = {
       phoneInvalid: "Invalid phone number",
       nationalIdInvalid: "Invalid national ID",
       birthDateInvalid: "The date must be in the past",
-
       error1: "Error during registration",
       namePlaceholder: "Ex: John Smith",
       phonePlaceholder: "0999999999",
@@ -188,11 +205,34 @@ const STRINGS = {
       languages: "Languages",
       paymentMethod: "Payment Methods",
       insurance: "Insurance Companies",
+      profile: "Professional Profile",
+      location: "Location",
     },
     appointments: {
       myAppointments: "My Appointments",
       nextAppointments: "Upcoming Appointments",
       pastAppointments: "Past Appointments",
+      name: "Name: ",
+      speciality: "Specialty: ",
+      timeDate: "Date and Time: ",
+      location: "Location: ",
+      status: "Status: ",
+      dateError:
+        "Appointments can only be canceled through this app up to 12 hours before the appointment. After that, you must contact the doctor directly.",
+      cancelAppointment: "Cancel Appointment",
+      bookAgain: "Book Again",
+      cancelationMessage: "Are you sure you want to cancel your appointment?",
+      confirmButton: "Confirm",
+      closeButton: "Close",
+      scheduled: {
+        cero: "Scheduled",
+        uno: "Completed",
+      },
+      cancelled: {
+        cero: "Cancelled",
+        uno: "Cancelled",
+      },
+      bookNewAppointment: "Book appointment",
     },
     account: {
       myProfile: "My Profile",
@@ -201,6 +241,15 @@ const STRINGS = {
       language: "Language",
       selectedLanguage: "English",
       logOut: "Log Out",
+      confirmLogOut: "Are you sure?",
+      languageSelect: "Select your language",
+      closeButton: "Close",
+    },
+    bookAppointment: {
+      noSlots: "No available time slots for this date",
+      selectDate: "Select a date",
+      timeSlots: "Available time slots",
+      confirmAppointment: "Confirm Appointment",
     },
     speciality: {
       INT: "Internal Medicine",
@@ -224,6 +273,10 @@ const STRINGS = {
       PSI: "Psychology",
       DEN: "Dentistry",
     },
+    daysOfWeek: [
+      "Sunday", "Monday", "Tuesday", "Wednesday",
+      "Thursday", "Friday", "Saturday"
+    ],
   },
 };
 

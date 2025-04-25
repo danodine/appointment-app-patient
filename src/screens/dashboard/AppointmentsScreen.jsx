@@ -15,15 +15,19 @@ import {
   clearPasstAppointments,
   cancelAppointment,
 } from "../../redux/appointmentsSlice";
+import { getDoctorById } from "../../redux/doctorSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import { formatDateTime } from "../../utils/helpers";
+import { unwrapResult } from "@reduxjs/toolkit";
 import STRINGS from "../../constants/strings";
 import styles from "../../styles/appointmentScreenStyles";
+import { COLORS } from "../../styles/theme";
+import PropTypes from "prop-types";
 
-const AppointmentsScreen = () => {
+const AppointmentsScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { upcommingAppointmentsList, passtAppointmentsList } = useSelector(
-    (state) => state.appointments,
+    (state) => state.appointments
   );
   const language = useSelector((state) => state.language.language);
 
@@ -52,7 +56,7 @@ const AppointmentsScreen = () => {
         dispatch(clearUpcommingAppointments());
         dispatch(clearPasstAppointments());
       };
-    }, []),
+    }, [])
   );
 
   useEffect(() => {
@@ -119,13 +123,37 @@ const AppointmentsScreen = () => {
     }
   };
 
-  const handleBookAppointment = () => {};
+  const handleBookAppointment = async () => {
+    try {
+      const resultAction = await dispatch(
+        getDoctorById({ id: modalData?.doctor?._id })
+      );
+      const data = unwrapResult(resultAction);
+      const doctorData = data.data;
 
+      if (doctorData) {
+        navigation.navigate("BookAppointment", {
+          doctor: doctorData,
+          location: modalData.location,
+        });
+        setModalVisible(false);
+        setModalDateError(false);
+        setConfirmCancelAppointment(false);
+        setModalData({});
+      }
+    } catch (err) {
+      console.log("Error Block", err);
+    }
+  };
   const handleCloseModal = () => {
     setModalVisible(false);
     setModalDateError(false);
     setConfirmCancelAppointment(false);
     setModalData({});
+  };
+
+  const handleNewAppointment = () => {
+    navigation.navigate("DoctorSearch");
   };
 
   return (
@@ -138,28 +166,37 @@ const AppointmentsScreen = () => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
-            <View>
-              <Text>{STRINGS[language].appointments.name}</Text>
-              <Text>{modalData?.doctorName}</Text>
-            </View>
-            <View>
-              <Text>{STRINGS[language].appointments.speciality}</Text>
-              <Text>
-                {STRINGS[language]?.speciality[modalData?.doctorSpeciality]}
+            <Text style={styles.doctorName}>{modalData?.doctorName}</Text>
+
+            <Text style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
+                {STRINGS[language].appointments.speciality}
               </Text>
-            </View>
-            <View>
-              <Text>{STRINGS[language].appointments.timeDate}</Text>
-              <Text>{formatDateTime(modalData?.dateTime)}</Text>
-            </View>
-            <View>
-              <Text>{STRINGS[language].appointments.location}</Text>
-              <Text>{modalData?.location}</Text>
-            </View>
-            <View>
-              <Text>{STRINGS[language].appointments.status}</Text>
-              <Text>{modalData?.status}</Text>
-            </View>
+              {STRINGS[language]?.speciality[modalData?.doctorSpeciality]}
+            </Text>
+
+            <Text style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
+                {STRINGS[language].appointments.timeDate}
+              </Text>
+              {formatDateTime(modalData?.dateTime, language)}
+            </Text>
+
+            <Text style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
+                {STRINGS[language].appointments.location}
+              </Text>
+              {modalData?.location}
+            </Text>
+
+            <Text style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
+                {STRINGS[language].appointments.status}
+              </Text>
+              {activeTab === 0
+                ? STRINGS[language]?.appointments[modalData?.status]?.cero
+                : STRINGS[language]?.appointments[modalData?.status]?.uno}
+            </Text>
 
             {modalDateError && (
               <Text>{STRINGS[language].appointments.dateError}</Text>
@@ -260,18 +297,36 @@ const AppointmentsScreen = () => {
             <View>
               <Text style={styles.item1}>{item.doctorName}</Text>
               <Text>{STRINGS[language].speciality[item.doctorSpeciality]}</Text>
-              <Text>{formatDateTime(item.dateTime)}</Text>
+              <Text>{formatDateTime(item.dateTime, language)}</Text>
               <Text
-                style={{ color: item.status === "cancelled" ? "red" : "green" }}
+                style={{
+                  color:
+                    item.status === "cancelled" ? COLORS.error : COLORS.green,
+                }}
               >
-                {item.status}
+                {activeTab === 0
+                  ? STRINGS[language].appointments[item.status].cero
+                  : STRINGS[language].appointments[item.status].uno}
               </Text>
             </View>
           </TouchableOpacity>
         )}
       />
+      <TouchableOpacity
+        style={styles.newAppointmentButton}
+        onPress={handleNewAppointment}
+      >
+        <Text style={styles.newAppointmentButtonText}>
+          {STRINGS[language].appointments.bookNewAppointment}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
+};
+AppointmentsScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+  }).isRequired,
 };
 
 export default AppointmentsScreen;

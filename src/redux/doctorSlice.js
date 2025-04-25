@@ -6,13 +6,28 @@ export const searchDoctors = createAsyncThunk(
   async ({ text }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/users/search?q=${text}`,
+        `http://192.168.0.63:3000/api/v1/users/search?q=${text}`
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  },
+  }
+);
+
+export const getDoctorById = createAsyncThunk(
+  "doctors/byId",
+  async ({ id }, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(
+        `http://192.168.0.63:3000/api/v1/users/doctor/${id}`
+      );
+      console.log(response.data)
+      return response.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Search failed");
+    }
+  }
 );
 
 const doctorSlice = createSlice({
@@ -21,6 +36,7 @@ const doctorSlice = createSlice({
     doctorsList: [],
     loading: false,
     error: null,
+    doctor: {},
   },
   reducers: {
     clearSearch: (state) => {
@@ -40,6 +56,18 @@ const doctorSlice = createSlice({
         state.doctorsList = action.payload.data;
       })
       .addCase(searchDoctors.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(getDoctorById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getDoctorById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.doctor = action.payload.data;
+      })
+      .addCase(getDoctorById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

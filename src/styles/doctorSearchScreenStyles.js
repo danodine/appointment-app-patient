@@ -1,21 +1,14 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS, FONTS, SIZES } from "./theme";
+import { COLORS, FONTS, SIZES, VALUES } from "./theme";
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-  backButton: {
-    position: "absolute",
-    top: SIZES.backButtonSpacingTop,
-    left: SIZES.backButtonSpacingLeft,
-    backgroundColor: COLORS.secondary,
-    padding: SIZES.coloredButtonPadding,
-    borderRadius: SIZES.coloredButtonBorderRadius,
-  },
   containerCard: {
     flex: 1,
     paddingTop: SIZES.mainContainerPaddingTop90,
     paddingHorizontal: 20,
   },
+  backButton: { ...VALUES.backButtonColor, left: 20 },
   inputText: {
     paddingTop: 30,
     paddingBottom: 5,

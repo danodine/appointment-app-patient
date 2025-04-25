@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES, FONTS } from "./theme";
+import { COLORS, SIZES, FONTS, VALUES } from "./theme";
 
 const styles = StyleSheet.create({
   container: {
-    padding: 24,
+    paddingHorizontal: 20,
     flexGrow: 1,
     justifyContent: "center",
   },
@@ -55,8 +55,8 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: "absolute",
-    top: SIZES.backButtonSpacingTop,
-    left: SIZES.backButtonSpacingLeft,
+    top: 50,
+    left: 20,
     zIndex: 1,
   },
   datePickerContainerView: {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginTop: 20,
   },
-  buttonOpacity: { opacity: SIZES.inactiveButtonOpacity },
+  buttonOpacity: { opacity: VALUES.inactiveButtonOpacity },
 });
 
 export default styles;

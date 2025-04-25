@@ -11,9 +11,13 @@ const COLORS = {
   black: "#000",
   error: "#FF0000",
   greyText: "#555",
+  greyBorder: "#ccc",
   selectedMenuItem: "white",
   menuItem: "black",
   tagColor: "#d1eded",
+  green: "#34B233",
+  modalOverlay: "rgba(0,0,0,0.4)",
+  selectedItem: "#2563EB",
 };
 
 const FONTS = {
@@ -24,12 +28,7 @@ const SIZES = {
   icon50: 50,
   icon20: 20,
   titleSize: 28,
-  subTitleSize: 18,
-  backButtonSpacingTop: 50,
-  backButtonSpacingLeft: 20,
-  coloredButtonPadding: 10,
-  coloredButtonBorderRadius: 50,
-  inactiveButtonOpacity: 0.5,
+  subTitleSize: 22,
   mainContainerPaddingTop70: 70,
   mainContainerPaddingTop90: 90,
 };
@@ -50,4 +49,16 @@ const TYPES = {
   listSelector: "listSelector",
 };
 
-export { COLORS, FONTS, SIZES, ICONS, TYPES };
+const VALUES = {
+  inactiveButtonOpacity: 0.5,
+  backButtonColor: {
+    position: "absolute",
+    top: 50,
+    backgroundColor: COLORS.secondary,
+    padding: 10,
+    borderRadius: 50,
+    zIndex: 10,
+  },
+};
+
+export { COLORS, FONTS, SIZES, ICONS, TYPES, VALUES };
