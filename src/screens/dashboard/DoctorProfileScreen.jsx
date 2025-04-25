@@ -19,18 +19,17 @@ const DoctorProfileScreen = ({ route, navigation }) => {
     if (!doctor?.profile?.availability) return [];
 
     const allLocations = doctor?.profile?.availability?.flatMap(
-      (item) => item?.timeSlots?.map((val) => val.location) || []
+      (item) => item?.timeSlots?.map((val) => val.location) || [],
     );
 
     return [...new Set(allLocations)];
   }, [doctor]);
 
   useEffect(() => {
-    if(locationList.length == 1){
-      setSelectedLocation(locationList[0])
+    if (locationList.length == 1) {
+      setSelectedLocation(locationList[0]);
     }
-  }, [])
-  
+  }, []);
 
   useEffect(() => {
     const dayMap = new Map();

@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 import { COLORS, FONTS, SIZES } from "./theme";
 
 const styles = StyleSheet.create({
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
   healthPartner: {
     fontWeight: FONTS.boldFont,
     fontSize: 16,
-    paddingTop: 40
+    paddingTop: 40,
   },
   healthPartnerTwo: {
     paddingBottom: 20,
@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
     width: 110,
     height: 120,
     marginVertical: 10,
-    marginBottom: 20
+    marginBottom: 20,
   },
   description: {
     textAlign: "center",

@@ -8,7 +8,6 @@ import StackNavigator from "./src/navigation/StackNavigator";
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-
   // useEffect(() => {
   //   const loadToken = async () => {
   //     const token = await SecureStore.getItemAsync("token");

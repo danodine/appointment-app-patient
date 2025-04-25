@@ -32,7 +32,7 @@ const LoginScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       dispatch(clearError());
-    }, [])
+    }, []),
   );
 
   const handleLogin = () => {

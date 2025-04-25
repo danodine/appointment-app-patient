@@ -4,7 +4,7 @@ Tis is a eork in progress.
 
 appointment-app-patient is a healthcare appointment booking application. It enables users to search for doctors, view profiles, and book appointments, while allowing doctors to manage their availability and profile information.
 
--------------------------------------------------------------
+---
 
 ## Features
 
@@ -18,7 +18,7 @@ appointment-app-patient is a healthcare appointment booking application. It enab
 
 ⚙️ User Accounts: Manage personal details and preferences.
 
--------------------------------------------------------------
+---
 
 ## Project Structure
 
@@ -41,25 +41,25 @@ src/
 └── index.js            # Entry point
 </code> </pre>
 
--------------------------------------------------------------
+---
+
 ## Getting Started
 
 ### Prerequisites
+
 Node.js >= 16
 
 npm or yarn
 
--------------------------------------------------------------
+---
 
 ## License
 
 This project is proprietary and all rights are reserved by the author.
 See LICENSE.md for full details.
 
--------------------------------------------------------------
+---
 
 ## Author
 
 David Nodine
-
-

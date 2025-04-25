@@ -114,15 +114,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.black,
   },
   bold: {
-    fontWeight: FONTS.boldFont
+    fontWeight: FONTS.boldFont,
   },
   phoneText: {
     marginBottom: 7,
-    marginTop: 7
+    marginTop: 7,
   },
   itemsText: {
     marginBottom: 7,
-  }
+  },
 });
 
 export default styles;

@@ -15,7 +15,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import PropTypes from "prop-types";
 import { LinearGradient } from "expo-linear-gradient";
 import { singupUser } from "../../redux/authSlice";
-import {provinces} from "../../constants/vars"
+import { provinces } from "../../constants/vars";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -78,7 +78,7 @@ const SingUpScreen = ({ navigation }) => {
           age,
           street,
           city,
-        })
+        }),
       ).unwrap();
 
       navigation.navigate("Login");
@@ -140,7 +140,7 @@ const SingUpScreen = ({ navigation }) => {
   const handleNationalId = (value) => {
     setNationalId(value);
     setNationalIdError(
-      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid
+      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid,
     );
   };
 
@@ -274,21 +274,15 @@ const SingUpScreen = ({ navigation }) => {
             )}
             {Platform.OS === "android" && show && (
               <Modal transparent animationType="slide">
-                <View
-                  style={styles.datePickerContainerView}
-                >
-                  <View
-                    style={styles.datePickerView}
-                  >
+                <View style={styles.datePickerContainerView}>
+                  <View style={styles.datePickerView}>
                     <DateTimePicker
                       value={tempDate}
                       mode="date"
                       display="default"
                       onChange={handleBirthDate}
                     />
-                    <View
-                      style={styles.androidCalendarButtonsView}
-                    >
+                    <View style={styles.androidCalendarButtonsView}>
                       <Button title={text.cancel} onPress={cancelPicker} />
                       <Button title={text.ok} onPress={confirmDate} />
                     </View>

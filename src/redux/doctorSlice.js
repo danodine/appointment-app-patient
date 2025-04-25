@@ -6,13 +6,13 @@ export const searchDoctors = createAsyncThunk(
   async ({ text }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/users/search?q=${text}`
+        `http://192.168.0.63:3000/api/v1/users/search?q=${text}`,
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  }
+  },
 );
 
 const doctorSlice = createSlice({
@@ -22,14 +22,13 @@ const doctorSlice = createSlice({
     loading: false,
     error: null,
   },
-    reducers: {
-      clearSearch: (state) => {
-        state.doctorsList = [];
-        state.loading = false;
-        state.error = null;
-      },
-
+  reducers: {
+    clearSearch: (state) => {
+      state.doctorsList = [];
+      state.loading = false;
+      state.error = null;
     },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(searchDoctors.pending, (state) => {

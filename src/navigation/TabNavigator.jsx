@@ -24,7 +24,6 @@ const getTabBarIcon = (routeName, focused, color, size) => {
 };
 
 const TabNavigator = () => {
-
   const language = useSelector((state) => state.language.language);
 
   return (
@@ -58,7 +57,10 @@ const TabNavigator = () => {
         name={language === "es" ? "Citas" : "Appointments"}
         component={AppointmentsScreen}
       />
-      <Tab.Screen name={language === "es" ? "Cuenta" : "Account"} component={AccountScreen} />
+      <Tab.Screen
+        name={language === "es" ? "Cuenta" : "Account"}
+        component={AccountScreen}
+      />
     </Tab.Navigator>
   );
 };

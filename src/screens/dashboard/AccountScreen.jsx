@@ -23,7 +23,7 @@ const AccountScreen = ({ navigation }) => {
 
   const handleLogOutModal = () => {
     setModalVisible(true);
-    setModalData([{ code: "logout", label: STRINGS[language].account.logOut}]);
+    setModalData([{ code: "logout", label: STRINGS[language].account.logOut }]);
     setModalType(TYPES.button);
     setModalTitle(STRINGS[language].account.confirmLogOut);
   };
@@ -35,7 +35,7 @@ const AccountScreen = ({ navigation }) => {
         CommonActions.reset({
           index: 0,
           routes: [{ name: "Login" }],
-        })
+        }),
       );
     } catch (error) {
       console.log("Logout Error", error);

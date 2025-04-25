@@ -1,11 +1,11 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  language: 'es',
+  language: "es",
 };
 
 const languageSlice = createSlice({
-  name: 'language',
+  name: "language",
   initialState,
   reducers: {
     setLanguage: (state, action) => {

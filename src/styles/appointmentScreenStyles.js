@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   statusIcon: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
     zIndex: 1,

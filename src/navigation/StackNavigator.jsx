@@ -10,7 +10,6 @@ import BookAppointmentScreen from "../screens/dashboard/BookAppointmentScreen";
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-
   useEffect(() => {
     const loadToken = async () => {
       const token = await SecureStore.getItemAsync("token");

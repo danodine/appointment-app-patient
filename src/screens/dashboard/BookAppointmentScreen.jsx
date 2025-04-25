@@ -19,6 +19,7 @@ import {
 import PropTypes from "prop-types";
 import { ICONS, COLORS, SIZES } from "../../styles/theme";
 import STRINGS from "../../constants/strings";
+import styles from "../../styles/bookAppointmentScreenStyles";
 
 const BookAppointmentScreen = ({ route, navigation }) => {
   const { doctor, location } = route.params;
@@ -46,7 +47,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     if (!availableDates.includes(dateStr)) {
       Alert.alert(
         "Unavailable",
-        "There are no available appointments on this date."
+        "There are no available appointments on this date.",
       );
       return;
     }
@@ -85,12 +86,12 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           doctorName: doctor.name,
           doctorSpeciality: doctor.profile.specialtyId,
           dateTime: new Date(
-            `${selectedDate}T${selectedTime}:00.000Z`
+            `${selectedDate}T${selectedTime}:00.000Z`,
           ).toISOString(),
           location,
-        })
+        }),
       );
-      navigation.navigate(language === "es" ? "Citas" : "Appointments")
+      navigation.navigate(language === "es" ? "Citas" : "Appointments");
     } catch (err) {
       console.log("Error Block", err);
     }
@@ -191,89 +192,5 @@ BookAppointmentScreen.propTypes = {
     goBack: PropTypes.func.isRequired,
   }).isRequired,
 };
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#fff",
-  },
-  backButton: {
-    position: "absolute",
-    top: 50,
-    backgroundColor: "#70C1E3",
-    padding: 10,
-    borderRadius: 50,
-    zIndex: 10,
-  },
-  doctorCard: {
-    backgroundColor: "#F3F4F6",
-    borderRadius: 20,
-    padding: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    marginTop: 110,
-  },
-  doctorName: {
-    fontSize: 20,
-    fontWeight: "600",
-    marginBottom: 4,
-  },
-  doctorSubtitle: {
-    color: "#6B7280",
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginTop: 24,
-    marginBottom: 8,
-  },
-  timeSlotContainer: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
-  timeSlot: {
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    margin: 4,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "#ccc",
-    backgroundColor: "#fff",
-  },
-  timeSlotSelected: {
-    backgroundColor: "#2563EB",
-    borderColor: "#2563EB",
-  },
-  timeSlotText: {
-    color: "#000",
-  },
-  timeSlotTextSelected: {
-    color: "#fff",
-  },
-  confirmButton: {
-    alignSelf: "center",
-    backgroundColor: "#70C1E3",
-    borderRadius: 50,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    marginTop: 20,
-    marginBottom: 30,
-  },
-  confirmButtonText: {
-    color: "black",
-    fontWeight: "600",
-    fontSize: 16,
-  },
-  confirmButtonDisabled: {
-    opacity: 0.5,
-  },
-  errorText: {
-    marginTop: 20,
-    color: "red",
-    textAlign: "center",
-  },
-});
 
 export default BookAppointmentScreen;

@@ -17,7 +17,7 @@ export const loginUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
     }
-  }
+  },
 );
 
 export const singupUser = createAsyncThunk(
@@ -35,7 +35,7 @@ export const singupUser = createAsyncThunk(
       street,
       city,
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axios.post(SINGUP_URL, {
@@ -63,7 +63,7 @@ export const singupUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Singup failed");
     }
-  }
+  },
 );
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {

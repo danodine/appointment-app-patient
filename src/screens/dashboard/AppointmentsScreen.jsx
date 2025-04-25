@@ -23,7 +23,7 @@ import styles from "../../styles/appointmentScreenStyles";
 const AppointmentsScreen = () => {
   const { user } = useSelector((state) => state.auth);
   const { upcommingAppointmentsList, passtAppointmentsList } = useSelector(
-    (state) => state.appointments
+    (state) => state.appointments,
   );
   const language = useSelector((state) => state.language.language);
 
@@ -52,7 +52,7 @@ const AppointmentsScreen = () => {
         dispatch(clearUpcommingAppointments());
         dispatch(clearPasstAppointments());
       };
-    }, [])
+    }, []),
   );
 
   useEffect(() => {
