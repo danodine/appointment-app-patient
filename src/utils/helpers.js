@@ -69,10 +69,11 @@ export const formatDateTime = (isoDateStr, language) => {
 
   const dayName = STRINGS[language].daysOfWeek[date.getUTCDay()];
   const day = String(date.getUTCDate());
+  const monthName = STRINGS[language].months[date.getUTCMonth()];
   const year = date.getUTCFullYear();
 
   const hours = String(date.getUTCHours()).padStart(2, "0");
   const minutes = String(date.getUTCMinutes()).padStart(2, "0");
 
-  return `${dayName} ${day} ${year} - ${hours}:${minutes}`;
+  return `${dayName} ${day} ${monthName} ${year} - ${hours}:${minutes}`;
 };

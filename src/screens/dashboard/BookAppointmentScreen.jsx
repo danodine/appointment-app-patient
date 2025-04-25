@@ -14,6 +14,8 @@ import {
   fetchAvailableDates,
   fetchAvailableTimes,
   bookAppointment,
+  clearavailableDates,
+  clearavailableTimes,
 } from "../../redux/appointmentsSlice";
 import PropTypes from "prop-types";
 import { ICONS, COLORS, SIZES } from "../../styles/theme";
@@ -27,6 +29,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
   const dispatch = useDispatch();
 
   const doctorId = doctor?._id;
+  const today = new Date();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const futureDate = new Date();
@@ -56,7 +59,6 @@ const BookAppointmentScreen = ({ route, navigation }) => {
   };
 
   const markedDates = {};
-  const today = new Date();
 
   for (let i = 0; i < 183; i++) {
     const date = new Date(today);
@@ -66,8 +68,8 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     if (availableDates.includes(dateStr)) {
       markedDates[dateStr] = {
         selected: selectedDate === dateStr,
-        selectedColor: "#2563EB",
-        selectedTextColor: "#ffffff",
+        selectedColor: COLORS.secondary,
+        selectedTextColor: COLORS.white,
       };
     } else {
       markedDates[dateStr] = {
@@ -91,6 +93,8 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         })
       );
       navigation.navigate(language === "es" ? "Citas" : "Appointments");
+      dispatch(clearavailableDates());
+      dispatch(clearavailableTimes());
     } catch (err) {
       console.log("Error Block", err);
     }
@@ -98,6 +102,8 @@ const BookAppointmentScreen = ({ route, navigation }) => {
 
   const handleBack = () => {
     navigation.goBack();
+    dispatch(clearavailableDates());
+    dispatch(clearavailableTimes());
   };
 
   const calendarElement = () => {
@@ -127,7 +133,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
       <Text>{STRINGS[language].bookAppointment.noSlots}</Text>
     );
   };
-  
+
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -158,9 +164,9 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         minDate={new Date().toISOString().split("T")[0]}
         maxDate={futureDate.toISOString().split("T")[0]}
         theme={{
-          selectedDayBackgroundColor: COLORS.selectedItem,
+          selectedDayBackgroundColor: COLORS.secondary,
           selectedDayTextColor: COLORS.white,
-          todayTextColor: COLORS.selectedItem,
+          todayTextColor: COLORS.secondary,
         }}
       />
 

@@ -45,8 +45,8 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   timeSlotSelected: {
-    backgroundColor: COLORS.selectedItem,
-    borderColor: COLORS.selectedItem,
+    backgroundColor: COLORS.secondary,
+    borderColor: COLORS.secondary,
   },
   timeSlotText: {
     color: COLORS.black,

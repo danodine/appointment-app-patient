@@ -6,13 +6,13 @@ export const getUpcommingAppointments = createAsyncThunk(
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/user/upcomming/${userId}`,
+        `http://192.168.0.63:3000/api/v1/appointments/user/upcomming/${userId}`
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  },
+  }
 );
 
 export const getPasstAppointments = createAsyncThunk(
@@ -20,13 +20,13 @@ export const getPasstAppointments = createAsyncThunk(
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/user/passt/${userId}`,
+        `http://192.168.0.63:3000/api/v1/appointments/user/passt/${userId}`
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  },
+  }
 );
 
 export const cancelAppointment = createAsyncThunk(
@@ -34,15 +34,15 @@ export const cancelAppointment = createAsyncThunk(
   async ({ appointmentId }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `http://192.168.0.63:3000/api/v1/appointments/${appointmentId}/cancel`,
+        `http://192.168.0.63:3000/api/v1/appointments/${appointmentId}/cancel`
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Cancelation failed",
+        err.response?.data?.message || "Cancelation failed"
       );
     }
-  },
+  }
 );
 
 export const fetchAvailableDates = createAsyncThunk(
@@ -50,15 +50,15 @@ export const fetchAvailableDates = createAsyncThunk(
   async ({ doctorId, location }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/available-dates/${doctorId}/${location}`,
+        `http://192.168.0.63:3000/api/v1/appointments/available-dates/${doctorId}/${location}`
       );
       return response.data.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to load available dates",
+        err.response?.data?.message || "Failed to load available dates"
       );
     }
-  },
+  }
 );
 
 export const fetchAvailableTimes = createAsyncThunk(
@@ -66,34 +66,34 @@ export const fetchAvailableTimes = createAsyncThunk(
   async ({ doctorId, date, location }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/available-times/${doctorId}/${date}/${location}`,
+        `http://192.168.0.63:3000/api/v1/appointments/available-times/${doctorId}/${date}/${location}`
       );
       return response.data.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to load available times",
+        err.response?.data?.message || "Failed to load available times"
       );
     }
-  },
+  }
 );
 export const bookAppointment = createAsyncThunk(
   "appointments/bookAppointment",
   async (
     { doctor, doctorName, doctorSpeciality, dateTime, location },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `http://192.168.0.63:3000/api/v1/appointments/new`,
-        { doctor, doctorName, doctorSpeciality, dateTime, location },
+        { doctor, doctorName, doctorSpeciality, dateTime, location }
       );
       return response.data.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Failed to load available times",
+        err.response?.data?.message || "Failed to load available times"
       );
     }
-  },
+  }
 );
 
 const appointmentsSlice = createSlice({
@@ -117,6 +117,18 @@ const appointmentsSlice = createSlice({
       state.passtAppointmentsList = [];
       state.loading = false;
       state.error = null;
+    },
+    clearavailableDates: (state) => {
+      state.availableDates = [];
+      state.loading = false;
+      state.error = null;
+      state.calendarLoading = null;
+    },
+    clearavailableTimes: (state) => {
+      state.availableTimes = [];
+      state.loading = false;
+      state.error = null;
+      state.calendarLoading = null;
     },
   },
   extraReducers: (builder) => {
@@ -171,6 +183,10 @@ const appointmentsSlice = createSlice({
   },
 });
 
-export const { clearUpcommingAppointments, clearPasstAppointments } =
-  appointmentsSlice.actions;
+export const {
+  clearUpcommingAppointments,
+  clearPasstAppointments,
+  clearavailableDates,
+  clearavailableTimes,
+} = appointmentsSlice.actions;
 export default appointmentsSlice.reducer;
