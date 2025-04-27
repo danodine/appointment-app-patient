@@ -47,16 +47,18 @@ const AppointmentsScreen = ({ navigation }) => {
     useCallback(() => {
       setActiveTab(0);
       setHasFetchedPasstAppointments(false);
-      try {
-        dispatch(getUpcommingAppointments({ userId: user?._id }));
-      } catch (error) {
-        console.log("Error Block", error);
-      }
+
+      const fetchAppointments = async () => {
+        await dispatch(getUpcommingAppointments({ userId: user?._id }));
+      };
+
+      fetchAppointments();
+
       return () => {
         dispatch(clearUpcommingAppointments());
         dispatch(clearPasstAppointments());
       };
-    }, [])
+    }, [dispatch, user?._id])
   );
 
   useEffect(() => {
@@ -75,12 +77,8 @@ const AppointmentsScreen = ({ navigation }) => {
   const handlePasstAppointments = () => {
     setActiveTab(1);
     if (!hasFetchedPasstAppointments) {
-      try {
-        dispatch(getPasstAppointments({ userId: user._id }));
-        setHasFetchedPasstAppointments(true);
-      } catch (error) {
-        console.log("Error Block", error);
-      }
+      dispatch(getPasstAppointments({ userId: user._id }));
+      setHasFetchedPasstAppointments(true);
     } else {
       setAppointments(passtAppointmentsList);
     }
@@ -92,15 +90,11 @@ const AppointmentsScreen = ({ navigation }) => {
   };
 
   const handleConfirmCancelAppointment = async () => {
-    try {
-      await dispatch(cancelAppointment({ appointmentId: modalData?._id }));
-      if (activeTab === 0) {
-        await dispatch(getUpcommingAppointments({ userId: user?._id }));
-      } else {
-        await dispatch(getPasstAppointments({ userId: user?._id }));
-      }
-    } catch (err) {
-      console.error("Error Block", err);
+    await dispatch(cancelAppointment({ appointmentId: modalData?._id }));
+    if (activeTab === 0) {
+      await dispatch(getUpcommingAppointments({ userId: user?._id }));
+    } else {
+      await dispatch(getPasstAppointments({ userId: user?._id }));
     }
 
     setModalVisible(false);
@@ -124,25 +118,21 @@ const AppointmentsScreen = ({ navigation }) => {
   };
 
   const handleBookAppointment = async () => {
-    try {
-      const resultAction = await dispatch(
-        getDoctorById({ id: modalData?.doctor?._id })
-      );
-      const data = unwrapResult(resultAction);
-      const doctorData = data.data;
+    const resultAction = await dispatch(
+      getDoctorById({ id: modalData?.doctor?._id })
+    );
+    const data = unwrapResult(resultAction);
+    const doctorData = data.data;
 
-      if (doctorData) {
-        navigation.navigate("BookAppointment", {
-          doctor: doctorData,
-          location: modalData.location,
-        });
-        setModalVisible(false);
-        setModalDateError(false);
-        setConfirmCancelAppointment(false);
-        setModalData({});
-      }
-    } catch (err) {
-      console.log("Error Block", err);
+    if (doctorData) {
+      navigation.navigate("BookAppointment", {
+        doctor: doctorData,
+        location: modalData.location,
+      });
+      setModalVisible(false);
+      setModalDateError(false);
+      setConfirmCancelAppointment(false);
+      setModalData({});
     }
   };
   const handleCloseModal = () => {

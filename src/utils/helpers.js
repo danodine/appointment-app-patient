@@ -77,3 +77,11 @@ export const formatDateTime = (isoDateStr, language) => {
 
   return `${dayName} ${day} ${monthName} ${year} - ${hours}:${minutes}`;
 };
+
+export const getCurrentTimeHHSS = () => {
+  const now = new Date();
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  
+  return `${hours}:${minutes}`;
+};

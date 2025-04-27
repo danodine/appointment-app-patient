@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Alert,
 } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 import { Calendar } from "react-native-calendars";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -14,24 +15,24 @@ import {
   fetchAvailableDates,
   fetchAvailableTimes,
   bookAppointment,
-  clearavailableDates,
-  clearavailableTimes,
 } from "../../redux/appointmentsSlice";
 import PropTypes from "prop-types";
 import { ICONS, COLORS, SIZES } from "../../styles/theme";
 import STRINGS from "../../constants/strings";
 import styles from "../../styles/bookAppointmentScreenStyles";
+import { getCurrentTimeHHSS } from "../../utils/helpers";
 
 const BookAppointmentScreen = ({ route, navigation }) => {
   const { doctor, location } = route.params;
   const language = useSelector((state) => state.language.language);
 
   const dispatch = useDispatch();
-
   const doctorId = doctor?._id;
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
+  const [treatments, setTreatments] = useState([]);
+  const [treatmentTime, setTreatmentTime] = useState(null);
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 182);
 
@@ -44,6 +45,16 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     }
   }, [doctorId, location]);
 
+  useEffect(() => {
+    const formatedTreatments = doctor?.profile?.treatments?.map(
+      (item, index) => ({
+        label: item.treatmentName,
+        value: item.treatmentTime,
+      })
+    );
+    setTreatments(formatedTreatments);
+  }, [doctor]);
+
   const onDateSelected = (day) => {
     const dateStr = day.dateString;
     if (!availableDates.includes(dateStr)) {
@@ -54,8 +65,8 @@ const BookAppointmentScreen = ({ route, navigation }) => {
       return;
     }
     setSelectedDate(dateStr);
-    dispatch(fetchAvailableTimes({ doctorId, date: dateStr, location }));
     setSelectedTime(null);
+    setTreatmentTime(null);
   };
 
   const markedDates = {};
@@ -79,31 +90,45 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     }
   }
 
-  const handleBookAppointment = () => {
-    try {
-      dispatch(
-        bookAppointment({
-          doctor: doctorId,
-          doctorName: doctor.name,
-          doctorSpeciality: doctor.profile.specialtyId,
-          dateTime: new Date(
-            `${selectedDate}T${selectedTime}:00.000Z`
-          ).toISOString(),
-          location,
-        })
-      );
-      navigation.navigate(language === "es" ? "Citas" : "Appointments");
-      dispatch(clearavailableDates());
-      dispatch(clearavailableTimes());
-    } catch (err) {
-      console.log("Error Block", err);
-    }
+  const handleBookAppointment = async () => {
+    await dispatch(
+      bookAppointment({
+        doctor: doctorId,
+        doctorName: doctor.name,
+        doctorSpeciality: doctor.profile.specialtyId,
+        dateTime: new Date(
+          `${selectedDate}T${selectedTime}:00.000Z`
+        ).toISOString(),
+        location,
+        duration: treatmentTime,
+      })
+    );
+    navigation.navigate("Dashboard", { screen: "Appointments" });
   };
 
   const handleBack = () => {
     navigation.goBack();
-    dispatch(clearavailableDates());
-    dispatch(clearavailableTimes());
+    setTreatments([]);
+    setTreatmentTime(null);
+    setSelectedDate(null);
+  };
+  useEffect(() => {
+    if (doctorId && selectedDate && location && treatmentTime) {
+      dispatch(
+        fetchAvailableTimes({
+          doctorId,
+          date: selectedDate,
+          location,
+          duration: treatmentTime,
+          currentTime: getCurrentTimeHHSS(),
+        })
+      );
+    }
+  }, [treatmentTime]);
+
+  const handleSelectedTreatment = (item) => {
+    setTreatmentTime(item.value);
+    setSelectedTime(null);
   };
 
   const calendarElement = () => {
@@ -170,12 +195,33 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         }}
       />
 
-      <Text style={styles.sectionTitle}>
-        {STRINGS[language].bookAppointment.timeSlots}
-      </Text>
+      {selectedDate && (
+        <>
+          <Text style={styles.sectionTitle}>Seleccione el tipo de cita</Text>
+          <Dropdown
+            style={styles.input}
+            data={treatments}
+            labelField="label"
+            valueField="value"
+            value={treatmentTime}
+            onChange={(item) => handleSelectedTreatment(item)}
+          />
+        </>
+      )}
 
-      {calendarLoading ? <ActivityIndicator size="large" /> : calendarElement()}
+      {treatmentTime && (
+        <>
+          <Text style={styles.sectionTitle}>
+            {STRINGS[language].bookAppointment.timeSlots}
+          </Text>
 
+          {calendarLoading ? (
+            <ActivityIndicator size="large" />
+          ) : (
+            calendarElement()
+          )}
+        </>
+      )}
       <TouchableOpacity
         onPress={handleBookAppointment}
         disabled={!selectedDate || !selectedTime}

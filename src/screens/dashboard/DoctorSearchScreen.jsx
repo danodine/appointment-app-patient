@@ -30,20 +30,17 @@ const HomeSearch = ({ navigation }) => {
       return () => {
         dispatch(clearSearch());
       };
-    }, []),
+    }, [])
   );
 
   const handleChangeSearch = (text) => {
     setSearchTerm(text);
-    try {
-      if (text.length < 3) {
-        dispatch(clearSearch());
-      }
-      if (text.length >= 3) {
-        dispatch(searchDoctors({ text }));
-      }
-    } catch (error) {
-      console.log("Error Block", error);
+
+    if (text.length < 3) {
+      dispatch(clearSearch());
+    }
+    if (text.length >= 3) {
+      dispatch(searchDoctors({ text }));
     }
   };
 

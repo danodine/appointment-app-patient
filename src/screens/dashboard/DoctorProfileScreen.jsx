@@ -137,7 +137,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         <View style={styles.tagContainer}>
           {doctor?.profile?.treatments?.map((label, index) => (
             <View key={index} style={styles.tag}>
-              <Text style={styles.tagText}>{label}</Text>
+              <Text style={styles.tagText}>{label.treatmentName}</Text>
             </View>
           ))}
         </View>

@@ -63,11 +63,15 @@ export const fetchAvailableDates = createAsyncThunk(
 
 export const fetchAvailableTimes = createAsyncThunk(
   "appointments/availableTimes",
-  async ({ doctorId, date, location }, { rejectWithValue }) => {
+  async (
+    { doctorId, date, location, duration, currentTime },
+    { rejectWithValue }
+  ) => {
     try {
-      const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/available-times/${doctorId}/${date}/${location}`
-      );
+      const baseUrl = `http://192.168.0.63:3000/api/v1/appointments/available-times/${doctorId}/${date}/${location}`;
+      const params = new URLSearchParams({ duration, currentTime });
+      
+      const response = await axios.get(`${baseUrl}?${params.toString()}`);
       return response.data.data;
     } catch (err) {
       return rejectWithValue(
@@ -79,13 +83,13 @@ export const fetchAvailableTimes = createAsyncThunk(
 export const bookAppointment = createAsyncThunk(
   "appointments/bookAppointment",
   async (
-    { doctor, doctorName, doctorSpeciality, dateTime, location },
+    { doctor, doctorName, doctorSpeciality, dateTime, location, duration },
     { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(
         `http://192.168.0.63:3000/api/v1/appointments/new`,
-        { doctor, doctorName, doctorSpeciality, dateTime, location }
+        { doctor, doctorName, doctorSpeciality, dateTime, location, duration }
       );
       return response.data.data;
     } catch (err) {
@@ -117,18 +121,6 @@ const appointmentsSlice = createSlice({
       state.passtAppointmentsList = [];
       state.loading = false;
       state.error = null;
-    },
-    clearavailableDates: (state) => {
-      state.availableDates = [];
-      state.loading = false;
-      state.error = null;
-      state.calendarLoading = null;
-    },
-    clearavailableTimes: (state) => {
-      state.availableTimes = [];
-      state.loading = false;
-      state.error = null;
-      state.calendarLoading = null;
     },
   },
   extraReducers: (builder) => {
@@ -183,10 +175,6 @@ const appointmentsSlice = createSlice({
   },
 });
 
-export const {
-  clearUpcommingAppointments,
-  clearPasstAppointments,
-  clearavailableDates,
-  clearavailableTimes,
-} = appointmentsSlice.actions;
+export const { clearUpcommingAppointments, clearPasstAppointments } =
+  appointmentsSlice.actions;
 export default appointmentsSlice.reducer;

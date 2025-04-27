@@ -12,23 +12,36 @@ const Tab = createBottomTabNavigator();
 
 const getTabBarIcon = (routeName, focused, color, size) => {
   let iconName;
-  if (routeName === "Inicio" || routeName === "Start") {
+  if (routeName === "Home") {
     iconName = focused ? "home" : "home-outline";
-  } else if (routeName === "Citas" || routeName === "Appointments") {
+  } else if (routeName === "Appointments") {
     iconName = focused ? "calendar" : "calendar-outline";
-  } else if (routeName === "Cuenta" || routeName === "Account") {
+  } else if (routeName === "Account") {
     iconName = focused ? "person" : "person-outline";
   }
-
   return <Ionicons name={iconName} size={size} color={color} />;
 };
 
 const TabNavigator = () => {
   const language = useSelector((state) => state.language.language);
 
+  const getLabel = (routeName) => {
+    switch (routeName) {
+      case "Home":
+        return language === "es" ? "Inicio" : "Start";
+      case "Appointments":
+        return language === "es" ? "Citas" : "Appointments";
+      case "Account":
+        return language === "es" ? "Cuenta" : "Account";
+      default:
+        return routeName;
+    }
+  };
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
+        tabBarLabel: getLabel(route.name),
         tabBarStyle: {
           backgroundColor: COLORS.secondary,
           borderTopWidth: 1,
@@ -42,23 +55,23 @@ const TabNavigator = () => {
       })}
     >
       <Tab.Screen
-        name={language === "es" ? "Inicio" : "Start"}
+        name="Home"
         component={HomeStackNavigator}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate(language === "es" ? "Inicio" : "Start", {
+            navigation.navigate("Home", {
               screen: "HomeMain",
             });
           },
         })}
       />
       <Tab.Screen
-        name={language === "es" ? "Citas" : "Appointments"}
+        name="Appointments"
         component={AppointmentsScreen}
       />
       <Tab.Screen
-        name={language === "es" ? "Cuenta" : "Account"}
+        name="Account"
         component={AccountScreen}
       />
     </Tab.Navigator>

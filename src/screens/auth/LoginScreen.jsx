@@ -32,15 +32,11 @@ const LoginScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       dispatch(clearError());
-    }, []),
+    }, [])
   );
 
   const handleLogin = () => {
-    try {
-      dispatch(loginUser({ email, password }));
-    } catch (error) {
-      console.log("Error Block", error);
-    }
+    dispatch(loginUser({ email, password }));
   };
   const handleSingUp = () => {
     navigation.reset({

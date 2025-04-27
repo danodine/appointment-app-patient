@@ -76,6 +76,13 @@ const styles = StyleSheet.create({
     color: COLORS.error,
     textAlign: "center",
   },
+  input: {
+    backgroundColor: COLORS.white,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 16,
+  },
 });
 
 export default styles;

@@ -29,7 +29,6 @@ const AccountScreen = ({ navigation }) => {
   };
 
   const handleLogOut = async () => {
-    try {
       await dispatch(logoutUser());
       navigation.dispatch(
         CommonActions.reset({
@@ -37,9 +36,6 @@ const AccountScreen = ({ navigation }) => {
           routes: [{ name: "Login" }],
         }),
       );
-    } catch (error) {
-      console.log("Logout Error", error);
-    }
   };
 
   const handleProfile = () => {};
