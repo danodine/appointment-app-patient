@@ -116,6 +116,38 @@ const styles = StyleSheet.create({
   itemsText: {
     marginBottom: 7,
   },
+  dayCard: {
+    backgroundColor: COLORS.tagColor,
+    padding: 15,
+    borderRadius: 10,
+    marginBottom: 12,
+    marginLeft: -20,
+  },
+  dayTitle: {
+    fontSize: 14,
+    fontWeight: FONTS.boldFont,
+    marginBottom: 8,
+    color: COLORS.primary,
+  },
+  timeSlot: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  timeText: {
+    color: COLORS.textPrimary,
+  },
+  tagTime: {
+    position: "absolute",
+    right: 10,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 20,
+  },
+  tagTextTime: {
+    fontSize: 12,
+    color: COLORS.textPrimary,
+  },
 });
 
 export default styles;

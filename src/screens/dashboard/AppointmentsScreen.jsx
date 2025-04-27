@@ -270,16 +270,6 @@ const AppointmentsScreen = ({ navigation }) => {
             style={styles.cardItem}
             onPress={() => handleAppointment(item)}
           >
-            <View style={styles.statusIcon}>
-              <Image
-                source={
-                  item.status === "scheduled"
-                    ? require("../../assets/icons/check-green.png")
-                    : require("../../assets/icons/x-red.png")
-                }
-                style={styles.iconSize}
-              />
-            </View>
             <Image
               style={styles.cardIcon}
               source={require("../../assets/icons/icono-cardio.png")}

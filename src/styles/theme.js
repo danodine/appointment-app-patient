@@ -18,6 +18,8 @@ const COLORS = {
   green: "#34B233",
   modalOverlay: "rgba(0,0,0,0.4)",
   selectedItem: "#2563EB",
+  morning: "#B7E4C7",
+  afternoon: "#FFD6A5",
 };
 
 const FONTS = {

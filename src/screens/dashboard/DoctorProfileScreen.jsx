@@ -58,9 +58,24 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         location: selectedLocation,
       });
     } else {
-      Alert.alert("Porfavor seleccione un consultorio");
+      Alert.alert(STRINGS[language].doctorProfile.selectLocationAlert);
     }
   };
+
+  const getTagLabel = (slot) => {
+    const fromHour = parseInt(slot.from.split(":")[0]);
+    if (fromHour >= 6 && fromHour < 12) return STRINGS[language].doctorProfile.morning;
+    if (fromHour >= 12 && fromHour < 18) return STRINGS[language].doctorProfile.afternoon;
+    return STRINGS[language].doctorProfile.fullDay;
+  };
+
+  const getTagStyle = (slot) => {
+    const fromHour = parseInt(slot.from.split(":")[0]);
+    if (fromHour >= 6 && fromHour < 12) return { backgroundColor: COLORS.morning };
+    if (fromHour >= 12 && fromHour < 18) return { backgroundColor: COLORS.afternoon };
+    return { backgroundColor: COLORS.secondary };
+  };
+
   return (
     <ScrollView style={styles.container}>
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -147,16 +162,30 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         title={STRINGS[language].doctorProfile.schedule}
         icon={ICONS.time}
       >
-        {times?.map((label, index) => (
-          <View key={index}>
-            <Text style={styles.bold}>{label?.day}</Text>
-            {label?.slots?.map((slot, slotIndex) => (
-              <Text key={slotIndex} style={styles.itemsText}>
-                • {slot?.from} - {slot?.to}
-              </Text>
-            ))}
-          </View>
-        ))}
+        {/* here it is */}
+        <View style={{ gap: 12, marginTop: 8 }}>
+          {times?.map((item, index) => (
+            <View key={index} style={styles.dayCard}>
+              <Text style={styles.dayTitle}>{item.day}</Text>
+              {item.slots.map((slot, slotIndex) => (
+                <View key={slotIndex} style={styles.timeSlot}>
+                  <Ionicons
+                    name="time-outline"
+                    size={18}
+                    color={COLORS.primary}
+                    style={{ marginRight: 8 }}
+                  />
+                  <Text
+                    style={styles.timeText}
+                  >{`${slot.from} - ${slot.to}`}</Text>
+                  <View style={[styles.tagTime, getTagStyle(slot)]}>
+                    <Text style={styles.tagTextTime}>{getTagLabel(slot)}</Text>
+                  </View>
+                </View>
+              ))}
+            </View>
+          ))}
+        </View>
       </Section>
       {<View style={styles.underline} />}
       <Section

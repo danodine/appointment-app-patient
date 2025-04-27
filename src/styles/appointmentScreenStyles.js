@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     marginBottom: 10,
-    marginTop: 10
+    marginTop: 10,
   },
   typeButtonText: {
     fontWeight: FONTS.boldFont,
@@ -92,16 +92,6 @@ const styles = StyleSheet.create({
   },
   buttonInactive: {
     opacity: VALUES.inactiveButtonOpacity,
-  },
-  statusIcon: {
-    position: "absolute",
-    top: 10,
-    right: 10,
-    zIndex: 1,
-  },
-  iconSize: {
-    width: 20,
-    height: 20,
   },
   doctorName: {
     fontSize: SIZES.subTitleSize,

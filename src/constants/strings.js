@@ -91,6 +91,11 @@ const STRINGS = {
       insurance: "Compañías de seguros",
       profile: "Perfil profesional",
       location: "Ubicación",
+      // new
+      selectLocationAlert: "Porfavor seleccione un consultorio",
+      morning: "Morning",
+      afternoon: "Afternoon",
+      fullDay: "Todo el dia"
     },
     appointments: {
       myAppointments: "Mis Citas",
@@ -136,12 +141,27 @@ const STRINGS = {
       confirmAppointment: "Confirmar Cita",
     },
     daysOfWeek: [
-      "Domingo", "Lunes", "Martes", "Miercoles",
-      "Jueves", "Viernes", "Sabado"
+      "Domingo",
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
     ],
     months: [
-      "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-      "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
     ],
   },
   en: {
@@ -278,12 +298,27 @@ const STRINGS = {
       DEN: "Dentistry",
     },
     daysOfWeek: [
-      "Sunday", "Monday", "Tuesday", "Wednesday",
-      "Thursday", "Friday", "Saturday"
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
     ],
     months: [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ],
   },
 };
