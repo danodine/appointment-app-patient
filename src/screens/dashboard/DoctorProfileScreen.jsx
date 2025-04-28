@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { callPhone, sendEmail } from "../../utils/helpers";
 import PropTypes from "prop-types";
 import STRINGS from "../../constants/strings";
 import { ICONS, COLORS, SIZES } from "../../styles/theme";
@@ -64,15 +65,19 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 
   const getTagLabel = (slot) => {
     const fromHour = parseInt(slot.from.split(":")[0]);
-    if (fromHour >= 6 && fromHour < 12) return STRINGS[language].doctorProfile.morning;
-    if (fromHour >= 12 && fromHour < 18) return STRINGS[language].doctorProfile.afternoon;
+    if (fromHour >= 6 && fromHour < 12)
+      return STRINGS[language].doctorProfile.morning;
+    if (fromHour >= 12 && fromHour < 18)
+      return STRINGS[language].doctorProfile.afternoon;
     return STRINGS[language].doctorProfile.fullDay;
   };
 
   const getTagStyle = (slot) => {
     const fromHour = parseInt(slot.from.split(":")[0]);
-    if (fromHour >= 6 && fromHour < 12) return { backgroundColor: COLORS.morning };
-    if (fromHour >= 12 && fromHour < 18) return { backgroundColor: COLORS.afternoon };
+    if (fromHour >= 6 && fromHour < 12)
+      return { backgroundColor: COLORS.morning };
+    if (fromHour >= 12 && fromHour < 18)
+      return { backgroundColor: COLORS.afternoon };
     return { backgroundColor: COLORS.secondary };
   };
 
@@ -130,18 +135,27 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         ) : (
           <Text>{locationList[0]}</Text>
         )}
-        <Text style={styles.phoneText}>
-          <Text style={styles.bold}>
+
+        <View style={styles.touchableElementContainer}>
+          <Text style={{ ...styles.bold, ...styles.phoneText }}>
             {STRINGS[language].doctorProfile.phone}
-          </Text>{" "}
-          {doctor?.phone}
-        </Text>
-        <Text>
-          <Text style={styles.bold}>
+          </Text>
+          <TouchableOpacity
+            onPress={() => callPhone(doctor?.phone)}
+            style={styles.touchableElement}
+          >
+            <Text style={styles.linkElement}> {doctor?.phone}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.touchableElementContainer}>
+          <Text style={styles.bold }>
             {STRINGS[language].doctorProfile.email}
-          </Text>{" "}
-          {doctor?.email}
-        </Text>
+          </Text>
+          <TouchableOpacity onPress={() => sendEmail(doctor?.email)}>
+            <Text style={styles.linkElement}> {doctor?.email}</Text>
+          </TouchableOpacity>
+        </View>
       </Section>
       {<View style={styles.underline} />}
       <Section

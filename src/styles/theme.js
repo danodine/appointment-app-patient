@@ -20,6 +20,7 @@ const COLORS = {
   selectedItem: "#2563EB",
   morning: "#B7E4C7",
   afternoon: "#FFD6A5",
+  externalLink: "#0000EE",
 };
 
 const FONTS = {

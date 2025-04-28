@@ -103,7 +103,8 @@ const STRINGS = {
       pastAppointments: "Citas Pasadas",
       name: "Nombre:",
       speciality: "Especialidad: ",
-      timeDate: "Fecha y hora: ",
+      date: "Fecha: ",
+      time: "Hora: ",
       location: "Lugar: ",
       status: "Estado: ",
       dateError:
@@ -238,7 +239,8 @@ const STRINGS = {
       pastAppointments: "Past Appointments",
       name: "Name: ",
       speciality: "Specialty: ",
-      timeDate: "Date and Time: ",
+      time: "Time: ",
+      date: "Date: ",
       location: "Location: ",
       status: "Status: ",
       dateError:

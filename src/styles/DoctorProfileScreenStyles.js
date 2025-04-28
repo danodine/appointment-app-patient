@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
   },
   phoneText: {
     marginBottom: 7,
-    marginTop: 7,
+    marginTop: 17,
   },
   itemsText: {
     marginBottom: 7,
@@ -130,9 +130,9 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
   timeSlot: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 11,
   },
   timeText: {
     color: COLORS.textPrimary,
@@ -148,6 +148,9 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.textPrimary,
   },
+  linkElement: { color: COLORS.externalLink, fontSize: 12 },
+  touchableElement: { marginTop: 12 },
+  touchableElementContainer: { flexDirection: "row", alignItems: "center" },
 });
 
 export default styles;

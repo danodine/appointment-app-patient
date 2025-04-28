@@ -1,4 +1,5 @@
-import { store } from "../redux/store"; // make sure your store is exported as named export
+import { store } from "../redux/store";
+import { Linking } from 'react-native';
 import { setLanguage } from "../redux/languageSlice";
 import STRINGS from "../constants/strings";
 
@@ -64,7 +65,7 @@ export const formatDate = (date) => {
   return `${day}/${month}/${year}`;
 };
 
-export const formatDateTime = (isoDateStr, language) => {
+export const formatDateText = (isoDateStr, language) => {
   const date = new Date(isoDateStr);
 
   const dayName = STRINGS[language].daysOfWeek[date.getUTCDay()];
@@ -72,16 +73,31 @@ export const formatDateTime = (isoDateStr, language) => {
   const monthName = STRINGS[language].months[date.getUTCMonth()];
   const year = date.getUTCFullYear();
 
+  return `${dayName} ${day} ${monthName} ${year}`;
+};
+
+export const formatTime = (isoDateStr, addMinutes = 0) => {
+  const date = new Date(isoDateStr);
+
+  date.setUTCMinutes(date.getUTCMinutes() + addMinutes);
   const hours = String(date.getUTCHours()).padStart(2, "0");
   const minutes = String(date.getUTCMinutes()).padStart(2, "0");
 
-  return `${dayName} ${day} ${monthName} ${year} - ${hours}:${minutes}`;
+  return `${hours}:${minutes}`;
 };
 
 export const getCurrentTimeHHSS = () => {
   const now = new Date();
-  const hours = String(now.getHours()).padStart(2, '0');
-  const minutes = String(now.getMinutes()).padStart(2, '0');
-  
+  const hours = String(now.getHours()).padStart(2, "0");
+  const minutes = String(now.getMinutes()).padStart(2, "0");
+
   return `${hours}:${minutes}`;
+};
+
+export const callPhone = (number) => {
+  Linking.openURL(`tel:${number}`);
+};
+
+export const sendEmail = (emailAddress) => {
+  Linking.openURL(`mailto:${emailAddress}`);
 };

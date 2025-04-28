@@ -98,6 +98,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   itemTextConteiner: {
+    flexDirection: "row",
+    alignItems: "center",
     marginBottom: 10,
   },
   bold: {
@@ -118,6 +120,9 @@ const styles = StyleSheet.create({
     fontWeight: FONTS.boldFont,
     fontSize: 16,
   },
+  linkElement: { color: COLORS.externalLink },
+  active: { color: COLORS.green },
+  inActive: { color: COLORS.error},
 });
 
 export default styles;

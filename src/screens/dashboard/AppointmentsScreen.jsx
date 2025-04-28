@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   Modal,
+  Linking,
+  Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -17,7 +19,13 @@ import {
 } from "../../redux/appointmentsSlice";
 import { getDoctorById } from "../../redux/doctorSlice";
 import { useFocusEffect } from "@react-navigation/native";
-import { formatDateTime } from "../../utils/helpers";
+import {
+  formatDateText,
+  formatTime,
+  sendEmail,
+  callPhone,
+} from "../../utils/helpers";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { unwrapResult } from "@reduxjs/toolkit";
 import STRINGS from "../../constants/strings";
 import styles from "../../styles/appointmentScreenStyles";
@@ -26,6 +34,7 @@ import PropTypes from "prop-types";
 
 const AppointmentsScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
+  const { showActionSheetWithOptions } = useActionSheet();
   const { upcommingAppointmentsList, passtAppointmentsList } = useSelector(
     (state) => state.appointments
   );
@@ -146,6 +155,54 @@ const AppointmentsScreen = ({ navigation }) => {
     navigation.navigate("DoctorSearch");
   };
 
+  const openMapPrompt = async (address) => {
+    const query = encodeURIComponent(address);
+
+    const options = ["Open in Google Maps", "Open in Waze"];
+    if (Platform.OS === "ios") {
+      options.push("Open in Apple Maps");
+    }
+    options.push("Cancel");
+
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 0) {
+          // Google Maps
+          const googleMapsAppUrl = `comgooglemaps://?q=${query}`;
+          const googleMapsWebUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+          const canOpen = await Linking.canOpenURL("comgooglemaps://");
+          if (canOpen) {
+            Linking.openURL(googleMapsAppUrl);
+          } else {
+            Linking.openURL(googleMapsWebUrl);
+          }
+        } else if (buttonIndex === 1) {
+          // Waze
+          const wazeAppUrl = `waze://?q=${query}&navigate=yes`;
+          const wazeWebUrl = `https://waze.com/ul?q=${query}&navigate=yes`;
+
+          const canOpen = await Linking.canOpenURL("waze://");
+          if (canOpen) {
+            Linking.openURL(wazeAppUrl);
+          } else {
+            Linking.openURL(wazeWebUrl);
+          }
+        } else if (Platform.OS === "ios" && buttonIndex === 2) {
+          // Apple Maps
+          const appleMapsUrl = `http://maps.apple.com/?q=${query}`;
+          Linking.openURL(appleMapsUrl);
+        }
+      }
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Modal
@@ -167,17 +224,66 @@ const AppointmentsScreen = ({ navigation }) => {
 
             <Text style={styles.itemTextConteiner}>
               <Text style={styles.bold}>
-                {STRINGS[language].appointments.timeDate}
+                {STRINGS[language].appointments.date}
               </Text>
-              {formatDateTime(modalData?.dateTime, language)}
+              {formatDateText(modalData?.dateTime, language)}
             </Text>
 
             <Text style={styles.itemTextConteiner}>
               <Text style={styles.bold}>
+                {STRINGS[language].appointments.time}{" "}
+              </Text>
+              {formatTime(modalData?.dateTime)} -{" "}
+              {formatTime(modalData?.dateTime, modalData?.duration)}
+            </Text>
+
+            <View style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
                 {STRINGS[language].appointments.location}
               </Text>
-              {modalData?.location}
-            </Text>
+              <TouchableOpacity
+                onPress={() =>
+                  openMapPrompt(
+                    `${modalData?.doctorAdrress?.street}, ${modalData?.doctorAdrress?.city}, ${modalData?.doctorAdrress?.country}`
+                  )
+                }
+              >
+                <Text style={styles.linkElement}>
+                  {" "}
+                  {modalData?.doctorAdrress?.street}{" - "}
+                  {modalData?.doctorAdrress?.city}{" "}
+                  {modalData?.doctorAdrress?.country}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
+                {STRINGS[language].doctorProfile.email}
+              </Text>
+              <TouchableOpacity
+                onPress={() => callPhone(modalData?.doctorPhone)}
+              >
+                <Text style={styles.linkElement}>
+                  {" "}
+                  {modalData?.doctorPhone}
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.itemTextConteiner}>
+              <Text style={styles.bold}>
+                {STRINGS[language].doctorProfile.email}
+              </Text>
+              <TouchableOpacity
+                onPress={() => sendEmail(modalData?.doctor?.email)}
+              >
+                <Text style={styles.linkElement}>
+                  {" "}
+                  {modalData?.doctor?.email}
+                </Text>
+              </TouchableOpacity>
+            </View>
 
             <Text style={styles.itemTextConteiner}>
               <Text style={styles.bold}>
@@ -277,7 +383,11 @@ const AppointmentsScreen = ({ navigation }) => {
             <View>
               <Text style={styles.item1}>{item.doctorName}</Text>
               <Text>{STRINGS[language].speciality[item.doctorSpeciality]}</Text>
-              <Text>{formatDateTime(item.dateTime, language)}</Text>
+              <Text>{formatDateText(item.dateTime, language)}</Text>
+              <Text>
+                {formatTime(item?.dateTime)} -{" "}
+                {formatTime(item?.dateTime, item?.duration)}
+              </Text>
               <Text
                 style={{
                   color:
