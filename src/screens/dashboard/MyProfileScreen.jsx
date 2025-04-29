@@ -21,12 +21,14 @@ import {
   bloodTypes,
   medicalCategories,
 } from "../../constants/vars";
-import { Dropdown } from "react-native-element-dropdown"; // Assuming you use this library
+import { isStrongPassword } from "../../utils/helpers";
+import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser } from "../../redux/userSlice";
+import { getCurrentUser, updateUser } from "../../redux/userSlice";
+import { changePassword } from "../../redux/authSlice";
+import { BASE_URL } from "../../../config";
 import { ICONS, COLORS, SIZES, VALUES, FONTS } from "../../styles/theme";
 
-// Enable LayoutAnimation on Android
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -36,15 +38,25 @@ if (
 
 export default function ProfileScreen({ navigation }) {
   const { currentUser } = useSelector((state) => state.users);
-  console.log("fff", currentUser, "kkkkk");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [height, setHeight] = useState("");
   const [weight, setWeight] = useState("");
   const [changePass, setChangePass] = useState(false);
+
   const [newPassword, setNewPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordTouched, setPasswordTouched] = useState(false);
+
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordConfirmError, setPasswordConfirmError] = useState("");
+  const [passwordConfirmTouched, setPasswordConfirmTouched] = useState(false);
+
+  const [oldPassword, setOldPassword] = useState("");
+  const [oldPasswordError, setOldPasswordError] = useState("");
+  const [oldPasswordTouched, setOldPasswordTouched] = useState(false);
+
   const [address, setAddress] = useState("");
   const [province, setProvince] = useState("");
   const [country, setCountry] = useState("");
@@ -56,6 +68,8 @@ export default function ProfileScreen({ navigation }) {
   const [detailsExpandedConditions, setDetailsExpandedConditions] =
     useState(false);
   const [detailsExpandedVaccines, setDetailsExpandedVaccines] = useState(false);
+
+  const [profileImageUri, setProfileImageUri] = useState(null); // local file
 
   const dispatch = useDispatch();
 
@@ -83,13 +97,14 @@ export default function ProfileScreen({ navigation }) {
     setName(currentUser?.name);
     setEmail(currentUser?.email);
     setPhone(currentUser?.phone);
-    setHeight(currentUser?.heightCm);
-    setWeight(currentUser?.weightKg);
+    setHeight(currentUser?.profile?.heightCm);
+    setWeight(currentUser?.profile?.weightKg);
     setAddress(currentUser?.profile?.address?.street);
     setProvince(currentUser?.profile?.address?.city);
     setCountry(currentUser?.profile?.address?.country);
-    setBlood(currentUser?.bloodType);
-    setMedicalConditions(currentUser?.profile?.medicalConditions)
+    setBlood(currentUser?.profile?.bloodType);
+    setMedicalConditions(currentUser?.profile?.medicalConditions);
+    setProfileImage(currentUser?.profile?.photo);
   }, [currentUser]);
 
   const addMedicalCondition = () => {
@@ -106,23 +121,90 @@ export default function ProfileScreen({ navigation }) {
       ],
     }));
 
-    setNewCondition(""); // clear input after adding
+    setNewCondition("");
   };
 
   const handleSaveChanges = () => {
-    setEditingField(null);
-    Alert.alert("Saved", "Changes have been saved.");
+    const userData = {
+      name,
+      email,
+      phone,
+      profile: {
+        heightCm: Number(height),
+        weightKg: Number(weight),
+        bloodType: blood,
+        medicalConditions,
+        address: {
+          street: address,
+          city: province,
+          country: country,
+        },
+      },
+      profileImageUri,
+    };
+
+    dispatch(updateUser(userData))
+      .unwrap()
+      .then(() => {
+        Alert.alert("Success", "Profile updated successfully!");
+        dispatch(getCurrentUser());
+        setProfileImageUri(null);
+      })
+      .catch((err) => {
+        Alert.alert("Error", err);
+      });
   };
 
   const handleChangePassword = () => {
     setChangePass(!changePass);
+    setOldPassword("");
+    setOldPasswordError("");
     setNewPassword("");
+    setPasswordError("");
     setConfirmPassword("");
+    setPasswordConfirmError("");
   };
 
   const handleSaveNewPassword = () => {
-    // Password saving logic
+    dispatch(
+      changePassword({
+        passwordCurrent: oldPassword,
+        password: newPassword,
+        passwordConfirm: confirmPassword,
+      })
+    );
+    setOldPassword("");
+    setOldPasswordError("");
+    setNewPassword("");
+    setPasswordError("");
+    setConfirmPassword("");
+    setPasswordConfirmError("");
   };
+
+  const handleOldPassword = (value) => {
+    setOldPassword(value);
+    setOldPasswordError(value === "" ? "Old password must not be empty" : "");
+  };
+
+  const handlePassword = (value) => {
+    setNewPassword(value);
+    setPasswordError(isStrongPassword(value) ? "" : "Error de clavw");
+  };
+
+  const handlePasswordConfirm = (value) => {
+    setConfirmPassword(value);
+    setPasswordConfirmError(
+      value === newPassword ? "" : "Passwords do not match"
+    );
+  };
+
+  const isFormValid =
+    oldPassword &&
+    newPassword &&
+    confirmPassword &&
+    !passwordError &&
+    !passwordConfirmError &&
+    !oldPasswordError;
 
   const handleCloseAccount = () => {
     Alert.alert("Confirm", "Are you sure you want to close your account?", [
@@ -148,13 +230,21 @@ export default function ProfileScreen({ navigation }) {
       quality: 1,
     });
 
-    if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
+    if (!result.canceled && result.assets?.length > 0) {
+      const uri = result.assets[0].uri;
+      setProfileImageUri(uri);
+      setProfileImage(uri);
     }
   };
 
   const handleBack = () => {
     navigation.goBack();
+    setOldPassword("");
+    setOldPasswordError("");
+    setNewPassword("");
+    setPasswordError("");
+    setConfirmPassword("");
+    setPasswordConfirmError("");
   };
 
   const renderField = (label, value, onChangeText, fieldKey) => (
@@ -223,47 +313,46 @@ export default function ProfileScreen({ navigation }) {
 
     return (
       <View style={{ width: "100%", marginTop: 10 }}>
-        {Object.entries(medicalConditions).map(([category, conditions]) => (
-          <View key={category} style={{ marginBottom: 20 }}>
-            {/* Category Name + Delete */}
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                marginBottom: 8,
-              }}
-            >
-              <Text style={{ fontWeight: "bold", flex: 1 }}>{category}</Text>
-              <TouchableOpacity onPress={() => deleteCategory(category)}>
-                <Ionicons name="close-circle" size={24} color="#ef4444" />
-              </TouchableOpacity>
-            </View>
-
-            {/* Conditions List */}
-            {conditions.map((cond, index) => (
+        {medicalConditions &&
+          Object?.entries(medicalConditions)?.map(([category, conditions]) => (
+            <View key={category} style={{ marginBottom: 20 }}>
               <View
-                key={index}
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                  marginLeft: 10,
-                  paddingVertical: 8, // more padding!
-                  borderBottomWidth: 1,
-                  borderBottomColor: "#e5e7eb",
+                  marginBottom: 8,
                 }}
               >
-                <Text style={{ flex: 1 }}>• {cond}</Text>
-                <TouchableOpacity
-                  onPress={() => deleteCondition(category, index)}
-                >
-                  <Ionicons name="close" size={20} color="#ef4444" />
+                <Text style={{ fontWeight: "bold", flex: 1 }}>{category}</Text>
+                <TouchableOpacity onPress={() => deleteCategory(category)}>
+                  <Ionicons name="close-circle" size={24} color="#ef4444" />
                 </TouchableOpacity>
               </View>
-            ))}
-          </View>
-        ))}
 
-        {/* Inputs to add new condition */}
+              {/* Conditions List */}
+              {conditions.map((cond, index) => (
+                <View
+                  key={index}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    marginLeft: 10,
+                    paddingVertical: 8,
+                    borderBottomWidth: 1,
+                    borderBottomColor: "#e5e7eb",
+                  }}
+                >
+                  <Text style={{ flex: 1 }}>• {cond}</Text>
+                  <TouchableOpacity
+                    onPress={() => deleteCondition(category, index)}
+                  >
+                    <Ionicons name="close" size={20} color="#ef4444" />
+                  </TouchableOpacity>
+                </View>
+              ))}
+            </View>
+          ))}
+
         <View style={{ marginTop: 20 }}>
           <Text style={styles.fieldLabel}>Add New Condition</Text>
           <Dropdown
@@ -315,7 +404,7 @@ export default function ProfileScreen({ navigation }) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDetailsExpandedVaccines(!detailsExpandedVaccines);
   };
-
+  console.log(profileImage);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -334,7 +423,13 @@ export default function ProfileScreen({ navigation }) {
           {/* Avatar */}
           <View style={styles.avatarContainer}>
             {profileImage ? (
-              <Image source={{ uri: profileImage }} style={styles.avatar} />
+              <Image
+                source={{
+                  uri:
+                    profileImageUri || `${BASE_URL}/img/users/${profileImage}`,
+                }}
+                style={styles.avatar}
+              />
             ) : (
               <View style={styles.avatarPlaceholder}>
                 <Ionicons name="person" size={50} color="#9ca3af" />
@@ -344,14 +439,11 @@ export default function ProfileScreen({ navigation }) {
               <Ionicons name="pencil" size={18} color="white" />
             </TouchableOpacity>
           </View>
-
-          {/* Editable Fields */}
           {renderField("Name", name, setName, "name")}
           {renderField("Email", email, setEmail, "email")}
           {renderField("Phone", phone, setPhone, "phone")}
           {renderField("Address", address, setAddress, "address")}
 
-          {/* More Details */}
           <TouchableOpacity
             onPress={toggleDetailsExpanded}
             style={styles.dropdownHeader}
@@ -403,14 +495,6 @@ export default function ProfileScreen({ navigation }) {
                   onChange={(item) => setBlood(item.value)}
                 />
               </View>
-              {/* Age field, not editable */}
-              <View style={styles.fieldContainer}>
-                <Text style={styles.fieldLabel}>Age</Text>
-                <View style={styles.valueContainer}>
-                  <Text style={styles.fieldValue}>29</Text>
-                  {/* Example static */}
-                </View>
-              </View>
             </View>
           )}
           <TouchableOpacity
@@ -444,7 +528,6 @@ export default function ProfileScreen({ navigation }) {
 
           {/*vacunas*/}
 
-          {/* Save Button */}
           <TouchableOpacity
             style={styles.saveButton}
             onPress={handleSaveChanges}
@@ -452,37 +535,73 @@ export default function ProfileScreen({ navigation }) {
             <Text style={styles.saveButtonText}>Save Changes</Text>
           </TouchableOpacity>
 
-          {/* Password Change Section */}
           {changePass && (
             <View style={{ width: "100%" }}>
-              <Text style={styles.label}>New Password</Text>
+              <Text style={styles.label}>Old Password</Text>
               <TextInput
-                style={styles.inputPass}
-                value={newPassword}
-                onChangeText={setNewPassword}
+                style={[
+                  styles.inputPass,
+                  oldPasswordError && oldPasswordTouched
+                    ? styles.errorBorder
+                    : null,
+                ]}
+                value={oldPassword}
+                onChangeText={handleOldPassword}
+                onBlur={() => setOldPasswordTouched(true)}
                 placeholder="Enter new password"
                 secureTextEntry
               />
+              {oldPasswordError && oldPasswordTouched && (
+                <Text style={styles.errorText}>{oldPasswordError}</Text>
+              )}
+
+              <Text style={styles.label}>New Password</Text>
+              <TextInput
+                style={[
+                  styles.inputPass,
+                  passwordError && passwordTouched ? styles.errorBorder : null,
+                ]}
+                value={newPassword}
+                onChangeText={handlePassword}
+                onBlur={() => setPasswordTouched(true)}
+                placeholder="Enter new password"
+                secureTextEntry
+              />
+              {passwordError && passwordTouched && (
+                <Text style={styles.errorText}>{passwordError}</Text>
+              )}
 
               <Text style={styles.label}>Confirm Password</Text>
               <TextInput
-                style={styles.inputPass}
+                style={[
+                  styles.inputPass,
+                  passwordConfirmError && passwordConfirmTouched
+                    ? styles.errorBorder
+                    : null,
+                ]}
                 value={confirmPassword}
-                onChangeText={setConfirmPassword}
+                onChangeText={handlePasswordConfirm}
                 placeholder="Confirm new password"
                 secureTextEntry
+                onBlur={() => setPasswordConfirmTouched(true)}
               />
+              {passwordConfirmError && passwordConfirmTouched && (
+                <Text style={styles.errorText}>{passwordConfirmError}</Text>
+              )}
 
               <TouchableOpacity
-                style={styles.saveButton}
+                style={[
+                  styles.saveButton,
+                  !isFormValid && styles.buttonOpacity,
+                ]}
                 onPress={handleSaveNewPassword}
+                disabled={!isFormValid}
               >
                 <Text style={styles.saveButtonText}>Save New Password</Text>
               </TouchableOpacity>
             </View>
           )}
 
-          {/* Password Change Toggle */}
           <TouchableOpacity
             style={styles.secondaryButton}
             onPress={handleChangePassword}
@@ -492,7 +611,6 @@ export default function ProfileScreen({ navigation }) {
             </Text>
           </TouchableOpacity>
 
-          {/* Close Account */}
           <TouchableOpacity
             style={styles.closeButton}
             onPress={handleCloseAccount}
@@ -653,4 +771,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+  errorBorder: {
+    borderColor: COLORS.error,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  errorText: {
+    color: COLORS.error,
+    marginBottom: 8,
+    marginTop: 4,
+  },
+  buttonOpacity: { opacity: VALUES.inactiveButtonOpacity },
 });

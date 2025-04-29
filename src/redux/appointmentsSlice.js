@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import { BASE_URL, VERSION_URL } from "../../config"; 
 
 export const getUpcommingAppointments = createAsyncThunk(
   "appointments/upcomming",
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/user/upcomming/${userId}`
+        `${BASE_URL}${VERSION_URL}/appointments/user/upcomming/${userId}`
       );
       return response.data;
     } catch (err) {
@@ -20,7 +21,7 @@ export const getPasstAppointments = createAsyncThunk(
   async ({ userId }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/user/passt/${userId}`
+        `${BASE_URL}${VERSION_URL}/appointments/user/passt/${userId}`
       );
       return response.data;
     } catch (err) {
@@ -34,7 +35,7 @@ export const cancelAppointment = createAsyncThunk(
   async ({ appointmentId }, { rejectWithValue }) => {
     try {
       const response = await axios.patch(
-        `http://192.168.0.63:3000/api/v1/appointments/${appointmentId}/cancel`
+        `${BASE_URL}${VERSION_URL}/appointments/${appointmentId}/cancel`
       );
       return response.data;
     } catch (err) {
@@ -50,7 +51,7 @@ export const fetchAvailableDates = createAsyncThunk(
   async ({ doctorId, location }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/appointments/available-dates/${doctorId}/${location}`
+        `${BASE_URL}${VERSION_URL}/appointments/available-dates/${doctorId}/${location}`
       );
       return response.data.data;
     } catch (err) {
@@ -68,7 +69,7 @@ export const fetchAvailableTimes = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      const baseUrl = `http://192.168.0.63:3000/api/v1/appointments/available-times/${doctorId}/${date}/${location}`;
+      const baseUrl = `${BASE_URL}${VERSION_URL}/appointments/available-times/${doctorId}/${date}/${location}`;
       const params = new URLSearchParams({ duration, currentTime });
       
       const response = await axios.get(`${baseUrl}?${params.toString()}`);
@@ -88,7 +89,7 @@ export const bookAppointment = createAsyncThunk(
   ) => {
     try {
       const response = await axios.post(
-        `http://192.168.0.63:3000/api/v1/appointments/new`,
+        `${BASE_URL}${VERSION_URL}/appointments/new`,
         { doctor, doctorName, doctorSpeciality, dateTime, location, duration }
       );
       return response.data.data;

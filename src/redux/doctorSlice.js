@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { BASE_URL, VERSION_URL } from "../../config"; 
 import axios from "axios";
 
 export const searchDoctors = createAsyncThunk(
@@ -6,7 +7,7 @@ export const searchDoctors = createAsyncThunk(
   async ({ text }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/users/search?q=${text}`
+        `${BASE_URL}${VERSION_URL}/users/search?q=${text}`
       );
       return response.data;
     } catch (err) {
@@ -20,7 +21,7 @@ export const getDoctorById = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://192.168.0.63:3000/api/v1/users/doctor/${id}`
+        `${BASE_URL}${VERSION_URL}/users/doctor/${id}`
       );
       console.log(response.data)
       return response.data;

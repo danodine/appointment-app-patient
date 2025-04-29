@@ -1,9 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as SecureStore from "expo-secure-store";
+import { BASE_URL, VERSION_URL } from "../../config"; 
 import axios from "axios";
 
-const LOGIN_URL = "http://192.168.0.63:3000/api/v1/users/login";
-const SIGNUP_URL = "http://192.168.0.63:3000/api/v1/users/signup";
+const LOGIN_URL = `${BASE_URL}${VERSION_URL}/users/login`;
+const SIGNUP_URL = `${BASE_URL}${VERSION_URL}/users/signup`;
+const NEW_PASSWORD_URL = `${BASE_URL}${VERSION_URL}/users/updateMyPassword`;
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -31,7 +33,6 @@ export const signupUser = createAsyncThunk(
       nationalId,
       birthDate,
       phone,
-      age,
       street,
       city,
     },
@@ -48,7 +49,6 @@ export const signupUser = createAsyncThunk(
         role: "patient",
         phone,
         profile: {
-          age,
           address: {
             street,
             city,
@@ -62,6 +62,35 @@ export const signupUser = createAsyncThunk(
       return { token, user };
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Signup failed");
+    }
+  }
+);
+
+export const changePassword = createAsyncThunk(
+  "auth/changePassword",
+  async ({ passwordCurrent, password, passwordConfirm }, { rejectWithValue }) => {
+    try {
+      const token = await SecureStore.getItemAsync("token");
+      const response = await axios.patch(
+        NEW_PASSWORD_URL,
+        {
+          passwordCurrent,
+          password,
+          passwordConfirm,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      const { token: newToken, data } = response.data;
+      const user = data.user;
+
+      await SecureStore.setItemAsync("token", newToken);
+      return { token: newToken, user };
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Password change failed");
     }
   }
 );
@@ -110,6 +139,14 @@ const authSlice = createSlice({
       .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+      }).addCase(changePassword.fulfilled, (state, action) => {
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        console.log(action)
+        state.error = action.payload;
+        state.loading = false;
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.token = null;

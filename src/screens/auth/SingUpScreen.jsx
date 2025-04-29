@@ -62,7 +62,6 @@ const SingUpScreen = ({ navigation }) => {
 
   const [city, setCity] = useState("");
   const [street, setStreet] = useState("");
-  const [age, setAge] = useState("");
 
   const handleRegister = async () => {
     try {
@@ -75,7 +74,6 @@ const SingUpScreen = ({ navigation }) => {
           nationalId,
           birthDate,
           phone,
-          age,
           street,
           city,
         }),
@@ -95,7 +93,6 @@ const SingUpScreen = ({ navigation }) => {
       setNationalId("");
       setCity("");
       setStreet("");
-      setAge("");
 
       setEmailTouched(false);
       setPasswordTouched(false);
@@ -165,23 +162,13 @@ const SingUpScreen = ({ navigation }) => {
 
     if (tempDate >= today) {
       setBirthDateError(text.birthDateInvalid);
-      setAge(null);
       setShow(false);
       return;
     }
 
-    let ageCalc = today.getFullYear() - tempDate.getFullYear();
-    const hasBirthdayPassedThisYear =
-      today.getMonth() > tempDate.getMonth() ||
-      (today.getMonth() === tempDate.getMonth() &&
-        today.getDate() >= tempDate.getDate());
 
-    if (!hasBirthdayPassedThisYear) {
-      ageCalc -= 1;
-    }
     setBirthDate(tempDate);
     setBirthDateError("");
-    setAge(ageCalc);
     setShow(false);
   };
 
