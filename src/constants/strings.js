@@ -43,7 +43,7 @@ const STRINGS = {
       surgestion:
         '"Dormir bien, comer bien y \n respirar profundo tambien es \n productividad."',
     },
-    singupUser: {
+    signupUser: {
       createAccountTitle1: "Creá una\n",
       createAccountTitle2: "nueva cuenta",
 
@@ -185,7 +185,7 @@ const STRINGS = {
       surgestion:
         '"Sleeping well, eating well, and \n breathing deeply is also \n productivity."',
     },
-    singupUser: {
+    signupUser: {
       createAccountTitle1: "Create a\n",
       createAccountTitle2: "new account",
 

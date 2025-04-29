@@ -38,7 +38,9 @@ const AccountScreen = ({ navigation }) => {
       );
   };
 
-  const handleProfile = () => {};
+  const handleProfile = () => {
+    navigation.navigate("MyProfile");
+  };
 
   const handleLanguage = () => {
     setModalVisible(true);

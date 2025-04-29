@@ -173,7 +173,6 @@ const AppointmentsScreen = ({ navigation }) => {
       },
       async (buttonIndex) => {
         if (buttonIndex === 0) {
-          // Google Maps
           const googleMapsAppUrl = `comgooglemaps://?q=${query}`;
           const googleMapsWebUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
 
@@ -250,7 +249,8 @@ const AppointmentsScreen = ({ navigation }) => {
               >
                 <Text style={styles.linkElement}>
                   {" "}
-                  {modalData?.doctorAdrress?.street}{" - "}
+                  {modalData?.doctorAdrress?.street}
+                  {" - "}
                   {modalData?.doctorAdrress?.city}{" "}
                   {modalData?.doctorAdrress?.country}
                 </Text>
@@ -289,9 +289,13 @@ const AppointmentsScreen = ({ navigation }) => {
               <Text style={styles.bold}>
                 {STRINGS[language].appointments.status}
               </Text>
-              {activeTab === 0
-                ? STRINGS[language]?.appointments[modalData?.status]?.cero
-                : STRINGS[language]?.appointments[modalData?.status]?.uno}
+              <Text style={modalData?.status === "scheduled"
+                  ? styles.active
+                  : styles.inActive}>
+                {activeTab === 0
+                  ? STRINGS[language]?.appointments[modalData?.status]?.cero
+                  : STRINGS[language]?.appointments[modalData?.status]?.uno}
+              </Text>
             </Text>
 
             {modalDateError && (

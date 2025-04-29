@@ -14,7 +14,7 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import PropTypes from "prop-types";
 import { LinearGradient } from "expo-linear-gradient";
-import { singupUser } from "../../redux/authSlice";
+import { signupUser } from "../../redux/authSlice";
 import { provinces } from "../../constants/vars";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -30,7 +30,7 @@ import { COLORS } from "../../styles/theme";
 
 const SingUpScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
-  const text = STRINGS[language].singupUser;
+  const text = STRINGS[language].signupUser;
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -67,7 +67,7 @@ const SingUpScreen = ({ navigation }) => {
   const handleRegister = async () => {
     try {
       await dispatch(
-        singupUser({
+        signupUser({
           name,
           email,
           password,

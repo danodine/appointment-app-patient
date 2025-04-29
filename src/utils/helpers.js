@@ -45,7 +45,7 @@ export const isStrongPassword = (password) => {
   const lengthCheck = /.{8,}/;
   const lowercaseCheck = /[a-z]/;
   const uppercaseCheck = /[A-Z]/;
-  const numberCheck = /[0-9]/;
+  const numberCheck = /\d/;
   const specialCharCheck = /[!@#$%^&*(),.?":{}|<>]/;
 
   return (

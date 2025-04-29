@@ -3,7 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 
 const LOGIN_URL = "http://192.168.0.63:3000/api/v1/users/login";
-const SINGUP_URL = "http://192.168.0.63:3000/api/v1/users/signup";
+const SIGNUP_URL = "http://192.168.0.63:3000/api/v1/users/signup";
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
@@ -17,11 +17,11 @@ export const loginUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
     }
-  },
+  }
 );
 
-export const singupUser = createAsyncThunk(
-  "auth/loginUser",
+export const signupUser = createAsyncThunk(
+  "auth/signupUser",
   async (
     {
       name,
@@ -35,10 +35,10 @@ export const singupUser = createAsyncThunk(
       street,
       city,
     },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(SINGUP_URL, {
+      const response = await axios.post(SIGNUP_URL, {
         name,
         email,
         password,
@@ -52,7 +52,7 @@ export const singupUser = createAsyncThunk(
           address: {
             street,
             city,
-            country: "Ecuador",
+            country: "ecuador",
           },
         },
       });
@@ -61,9 +61,9 @@ export const singupUser = createAsyncThunk(
       await SecureStore.setItemAsync("token", token);
       return { token, user };
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Singup failed");
+      return rejectWithValue(err.response?.data?.message || "Signup failed");
     }
-  },
+  }
 );
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
@@ -95,6 +95,19 @@ const authSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      .addCase(signupUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(signupUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.token = action.payload.token;
+        state.user = action.payload.user;
+      })
+      .addCase(signupUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

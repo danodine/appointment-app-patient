@@ -3,6 +3,7 @@ import authReducer from "./authSlice";
 import languageReducer from "./languageSlice";
 import doctorReducer from "./doctorSlice";
 import appointmentsReducer from "./appointmentsSlice";
+import userReducer from "./userSlice";
 
 const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
     language: languageReducer,
     doctor: doctorReducer,
     appointments: appointmentsReducer,
+    users: userReducer,
   },
 });
 

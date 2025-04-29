@@ -4,6 +4,7 @@ import HomeScreen from "../screens/dashboard/HomeScreen";
 import DoctorSearchScreen from "../screens/dashboard/DoctorSearchScreen";
 import DoctorProfileScreen from "../screens/dashboard/DoctorProfileScreen";
 import BookAppointmentScreen from "../screens/dashboard/BookAppointmentScreen";
+import MyProfileScreen from "../screens/dashboard/MyProfileScreen";
 import PropTypes from "prop-types";
 
 const Stack = createNativeStackNavigator();
@@ -19,6 +20,7 @@ const HomeStackNavigator = ({ route }) => {
       <Stack.Screen name="DoctorSearch" component={DoctorSearchScreen} />
       <Stack.Screen name="DoctorProfile" component={DoctorProfileScreen} />
       <Stack.Screen name="BookAppointment" component={BookAppointmentScreen} />
+      <Stack.Screen name="MyProfile" component={MyProfileScreen} />
     </Stack.Navigator>
   );
 };

@@ -28,3 +28,42 @@ export const languages = [
   { code: "en", label: "English" },
   { code: "es", label: "Español" },
 ];
+
+export const countrys = [
+  { label: "Ecuador", value: "ecuador" },
+];
+
+export const bloodTypes = [
+  { label: "A+", value: "A+" },
+  { label: "A-", value: "A-" },
+  { label: "B+", value: "B+" },
+  { label: "B-", value: "B-" },
+  { label: "AB+", value: "AB+" },
+  { label: "AB-", value: "AB-" },
+  { label: "O+", value: "O+" },
+  { label: "O-", value: "O-" },
+];
+
+// make label come from lan
+export const medicalCategories = [
+  { label: "Infectious Diseases", value: "Infectious Diseases" },
+  { label: "Cardiovascular Diseases", value: "Cardiovascular Diseases" },
+  { label: "Respiratory Diseases", value: "Respiratory Diseases" },
+  { label: "Neurological Disorders", value: "Neurological Disorders" },
+  { label: "Mental Health Disorders", value: "Mental Health Disorders" },
+  { label: "Endocrine and Metabolic Disorders", value: "Endocrine and Metabolic Disorders" },
+  { label: "Musculoskeletal Disorders", value: "Musculoskeletal Disorders" },
+  { label: "Gastrointestinal Disorders", value: "Gastrointestinal Disorders" },
+  { label: "Genetic and Congenital Disorders", value: "Genetic and Congenital Disorders" },
+  { label: "Cancers (Oncological Diseases)", value: "Cancers (Oncological Diseases)" },
+  { label: "Dermatological Conditions", value: "Dermatological Conditions" },
+  { label: "Renal and Urological Disorders", value: "Renal and Urological Disorders" },
+  { label: "Hematologic (Blood) Disorders", value: "Hematologic (Blood) Disorders" },
+  { label: "Reproductive Health Disorders", value: "Reproductive Health Disorders" },
+  { label: "Immune System Disorders", value: "Immune System Disorders" },
+  { label: "Eye Disorders (Ophthalmology)", value: "Eye Disorders (Ophthalmology)" },
+  { label: "Ear, Nose, and Throat (ENT) Disorders", value: "Ear, Nose, and Throat (ENT) Disorders" },
+  { label: "Nutritional Deficiencies", value: "Nutritional Deficiencies" },
+  { label: "Pain Disorders", value: "Pain Disorders" },
+  { label: "Toxicologic Conditions", value: "Toxicologic Conditions" },
+];
