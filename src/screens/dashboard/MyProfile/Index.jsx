@@ -20,14 +20,14 @@ import {
   countrys,
   bloodTypes,
   medicalCategories,
-} from "../../constants/vars";
-import { isStrongPassword } from "../../utils/helpers";
+} from "../../../constants/vars";
+import { isStrongPassword } from "../../../utils/helpers";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser, updateUser } from "../../redux/userSlice";
-import { changePassword } from "../../redux/authSlice";
-import { BASE_URL } from "../../../config";
-import { ICONS, COLORS, SIZES, VALUES, FONTS } from "../../styles/theme";
+import { getCurrentUser, updateUser } from "../../../redux/userSlice";
+import { changePassword } from "../../../redux/authSlice";
+import { BASE_URL } from "../../../../config";
+import { ICONS, COLORS, SIZES, VALUES, FONTS } from "../../../styles/theme";
 
 if (
   Platform.OS === "android" &&
@@ -38,6 +38,8 @@ if (
 
 export default function ProfileScreen({ navigation }) {
   const { currentUser } = useSelector((state) => state.users);
+  const { changePasswordError } = useSelector((state) => state.auth);
+  console.log(changePasswordError)
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -404,7 +406,7 @@ export default function ProfileScreen({ navigation }) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDetailsExpandedVaccines(!detailsExpandedVaccines);
   };
-  console.log(profileImage);
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}

@@ -15,12 +15,12 @@ import {
   fetchAvailableDates,
   fetchAvailableTimes,
   bookAppointment,
-} from "../../redux/appointmentsSlice";
+} from "../../../redux/appointmentsSlice";
 import PropTypes from "prop-types";
-import { ICONS, COLORS, SIZES } from "../../styles/theme";
-import STRINGS from "../../constants/strings";
-import styles from "../../styles/bookAppointmentScreenStyles";
-import { getCurrentTimeHHSS } from "../../utils/helpers";
+import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import STRINGS from "../../../constants/strings";
+import styles from "./styles";
+import { getCurrentTimeHHSS } from "../../../utils/helpers";
 
 const BookAppointmentScreen = ({ route, navigation }) => {
   const { doctor, location } = route.params;

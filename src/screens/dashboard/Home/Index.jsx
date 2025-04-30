@@ -11,8 +11,8 @@ import {
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import { Ionicons } from "@expo/vector-icons";
-import styles from "../../styles/homeScreenStyles";
-import STRINGS from "../../constants/strings";
+import styles from "./styles";
+import STRINGS from "../../../constants/strings";
 
 const HomeScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
       >
         <View style={styles.logoContainer}>
           <Image
-            source={require("../../assets/logoTexto.png")}
+            source={require("../../../assets/logoTexto.png")}
             style={styles.logo}
           />
         </View>
@@ -47,7 +47,7 @@ const HomeScreen = ({ navigation }) => {
           {STRINGS[language].home.titleTwo}
         </Text>
         <Image
-          source={require("../../assets/icons/consejo-1.png")}
+          source={require("../../../assets/icons/consejo-1.png")}
           style={styles.icon}
         />
         <Text style={styles.description}>

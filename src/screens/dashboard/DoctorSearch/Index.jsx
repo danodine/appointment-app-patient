@@ -9,12 +9,12 @@ import {
   FlatList,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { searchDoctors, clearSearch } from "../../redux/doctorSlice";
+import { searchDoctors, clearSearch } from "../../../redux/doctorSlice";
 import { Ionicons } from "@expo/vector-icons";
-import styles from "../../styles/doctorSearchScreenStyles";
+import styles from "./styles";
 import PropTypes from "prop-types";
-import STRINGS from "../../constants/strings";
-import { ICONS, COLORS, SIZES } from "../../styles/theme";
+import STRINGS from "../../../constants/strings";
+import { ICONS, COLORS, SIZES } from "../../../styles/theme";
 
 const HomeSearch = ({ navigation }) => {
   const { doctorsList } = useSelector((state) => state.doctor);
@@ -84,7 +84,7 @@ const HomeSearch = ({ navigation }) => {
             onPress={() => handleSelect(item)}
           >
             <Image
-              source={require("../../assets/icons/icono-cardio.png")}
+              source={require("../../../assets/icons/icono-cardio.png")}
               style={styles.cardIcon}
             />
             <View>

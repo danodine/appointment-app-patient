@@ -4,11 +4,11 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
-import { callPhone, sendEmail } from "../../utils/helpers";
+import { callPhone, sendEmail } from "../../../utils/helpers";
 import PropTypes from "prop-types";
-import STRINGS from "../../constants/strings";
-import { ICONS, COLORS, SIZES } from "../../styles/theme";
-import styles from "../../styles/doctorProfileScreenStyles";
+import STRINGS from "../../../constants/strings";
+import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import styles from "./styles";
 
 const DoctorProfileScreen = ({ route, navigation }) => {
   const { doctor } = route.params;

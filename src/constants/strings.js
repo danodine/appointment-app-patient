@@ -1,5 +1,3 @@
-import { bookAppointment } from "../redux/appointmentsSlice";
-
 const STRINGS = {
   es: {
     speciality: {

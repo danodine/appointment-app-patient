@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS, FONTS, SIZES, VALUES } from "./theme";
+import { COLORS, FONTS, SIZES, VALUES } from "../../../styles/theme";
 
 const screenWidth = Dimensions.get("window").width;
 

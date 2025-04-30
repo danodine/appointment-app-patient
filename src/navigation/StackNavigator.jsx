@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "../screens/auth/LoginScreen";
-import SingUpScreen from "../screens/auth/SingUpScreen";
+import LoginScreen from "../screens/auth/Login/Index";
+import SingUpScreen from "../screens/auth/SingUp/Index";
 import TabNavigator from "./TabNavigator";
-import DoctorSearchScreen from "../screens/dashboard/DoctorSearchScreen";
-import DoctorProfileScreen from "../screens/dashboard/DoctorProfileScreen";
-import BookAppointmentScreen from "../screens/dashboard/BookAppointmentScreen";
-import MyProfileScreen from "../screens/dashboard/MyProfileScreen";
+import DoctorSearchScreen from "../screens/dashboard/DoctorSearch/Index";
+import DoctorProfileScreen from "../screens/dashboard/DoctorProfile/Index";
+import BookAppointmentScreen from "../screens/dashboard/BookAppoitnmet/Index";
+import MyProfileScreen from "../screens/dashboard/MyProfile/Index";
 
 const Stack = createNativeStackNavigator();
 

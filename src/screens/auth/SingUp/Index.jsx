@@ -14,8 +14,8 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import PropTypes from "prop-types";
 import { LinearGradient } from "expo-linear-gradient";
-import { signupUser } from "../../redux/authSlice";
-import { provinces } from "../../constants/vars";
+import { signupUser } from "../../../redux/authSlice";
+import { provinces } from "../../../constants/vars";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -23,10 +23,10 @@ import {
   validateEcuadorianCedula,
   isStrongPassword,
   formatDate,
-} from "../../utils/helpers";
-import styles from "../../styles/singUpScreenStyles";
-import STRINGS from "../../constants/strings";
-import { COLORS } from "../../styles/theme";
+} from "../../../utils/helpers";
+import styles from "./styles";
+import STRINGS from "../../../constants/strings";
+import { COLORS } from "../../../styles/theme";
 
 const SingUpScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);

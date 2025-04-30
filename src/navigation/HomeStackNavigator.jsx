@@ -1,10 +1,10 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import HomeScreen from "../screens/dashboard/HomeScreen";
-import DoctorSearchScreen from "../screens/dashboard/DoctorSearchScreen";
-import DoctorProfileScreen from "../screens/dashboard/DoctorProfileScreen";
-import BookAppointmentScreen from "../screens/dashboard/BookAppointmentScreen";
-import MyProfileScreen from "../screens/dashboard/MyProfileScreen";
+import HomeScreen from "../screens/dashboard/Home/Index";
+import DoctorSearchScreen from "../screens/dashboard/DoctorSearch/Index";
+import DoctorProfileScreen from "../screens/dashboard/DoctorProfile/Index";
+import BookAppointmentScreen from "../screens/dashboard/BookAppoitnmet/Index";
+import MyProfileScreen from "../screens/dashboard/MyProfile/Index";
 import PropTypes from "prop-types";
 
 const Stack = createNativeStackNavigator();

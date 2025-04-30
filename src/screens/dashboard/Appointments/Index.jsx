@@ -15,20 +15,20 @@ import {
   getPastAppointments,
   clearAppointmentsState,
   cancelAppointment,
-} from "../../redux/appointmentsSlice";
-import { getDoctorById } from "../../redux/doctorSlice";
+} from "../../../redux/appointmentsSlice";
+import { getDoctorById } from "../../../redux/doctorSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   formatDateText,
   formatTime,
   sendEmail,
   callPhone,
-} from "../../utils/helpers";
+} from "../../../utils/helpers";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { unwrapResult } from "@reduxjs/toolkit";
-import STRINGS from "../../constants/strings";
-import styles from "../../styles/appointmentScreenStyles";
-import { COLORS } from "../../styles/theme";
+import STRINGS from "../../../constants/strings";
+import styles from "./styles";
+import { COLORS } from "../../../styles/theme";
 import PropTypes from "prop-types";
 
 const AppointmentsScreen = ({ navigation }) => {
@@ -380,7 +380,7 @@ const AppointmentsScreen = ({ navigation }) => {
           >
             <Image
               style={styles.cardIcon}
-              source={require("../../assets/icons/icono-cardio.png")}
+              source={require("../../../assets/icons/icono-cardio.png")}
             />
             <View>
               <Text style={styles.item1}>{item.doctorName}</Text>

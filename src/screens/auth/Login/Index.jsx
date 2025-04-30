@@ -12,13 +12,13 @@ import {
   Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, clearLoginError } from "../../redux/authSlice";
+import { loginUser, clearLoginError } from "../../../redux/authSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { toggleLanguage } from "../../utils/helpers";
-import STRINGS from "../../constants/strings";
-import styles from "../../styles/loginScreenStyles";
-import { COLORS } from "../../styles/theme";
+import { toggleLanguage } from "../../../utils/helpers";
+import STRINGS from "../../../constants/strings";
+import styles from "./styles";
+import { COLORS } from "../../../styles/theme";
 
 const LoginScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
@@ -72,7 +72,7 @@ const LoginScreen = ({ navigation }) => {
           >
             <View style={styles.logoContainer}>
               <Image
-                source={require("../../assets/logo.png")}
+                source={require("../../../assets/logo.png")}
                 style={styles.logo}
               />
             </View>

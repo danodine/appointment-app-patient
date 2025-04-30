@@ -1,15 +1,15 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { View, StyleSheet } from "react-native";
-import AccountElement from "./components/AccountElement";
+import AccountElement from "../components/AccountElement/Index";
 import { useDispatch, useSelector } from "react-redux";
-import { logoutUser } from "../../redux/authSlice";
+import { logoutUser } from "../../../redux/authSlice";
 import { CommonActions } from "@react-navigation/native";
-import STRINGS from "../../constants/strings";
-import { ICONS, SIZES, TYPES } from "../../styles/theme";
-import { setLanguageTo } from "../../utils/helpers";
-import { languages } from "../../constants/vars";
-import ModalComponent from "./components/ModalComponent";
+import STRINGS from "../../../constants/strings";
+import { ICONS, SIZES, TYPES } from "../../../styles/theme";
+import { setLanguageTo } from "../../../utils/helpers";
+import { languages } from "../../../constants/vars";
+import ModalComponent from "../components/AccountModal/Index";
 
 const AccountScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
