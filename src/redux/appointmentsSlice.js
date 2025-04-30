@@ -1,31 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { BASE_URL, VERSION_URL } from "../../config"; 
+import { BASE_URL, VERSION_URL } from "../../config";
 
-export const getUpcommingAppointments = createAsyncThunk(
-  "appointments/upcomming",
+const API_BASE = `${BASE_URL}${VERSION_URL}/appointments`;
+
+// Thunks
+export const getUpcomingAppointments = createAsyncThunk(
+  "appointments/getUpcoming",
   async ({ userId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/appointments/user/upcomming/${userId}`
-      );
+      const response = await axios.get(`${API_BASE}/user/upcoming/${userId}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Search failed");
+      return rejectWithValue(err.response?.data?.message || "Fetching upcoming appointments failed");
     }
   }
 );
 
-export const getPasstAppointments = createAsyncThunk(
-  "appointments/passt",
+export const getPastAppointments = createAsyncThunk(
+  "appointments/getPast",
   async ({ userId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/appointments/user/passt/${userId}`
-      );
+      const response = await axios.get(`${API_BASE}/user/past/${userId}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Search failed");
+      return rejectWithValue(err.response?.data?.message || "Fetching past appointments failed");
     }
   }
 );
@@ -34,148 +33,177 @@ export const cancelAppointment = createAsyncThunk(
   "appointments/cancel",
   async ({ appointmentId }, { rejectWithValue }) => {
     try {
-      const response = await axios.patch(
-        `${BASE_URL}${VERSION_URL}/appointments/${appointmentId}/cancel`
-      );
+      const response = await axios.patch(`${API_BASE}/${appointmentId}/cancel`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Cancelation failed"
-      );
+      return rejectWithValue(err.response?.data?.message || "Cancellation failed");
     }
   }
 );
 
 export const fetchAvailableDates = createAsyncThunk(
-  "appointments/availableDates",
+  "appointments/fetchAvailableDates",
   async ({ doctorId, location }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/appointments/available-dates/${doctorId}/${location}`
-      );
+      const response = await axios.get(`${API_BASE}/available-dates/${doctorId}/${location}`);
       return response.data.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to load available dates"
-      );
+      return rejectWithValue(err.response?.data?.message || "Loading available dates failed");
     }
   }
 );
 
 export const fetchAvailableTimes = createAsyncThunk(
-  "appointments/availableTimes",
-  async (
-    { doctorId, date, location, duration, currentTime },
-    { rejectWithValue }
-  ) => {
+  "appointments/fetchAvailableTimes",
+  async ({ doctorId, date, location, duration, currentTime }, { rejectWithValue }) => {
     try {
-      const baseUrl = `${BASE_URL}${VERSION_URL}/appointments/available-times/${doctorId}/${date}/${location}`;
       const params = new URLSearchParams({ duration, currentTime });
-      
-      const response = await axios.get(`${baseUrl}?${params.toString()}`);
+      const url = `${API_BASE}/available-times/${doctorId}/${date}/${location}?${params.toString()}`;
+      const response = await axios.get(url);
       return response.data.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to load available times"
-      );
-    }
-  }
-);
-export const bookAppointment = createAsyncThunk(
-  "appointments/bookAppointment",
-  async (
-    { doctor, doctorName, doctorSpeciality, dateTime, location, duration },
-    { rejectWithValue }
-  ) => {
-    try {
-      const response = await axios.post(
-        `${BASE_URL}${VERSION_URL}/appointments/new`,
-        { doctor, doctorName, doctorSpeciality, dateTime, location, duration }
-      );
-      return response.data.data;
-    } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to load available times"
-      );
+      return rejectWithValue(err.response?.data?.message || "Loading available times failed");
     }
   }
 );
 
+export const bookAppointment = createAsyncThunk(
+  "appointments/book",
+  async ({ doctor, doctorName, doctorSpeciality, dateTime, location, duration }, { rejectWithValue }) => {
+    try {
+      const response = await axios.post(`${API_BASE}/new`, {
+        doctor,
+        doctorName,
+        doctorSpeciality,
+        dateTime,
+        location,
+        duration,
+      });
+      return response.data.data;
+    } catch (err) {
+      return rejectWithValue(err.response?.data?.message || "Booking failed");
+    }
+  }
+);
+
+// Slice
 const appointmentsSlice = createSlice({
   name: "appointments",
   initialState: {
-    upcommingAppointmentsList: [],
-    passtAppointmentsList: [],
-    loading: false,
-    error: null,
+    upcomingAppointmentsList: [],
+    pastAppointmentsList: [],
     availableDates: [],
     availableTimes: [],
-    calendarLoading: false,
+    loading: {
+      upcoming: false,
+      past: false,
+      calendar: false,
+      booking: false,
+    },
+    error: {
+      upcoming: null,
+      past: null,
+      calendar: null,
+      booking: null,
+    },
   },
   reducers: {
-    clearUpcommingAppointments: (state) => {
-      state.upcommingAppointmentsList = [];
-      state.loading = false;
-      state.error = null;
-    },
-    clearPasstAppointments: (state) => {
-      state.passtAppointmentsList = [];
-      state.loading = false;
-      state.error = null;
+    clearAppointmentsState: (state) => {
+      state.upcomingAppointmentsList = [];
+      state.pastAppointmentsList = [];
+      state.availableDates = [];
+      state.availableTimes = [];
+      state.loading = {
+        upcoming: false,
+        past: false,
+        calendar: false,
+        booking: false,
+      };
+      state.error = {
+        upcoming: null,
+        past: null,
+        calendar: null,
+        booking: null,
+      };
     },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getUpcommingAppointments.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+      // Upcoming
+      .addCase(getUpcomingAppointments.pending, (state) => {
+        state.loading.upcoming = true;
+        state.error.upcoming = null;
       })
-      .addCase(getUpcommingAppointments.fulfilled, (state, action) => {
-        state.loading = false;
-        state.upcommingAppointmentsList = action.payload.data.appointments;
+      .addCase(getUpcomingAppointments.fulfilled, (state, action) => {
+        state.loading.upcoming = false;
+        state.upcomingAppointmentsList = action.payload.data.appointments;
       })
-      .addCase(getUpcommingAppointments.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+      .addCase(getUpcomingAppointments.rejected, (state, action) => {
+        state.loading.upcoming = false;
+        state.error.upcoming = action.payload;
       })
-      .addCase(getPasstAppointments.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+
+      // Past
+      .addCase(getPastAppointments.pending, (state) => {
+        state.loading.past = true;
+        state.error.past = null;
       })
-      .addCase(getPasstAppointments.fulfilled, (state, action) => {
-        state.loading = false;
-        state.passtAppointmentsList = action.payload.data.appointments;
+      .addCase(getPastAppointments.fulfilled, (state, action) => {
+        state.loading.past = false;
+        state.pastAppointmentsList = action.payload.data.appointments;
       })
-      .addCase(getPasstAppointments.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+      .addCase(getPastAppointments.rejected, (state, action) => {
+        state.loading.past = false;
+        state.error.past = action.payload;
       })
+
+      // Cancel (optional error update)
+      .addCase(cancelAppointment.rejected, (state, action) => {
+        state.error.booking = action.payload;
+      })
+
+      // Dates
       .addCase(fetchAvailableDates.pending, (state) => {
-        state.calendarLoading = true;
+        state.loading.calendar = true;
+        state.error.calendar = null;
       })
       .addCase(fetchAvailableDates.fulfilled, (state, action) => {
-        state.calendarLoading = false;
+        state.loading.calendar = false;
         state.availableDates = action.payload;
       })
       .addCase(fetchAvailableDates.rejected, (state, action) => {
-        state.calendarLoading = false;
-        state.error = action.payload;
+        state.loading.calendar = false;
+        state.error.calendar = action.payload;
       })
 
+      // Times
       .addCase(fetchAvailableTimes.pending, (state) => {
-        state.calendarLoading = true;
+        state.loading.calendar = true;
+        state.error.calendar = null;
       })
       .addCase(fetchAvailableTimes.fulfilled, (state, action) => {
-        state.calendarLoading = false;
+        state.loading.calendar = false;
         state.availableTimes = action.payload;
       })
       .addCase(fetchAvailableTimes.rejected, (state, action) => {
-        state.calendarLoading = false;
-        state.error = action.payload;
+        state.loading.calendar = false;
+        state.error.calendar = action.payload;
+      })
+
+      // Book
+      .addCase(bookAppointment.pending, (state) => {
+        state.loading.booking = true;
+        state.error.booking = null;
+      })
+      .addCase(bookAppointment.fulfilled, (state) => {
+        state.loading.booking = false;
+      })
+      .addCase(bookAppointment.rejected, (state, action) => {
+        state.loading.booking = false;
+        state.error.booking = action.payload;
       });
   },
 });
 
-export const { clearUpcommingAppointments, clearPasstAppointments } =
-  appointmentsSlice.actions;
+export const { clearAppointmentsState } = appointmentsSlice.actions;
 export default appointmentsSlice.reducer;
