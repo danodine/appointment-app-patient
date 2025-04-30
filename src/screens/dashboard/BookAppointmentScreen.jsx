@@ -36,7 +36,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 182);
 
-  const { availableDates, availableTimes, calendarLoading, error } =
+  const { availableDates, availableTimes, loading } =
     useSelector((state) => state.appointments);
 
   useEffect(() => {
@@ -215,7 +215,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
             {STRINGS[language].bookAppointment.timeSlots}
           </Text>
 
-          {calendarLoading ? (
+          {loading.calendar ? (
             <ActivityIndicator size="large" />
           ) : (
             calendarElement()
@@ -234,8 +234,6 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           {STRINGS[language].bookAppointment.confirmAppointment}
         </Text>
       </TouchableOpacity>
-
-      {/* {error && <Text style={styles.errorText}>{error}</Text>} */}
     </ScrollView>
   );
 };

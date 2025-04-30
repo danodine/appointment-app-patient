@@ -4,7 +4,6 @@ import { BASE_URL, VERSION_URL } from "../../config";
 
 const API_BASE = `${BASE_URL}${VERSION_URL}/appointments`;
 
-// Thunks
 export const getUpcomingAppointments = createAsyncThunk(
   "appointments/getUpcoming",
   async ({ userId }, { rejectWithValue }) => {
@@ -86,7 +85,6 @@ export const bookAppointment = createAsyncThunk(
   }
 );
 
-// Slice
 const appointmentsSlice = createSlice({
   name: "appointments",
   initialState: {
@@ -129,7 +127,6 @@ const appointmentsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Upcoming
       .addCase(getUpcomingAppointments.pending, (state) => {
         state.loading.upcoming = true;
         state.error.upcoming = null;
@@ -142,8 +139,6 @@ const appointmentsSlice = createSlice({
         state.loading.upcoming = false;
         state.error.upcoming = action.payload;
       })
-
-      // Past
       .addCase(getPastAppointments.pending, (state) => {
         state.loading.past = true;
         state.error.past = null;
@@ -156,13 +151,9 @@ const appointmentsSlice = createSlice({
         state.loading.past = false;
         state.error.past = action.payload;
       })
-
-      // Cancel (optional error update)
       .addCase(cancelAppointment.rejected, (state, action) => {
         state.error.booking = action.payload;
       })
-
-      // Dates
       .addCase(fetchAvailableDates.pending, (state) => {
         state.loading.calendar = true;
         state.error.calendar = null;
@@ -175,8 +166,6 @@ const appointmentsSlice = createSlice({
         state.loading.calendar = false;
         state.error.calendar = action.payload;
       })
-
-      // Times
       .addCase(fetchAvailableTimes.pending, (state) => {
         state.loading.calendar = true;
         state.error.calendar = null;
@@ -189,8 +178,6 @@ const appointmentsSlice = createSlice({
         state.loading.calendar = false;
         state.error.calendar = action.payload;
       })
-
-      // Book
       .addCase(bookAppointment.pending, (state) => {
         state.loading.booking = true;
         state.error.booking = null;

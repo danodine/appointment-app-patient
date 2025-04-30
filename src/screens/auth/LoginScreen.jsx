@@ -12,7 +12,7 @@ import {
   Platform,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser, clearError } from "../../redux/authSlice";
+import { loginUser, clearLoginError } from "../../redux/authSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { toggleLanguage } from "../../utils/helpers";
@@ -22,7 +22,7 @@ import { COLORS } from "../../styles/theme";
 
 const LoginScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
-  const { user, loading, error } = useSelector((state) => state.auth);
+  const { user, loading, loginError } = useSelector((state) => state.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -31,7 +31,7 @@ const LoginScreen = ({ navigation }) => {
 
   useFocusEffect(
     React.useCallback(() => {
-      dispatch(clearError());
+      dispatch(clearLoginError());
     }, [])
   );
 
@@ -92,8 +92,8 @@ const LoginScreen = ({ navigation }) => {
               value={password}
               onChangeText={setPassword}
             />
-            {loading && <ActivityIndicator size="small" />}
-            {error && <Text style={styles.error}>{error}</Text>}
+            {loading.login && <ActivityIndicator size="small" />}
+            {loginError && <Text style={styles.error}>{loginError}</Text>}
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
               <Text style={styles.buttonText}>
                 {STRINGS[language].login.logIn}

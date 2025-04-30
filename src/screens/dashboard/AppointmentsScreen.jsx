@@ -11,10 +11,9 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getUpcommingAppointments,
-  getPasstAppointments,
-  clearUpcommingAppointments,
-  clearPasstAppointments,
+  getUpcomingAppointments,
+  getPastAppointments,
+  clearAppointmentsState,
   cancelAppointment,
 } from "../../redux/appointmentsSlice";
 import { getDoctorById } from "../../redux/doctorSlice";
@@ -35,12 +34,12 @@ import PropTypes from "prop-types";
 const AppointmentsScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { showActionSheetWithOptions } = useActionSheet();
-  const { upcommingAppointmentsList, passtAppointmentsList } = useSelector(
+  const { upcomingAppointmentsList, pastAppointmentsList } = useSelector(
     (state) => state.appointments
   );
   const language = useSelector((state) => state.language.language);
 
-  const [appointments, setAppointments] = useState(upcommingAppointmentsList);
+  const [appointments, setAppointments] = useState(upcomingAppointmentsList);
   const [activeTab, setActiveTab] = useState(0);
   const [hasFetchedPasstAppointments, setHasFetchedPasstAppointments] =
     useState(false);
@@ -58,38 +57,37 @@ const AppointmentsScreen = ({ navigation }) => {
       setHasFetchedPasstAppointments(false);
 
       const fetchAppointments = async () => {
-        await dispatch(getUpcommingAppointments({ userId: user?._id }));
+        await dispatch(getUpcomingAppointments({ userId: user?._id }));
       };
 
       fetchAppointments();
 
       return () => {
-        dispatch(clearUpcommingAppointments());
-        dispatch(clearPasstAppointments());
+        dispatch(clearAppointmentsState());
       };
     }, [dispatch, user?._id])
   );
 
   useEffect(() => {
-    setAppointments(upcommingAppointmentsList);
-  }, [upcommingAppointmentsList]);
+    setAppointments(upcomingAppointmentsList);
+  }, [upcomingAppointmentsList]);
 
   useEffect(() => {
-    setAppointments(passtAppointmentsList);
-  }, [passtAppointmentsList]);
+    setAppointments(pastAppointmentsList);
+  }, [pastAppointmentsList]);
 
   const handleUpcomingAppointments = () => {
     setActiveTab(0);
-    setAppointments(upcommingAppointmentsList);
+    setAppointments(upcomingAppointmentsList);
   };
 
   const handlePasstAppointments = () => {
     setActiveTab(1);
     if (!hasFetchedPasstAppointments) {
-      dispatch(getPasstAppointments({ userId: user._id }));
+      dispatch(getPastAppointments({ userId: user._id }));
       setHasFetchedPasstAppointments(true);
     } else {
-      setAppointments(passtAppointmentsList);
+      setAppointments(pastAppointmentsList);
     }
   };
 
@@ -101,9 +99,9 @@ const AppointmentsScreen = ({ navigation }) => {
   const handleConfirmCancelAppointment = async () => {
     await dispatch(cancelAppointment({ appointmentId: modalData?._id }));
     if (activeTab === 0) {
-      await dispatch(getUpcommingAppointments({ userId: user?._id }));
+      await dispatch(getUpcomingAppointments({ userId: user?._id }));
     } else {
-      await dispatch(getPasstAppointments({ userId: user?._id }));
+      await dispatch(getPastAppointments({ userId: user?._id }));
     }
 
     setModalVisible(false);

@@ -9,7 +9,10 @@ export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async ({ email, password }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${USER_URL}/login`, { email, password });
+      const response = await axios.post(`${USER_URL}/login`, {
+        email,
+        password,
+      });
       const { token, data } = response.data;
       const user = data.user;
       await SecureStore.setItemAsync("token", token);
@@ -103,76 +106,98 @@ const authSlice = createSlice({
   initialState: {
     token: null,
     user: null,
-    loading: false,
-    loginError: null,
-    signupError: null,
-    changePasswordError: null,
+    loading: {
+      login: false,
+      signup: false,
+      changePassword: false,
+    },
+    error: {
+      login: null,
+      signup: null,
+      changePassword: null,
+    },
   },
   reducers: {
     clearLoginError: (state) => {
-      state.loginError = null;
+      state.error.login = null;
     },
     clearSignupError: (state) => {
-      state.signupError = null;
+      state.error.signup = null;
     },
     clearChangePasswordError: (state) => {
-      state.changePasswordError = null;
+      state.error.changePassword = null;
+    },
+    clearAllErrors: (state) => {
+      state.error = {
+        login: null,
+        signup: null,
+        changePassword: null,
+      };
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(loginUser.pending, (state) => {
-        state.loading = true;
-        state.loginError = null;
+        state.loading.login = true;
+        state.error.login = null;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.login = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
       .addCase(loginUser.rejected, (state, action) => {
-        state.loading = false;
-        state.loginError = action.payload;
+        state.loading.login = false;
+        state.error.login = action.payload;
       })
-
-      // Signup
       .addCase(signupUser.pending, (state) => {
-        state.loading = true;
-        state.signupError = null;
+        state.loading.signup = true;
+        state.error.signup = null;
       })
       .addCase(signupUser.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.signup = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
       .addCase(signupUser.rejected, (state, action) => {
-        state.loading = false;
-        state.signupError = action.payload;
+        state.loading.signup = false;
+        state.error.signup = action.payload;
       })
-
-      // Change Password
       .addCase(changePassword.pending, (state) => {
-        state.loading = true;
-        state.changePasswordError = null;
+        state.loading.changePassword = true;
+        state.error.changePassword = null;
       })
       .addCase(changePassword.fulfilled, (state, action) => {
-        state.loading = false;
+        state.loading.changePassword = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
       })
       .addCase(changePassword.rejected, (state, action) => {
-        state.loading = false;
-        state.changePasswordError = action.payload;
+        state.loading.changePassword = false;
+        state.error.changePassword = action.payload;
       })
-
-      // Logout
       .addCase(logoutUser.fulfilled, (state) => {
         state.token = null;
         state.user = null;
+        state.loading = {
+          login: false,
+          signup: false,
+          changePassword: false,
+        };
+        state.error = {
+          login: null,
+          signup: null,
+          changePassword: null,
+        };
       });
   },
 });
 
-export const { clearLoginError, clearSignupError, clearChangePasswordError } =
-  authSlice.actions;
+export const {
+  clearLoginError,
+  clearSignupError,
+  clearChangePasswordError,
+  clearAllErrors,
+} = authSlice.actions;
+
 export default authSlice.reducer;

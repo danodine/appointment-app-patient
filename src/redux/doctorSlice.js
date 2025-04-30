@@ -70,8 +70,6 @@ const doctorSlice = createSlice({
         state.loading.search = false;
         state.error.search = action.payload;
       })
-
-      // Get Doctor by ID
       .addCase(getDoctorById.pending, (state) => {
         state.loading.getById = true;
         state.error.getById = null;
