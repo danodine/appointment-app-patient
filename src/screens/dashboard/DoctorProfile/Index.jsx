@@ -1,11 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+  Alert,
+  Image,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import FontAwesome from "react-native-vector-icons/FontAwesome";
 import { callPhone, sendEmail } from "../../../utils/helpers";
 import PropTypes from "prop-types";
+import { BASE_URL } from "../../../../config";
 import STRINGS from "../../../constants/strings";
 import { ICONS, COLORS, SIZES } from "../../../styles/theme";
 import styles from "./styles";
@@ -92,7 +98,18 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       </TouchableOpacity>
 
       <View style={styles.profileContainer}>
-        <FontAwesome name={ICONS.userCircle} size={80} />
+        {doctor?.profile?.photo ? (
+          <Image
+            source={{
+              uri: `${BASE_URL}/img/users/${doctor?.profile?.photo}`,
+            }}
+            style={styles.avatar}
+          />
+        ) : (
+          <View style={styles.avatarPlaceholder}>
+            <Ionicons name="person" size={50} color="#9ca3af" />
+          </View>
+        )}
         <Text style={styles.name}>{doctor?.name}</Text>
         <Text style={styles.specialty}>
           {STRINGS[language]?.speciality[doctor?.profile?.specialtyId]}
@@ -107,7 +124,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 
       <Section
         title={STRINGS[language].doctorProfile.location}
-        icon="location-outline"
+        icon={require("../../../assets/icons/location-icon.png")}
       >
         <Text style={styles.address}>
           {doctor?.profile?.address?.city} {doctor?.profile?.address?.country}
@@ -149,7 +166,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         </View>
 
         <View style={styles.touchableElementContainer}>
-          <Text style={styles.bold }>
+          <Text style={styles.bold}>
             {STRINGS[language].doctorProfile.email}
           </Text>
           <TouchableOpacity onPress={() => sendEmail(doctor?.email)}>
@@ -160,7 +177,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       {<View style={styles.underline} />}
       <Section
         title={STRINGS[language].doctorProfile.profile}
-        icon="person-outline"
+        icon={require("../../../assets/icons/profile-icon.png")}
       >
         <Text>{doctor?.profile?.biography}</Text>
         <View style={styles.tagContainer}>
@@ -174,7 +191,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       {<View style={styles.underline} />}
       <Section
         title={STRINGS[language].doctorProfile.schedule}
-        icon={ICONS.time}
+        icon={require("../../../assets/icons/time-icon.png")}
       >
         {/* here it is */}
         <View style={{ gap: 12, marginTop: 8 }}>
@@ -204,7 +221,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       {<View style={styles.underline} />}
       <Section
         title={STRINGS[language].doctorProfile.languages}
-        icon={ICONS.globe}
+        icon={require("../../../assets/icons/language-icon.png")}
       >
         {doctor?.profile?.languages?.map((label, index) => (
           <Text key={index} style={styles.itemsText}>
@@ -215,7 +232,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       {<View style={styles.underline} />}
       <Section
         title={STRINGS[language].doctorProfile.paymentMethod}
-        icon={ICONS.cash}
+        icon={require("../../../assets/icons/payment-icon.png")}
       >
         {doctor?.profile?.paymentMethods?.map((label, index) => (
           <Text key={index} style={styles.itemsText}>
@@ -226,7 +243,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       {<View style={styles.underline} />}
       <Section
         title={STRINGS[language].doctorProfile.insurance}
-        icon={ICONS.shieldCheckmark}
+        icon={require('../../../assets/icons/inshurance-icon.png')}
       >
         {doctor?.profile?.insurances?.map((label, index) => (
           <Text key={index} style={styles.itemsText}>
@@ -241,7 +258,10 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 const Section = ({ title, icon, children }) => (
   <View style={styles.section}>
     <View style={styles.sectionHeader}>
-      <Icon name={icon} size={SIZES.icon20} />
+      {icon && <Image
+        source={icon}
+        style={styles.icon}
+      />}
       <Text style={styles.sectionTitle}>{title}</Text>
     </View>
     <View style={styles.sectionContent}>{children}</View>
@@ -250,7 +270,7 @@ const Section = ({ title, icon, children }) => (
 
 Section.propTypes = {
   title: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.string,
   children: PropTypes.node,
 };
 

@@ -6,7 +6,6 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
   View,
   Button,
   Pressable,

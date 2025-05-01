@@ -124,6 +124,7 @@ export default function ProfileScreen({ navigation }) {
 
   const addMedicalCondition = () => {
     if (!newCondition.trim()) {
+      // create error modal
       Alert.alert("Error", "Please enter a condition.");
       return;
     }
@@ -138,7 +139,6 @@ export default function ProfileScreen({ navigation }) {
 
     setNewCondition("");
   };
-  console.log(vaccines);
   const handleSaveChanges = () => {
     const userData = {
       name,
@@ -161,13 +161,16 @@ export default function ProfileScreen({ navigation }) {
 
     dispatch(updateUser(userData))
       .unwrap()
+      
       .then(() => {
-        Alert.alert("Success", "Profile updated successfully!");
+        // use a modal for succes and error
+        // Alert.alert("Success", "Profile updated successfully!");
         dispatch(getCurrentUser());
         setProfileImageUri(null);
       })
       .catch((err) => {
-        Alert.alert("Error", err);
+         // use a modal for succes and error
+        // Alert.alert("Error", err);
       });
   };
 
@@ -223,19 +226,7 @@ export default function ProfileScreen({ navigation }) {
     !oldPasswordError;
 
   const handleCloseAccount = async () => {
-    // Alert.alert("Confirm", "Are you sure you want to close your account?", [
-    //   { text: "Cancel", style: "cancel" },
-    //   {
-    //     text: "Yes, Close It",
-    //     style: "destructive",
-    //     onPress: () => {
-    //       Alert.alert(
-    //         "Account Closed",
-    //         "Your account has been successfully closed."
-    //       );
-    //     },
-    //   },
-    // ]);
+    // add a modal here
     await dispatch(deleteMe());
     await dispatch(logoutUser());
     await dispatch(clearAuth());
@@ -418,6 +409,7 @@ export default function ProfileScreen({ navigation }) {
   const renderVaccines = () => {
     const addVaccine = () => {
       if (!newVaccineName.trim()) {
+        // create error modal
         Alert.alert("Error", "Please enter vaccine name.");
         return;
       }

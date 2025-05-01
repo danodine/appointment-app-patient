@@ -48,7 +48,6 @@ export const updateUser = createAsyncThunk(
 export const deleteMe = createAsyncThunk(
   'user/deleteMe',
   async (_, { rejectWithValue }) => {
-    console.log('holaaa')
     try {
       await axios.delete(`${USER_ENDPOINT}/deleteMe`);
        await SecureStore.deleteItemAsync("token");

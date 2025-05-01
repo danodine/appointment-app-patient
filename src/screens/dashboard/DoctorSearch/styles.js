@@ -49,6 +49,20 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontSize: 16,
   },
+  avatar: {
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    marginRight: 20,
+  },
+  avatarPlaceholder: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#e5e7eb",
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 });
 
 export default styles;

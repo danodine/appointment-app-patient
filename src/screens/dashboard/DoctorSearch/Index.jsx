@@ -13,13 +13,14 @@ import { searchDoctors, clearSearch } from "../../../redux/doctorSlice";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./styles";
 import PropTypes from "prop-types";
+import { BASE_URL } from "../../../../config";
 import STRINGS from "../../../constants/strings";
 import { ICONS, COLORS, SIZES } from "../../../styles/theme";
 
 const HomeSearch = ({ navigation }) => {
   const { doctorsList } = useSelector((state) => state.doctor);
   const language = useSelector((state) => state.language.language);
-
+  console.log(doctorsList);
   const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -83,10 +84,18 @@ const HomeSearch = ({ navigation }) => {
             style={styles.doctorItem}
             onPress={() => handleSelect(item)}
           >
-            <Image
-              source={require("../../../assets/icons/icono-cardio.png")}
-              style={styles.cardIcon}
-            />
+            {item.profile.photo ? (
+              <Image
+                source={{
+                  uri: `${BASE_URL}/img/users/${item.profile.photo}`,
+                }}
+                style={styles.avatar}
+              />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Ionicons name="person" size={50} color="#9ca3af" />
+              </View>
+            )}
             <View>
               <Text style={styles.doctorName}>{item.name}</Text>
               <Text>

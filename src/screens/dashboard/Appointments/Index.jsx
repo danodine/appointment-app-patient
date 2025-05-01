@@ -26,6 +26,8 @@ import {
 } from "../../../utils/helpers";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { unwrapResult } from "@reduxjs/toolkit";
+import { BASE_URL } from "../../../../config";
+import { Ionicons } from "@expo/vector-icons";
 import STRINGS from "../../../constants/strings";
 import styles from "./styles";
 import { COLORS } from "../../../styles/theme";
@@ -287,9 +289,13 @@ const AppointmentsScreen = ({ navigation }) => {
               <Text style={styles.bold}>
                 {STRINGS[language].appointments.status}
               </Text>
-              <Text style={modalData?.status === "scheduled"
-                  ? styles.active
-                  : styles.inActive}>
+              <Text
+                style={
+                  modalData?.status === "scheduled"
+                    ? styles.active
+                    : styles.inActive
+                }
+              >
                 {activeTab === 0
                   ? STRINGS[language]?.appointments[modalData?.status]?.cero
                   : STRINGS[language]?.appointments[modalData?.status]?.uno}
@@ -378,10 +384,18 @@ const AppointmentsScreen = ({ navigation }) => {
             style={styles.cardItem}
             onPress={() => handleAppointment(item)}
           >
-            <Image
-              style={styles.cardIcon}
-              source={require("../../../assets/icons/icono-cardio.png")}
-            />
+            {item?.doctorPhoto ? (
+              <Image
+                source={{
+                  uri: `${BASE_URL}/img/users/${item?.doctorPhoto}`,
+                }}
+                style={styles.avatar}
+              />
+            ) : (
+              <View style={styles.avatarPlaceholder}>
+                <Ionicons name="person" size={50} color="#9ca3af" />
+              </View>
+            )}
             <View>
               <Text style={styles.item1}>{item.doctorName}</Text>
               <Text>{STRINGS[language].speciality[item.doctorSpeciality]}</Text>

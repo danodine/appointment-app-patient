@@ -151,6 +151,23 @@ const styles = StyleSheet.create({
   linkElement: { color: COLORS.externalLink, fontSize: 12 },
   touchableElement: { marginTop: 12 },
   touchableElementContainer: { flexDirection: "row", alignItems: "center" },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+  },
+  avatarPlaceholder: {
+    width: 100,
+    height: 100,
+    backgroundColor: "#e5e7eb",
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  icon: {
+    width: 20,
+    height: 20,
+  }
 });
 
 export default styles;
