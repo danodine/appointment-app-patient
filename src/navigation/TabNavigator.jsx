@@ -66,14 +66,8 @@ const TabNavigator = () => {
           },
         })}
       />
-      <Tab.Screen
-        name="Appointments"
-        component={AppointmentsScreen}
-      />
-      <Tab.Screen
-        name="Account"
-        component={AccountScreen}
-      />
+      <Tab.Screen name="Appointments" component={AppointmentsScreen} />
+      <Tab.Screen name="Account" component={AccountScreen} />
     </Tab.Navigator>
   );
 };

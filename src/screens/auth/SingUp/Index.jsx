@@ -74,7 +74,7 @@ const SingUpScreen = ({ navigation }) => {
         phone,
         street,
         city,
-      })
+      }),
     ).unwrap();
 
     navigation.navigate("Login");
@@ -107,7 +107,7 @@ const SingUpScreen = ({ navigation }) => {
   const handleNationalId = (value) => {
     setNationalId(value);
     setNationalIdError(
-      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid
+      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid,
     );
   };
 

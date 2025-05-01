@@ -133,7 +133,7 @@ export const appendProfileFields = (formData, profile) => {
   if (medicalConditions) {
     formData.append(
       "profile.medicalConditions",
-      JSON.stringify(medicalConditions)
+      JSON.stringify(medicalConditions),
     );
   }
 

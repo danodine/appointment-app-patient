@@ -36,8 +36,9 @@ const BookAppointmentScreen = ({ route, navigation }) => {
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 182);
 
-  const { availableDates, availableTimes, loading } =
-    useSelector((state) => state.appointments);
+  const { availableDates, availableTimes, loading } = useSelector(
+    (state) => state.appointments,
+  );
 
   useEffect(() => {
     if (doctorId) {
@@ -50,7 +51,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
       (item, index) => ({
         label: item.treatmentName,
         value: item.treatmentTime,
-      })
+      }),
     );
     setTreatments(formatedTreatments);
   }, [doctor]);
@@ -60,7 +61,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     if (!availableDates.includes(dateStr)) {
       Alert.alert(
         "Unavailable",
-        "There are no available appointments on this date."
+        "There are no available appointments on this date.",
       );
       return;
     }
@@ -97,11 +98,11 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         doctorName: doctor.name,
         doctorSpeciality: doctor.profile.specialtyId,
         dateTime: new Date(
-          `${selectedDate}T${selectedTime}:00.000Z`
+          `${selectedDate}T${selectedTime}:00.000Z`,
         ).toISOString(),
         location,
         duration: treatmentTime,
-      })
+      }),
     );
     navigation.navigate("Dashboard", { screen: "Appointments" });
   };
@@ -121,7 +122,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           location,
           duration: treatmentTime,
           currentTime: getCurrentTimeHHSS(),
-        })
+        }),
       );
     }
   }, [treatmentTime]);

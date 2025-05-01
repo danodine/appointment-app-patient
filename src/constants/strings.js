@@ -30,7 +30,7 @@ const STRINGS = {
       forgotPassword: "Olvidaste tu contraseña",
       createAccount: "Crear cuenta",
       country: "País ",
-      countryName: "Ecuador",
+      countryName: "🇪🇨 Ecuador",
       language: "Idioma ",
       selectedLanguage: "Español",
     },
@@ -93,7 +93,7 @@ const STRINGS = {
       selectLocationAlert: "Porfavor seleccione un consultorio",
       morning: "Morning",
       afternoon: "Afternoon",
-      fullDay: "Todo el dia"
+      fullDay: "Todo el dia",
     },
     appointments: {
       myAppointments: "Mis Citas",
@@ -172,7 +172,7 @@ const STRINGS = {
       forgotPassword: "Forgot your password",
       createAccount: "Create account",
       country: "Country ",
-      countryName: "Ecuador",
+      countryName: "🇪🇨 Ecuador",
       language: "Language ",
       selectedLanguage: "English",
     },

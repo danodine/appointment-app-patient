@@ -26,7 +26,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
     if (!doctor?.profile?.availability) return [];
 
     const allLocations = doctor?.profile?.availability?.flatMap(
-      (item) => item?.timeSlots?.map((val) => val.location) || []
+      (item) => item?.timeSlots?.map((val) => val.location) || [],
     );
 
     return [...new Set(allLocations)];
@@ -243,7 +243,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
       {<View style={styles.underline} />}
       <Section
         title={STRINGS[language].doctorProfile.insurance}
-        icon={require('../../../assets/icons/inshurance-icon.png')}
+        icon={require("../../../assets/icons/inshurance-icon.png")}
       >
         {doctor?.profile?.insurances?.map((label, index) => (
           <Text key={index} style={styles.itemsText}>
@@ -258,10 +258,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
 const Section = ({ title, icon, children }) => (
   <View style={styles.section}>
     <View style={styles.sectionHeader}>
-      {icon && <Image
-        source={icon}
-        style={styles.icon}
-      />}
+      {icon && <Image source={icon} style={styles.icon} />}
       <Text style={styles.sectionTitle}>{title}</Text>
     </View>
     <View style={styles.sectionContent}>{children}</View>
@@ -270,7 +267,7 @@ const Section = ({ title, icon, children }) => (
 
 Section.propTypes = {
   title: PropTypes.string.isRequired,
-  icon: PropTypes.string,
+  icon: PropTypes.any,
   children: PropTypes.node,
 };
 

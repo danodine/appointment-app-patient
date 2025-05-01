@@ -25,13 +25,11 @@ export const provinces = [
   { label: "Zamora Chinchipe", value: "zamora_chinchipe" },
 ];
 export const languages = [
-  { code: "en", label: "English" },
-  { code: "es", label: "Español" },
+  { code: "en", label: "🇬🇧 English" },
+  { code: "es", label: "🇪🇸 Español" },
 ];
 
-export const countrys = [
-  { label: "Ecuador", value: "ecuador" },
-];
+export const countrys = [{ label: "🇪🇨 Ecuador", value: "ecuador" }];
 
 export const bloodTypes = [
   { label: "A+", value: "A+" },
@@ -51,18 +49,42 @@ export const medicalCategories = [
   { label: "Respiratory Diseases", value: "Respiratory Diseases" },
   { label: "Neurological Disorders", value: "Neurological Disorders" },
   { label: "Mental Health Disorders", value: "Mental Health Disorders" },
-  { label: "Endocrine and Metabolic Disorders", value: "Endocrine and Metabolic Disorders" },
+  {
+    label: "Endocrine and Metabolic Disorders",
+    value: "Endocrine and Metabolic Disorders",
+  },
   { label: "Musculoskeletal Disorders", value: "Musculoskeletal Disorders" },
   { label: "Gastrointestinal Disorders", value: "Gastrointestinal Disorders" },
-  { label: "Genetic and Congenital Disorders", value: "Genetic and Congenital Disorders" },
-  { label: "Cancers (Oncological Diseases)", value: "Cancers (Oncological Diseases)" },
+  {
+    label: "Genetic and Congenital Disorders",
+    value: "Genetic and Congenital Disorders",
+  },
+  {
+    label: "Cancers (Oncological Diseases)",
+    value: "Cancers (Oncological Diseases)",
+  },
   { label: "Dermatological Conditions", value: "Dermatological Conditions" },
-  { label: "Renal and Urological Disorders", value: "Renal and Urological Disorders" },
-  { label: "Hematologic (Blood) Disorders", value: "Hematologic (Blood) Disorders" },
-  { label: "Reproductive Health Disorders", value: "Reproductive Health Disorders" },
+  {
+    label: "Renal and Urological Disorders",
+    value: "Renal and Urological Disorders",
+  },
+  {
+    label: "Hematologic (Blood) Disorders",
+    value: "Hematologic (Blood) Disorders",
+  },
+  {
+    label: "Reproductive Health Disorders",
+    value: "Reproductive Health Disorders",
+  },
   { label: "Immune System Disorders", value: "Immune System Disorders" },
-  { label: "Eye Disorders (Ophthalmology)", value: "Eye Disorders (Ophthalmology)" },
-  { label: "Ear, Nose, and Throat (ENT) Disorders", value: "Ear, Nose, and Throat (ENT) Disorders" },
+  {
+    label: "Eye Disorders (Ophthalmology)",
+    value: "Eye Disorders (Ophthalmology)",
+  },
+  {
+    label: "Ear, Nose, and Throat (ENT) Disorders",
+    value: "Ear, Nose, and Throat (ENT) Disorders",
+  },
   { label: "Nutritional Deficiencies", value: "Nutritional Deficiencies" },
   { label: "Pain Disorders", value: "Pain Disorders" },
   { label: "Toxicologic Conditions", value: "Toxicologic Conditions" },

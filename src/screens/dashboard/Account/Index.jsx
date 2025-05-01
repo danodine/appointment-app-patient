@@ -29,13 +29,13 @@ const AccountScreen = ({ navigation }) => {
   };
 
   const handleLogOut = async () => {
-      await dispatch(logoutUser());
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: "Login" }],
-        }),
-      );
+    await dispatch(logoutUser());
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      }),
+    );
   };
 
   const handleProfile = () => {

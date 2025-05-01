@@ -100,7 +100,7 @@ export default function ProfileScreen({ navigation }) {
 
   const [newCondition, setNewCondition] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(
-    medicalCategories[0]?.value || ""
+    medicalCategories[0]?.value || "",
   );
 
   useEffect(() => {
@@ -111,31 +111,44 @@ export default function ProfileScreen({ navigation }) {
     setName(currentUser?.name);
     setEmail(currentUser?.email);
     setPhone(currentUser?.phone);
-    setHeight(currentUser?.profile?.heightCm);
-    setWeight(currentUser?.profile?.weightKg);
+    setHeight(
+      isNaN(currentUser?.profile?.heightCm)
+        ? 0
+        : currentUser?.profile?.heightCm,
+    );
+    setWeight(
+      isNaN(currentUser?.profile?.weightKg)
+        ? 0
+        : currentUser?.profile?.weightKg,
+    );
     setAddress(currentUser?.profile?.address?.street);
     setProvince(currentUser?.profile?.address?.city);
     setCountry(currentUser?.profile?.address?.country);
     setBlood(currentUser?.profile?.bloodType);
-    setMedicalConditions(currentUser?.profile?.medicalConditions);
+    setMedicalConditions(
+      currentUser?.profile?.medicalConditions === undefined
+        ? {}
+        : currentUser?.profile?.medicalConditions,
+    );
     setVaccines(currentUser?.profile?.vaccines || []);
     setProfileImage(currentUser?.profile?.photo);
   }, [currentUser]);
 
   const addMedicalCondition = () => {
     if (!newCondition.trim()) {
-      // create error modal
       Alert.alert("Error", "Please enter a condition.");
       return;
     }
 
-    setMedicalConditions((prev) => ({
-      ...prev,
-      [selectedCategory]: [
-        ...(prev[selectedCategory] || []),
-        newCondition.trim(),
-      ],
-    }));
+    setMedicalConditions((prev) => {
+      return {
+        ...prev,
+        [selectedCategory]: [
+          ...(prev[selectedCategory] || []),
+          newCondition.trim(),
+        ],
+      };
+    });
 
     setNewCondition("");
   };
@@ -161,7 +174,7 @@ export default function ProfileScreen({ navigation }) {
 
     dispatch(updateUser(userData))
       .unwrap()
-      
+
       .then(() => {
         // use a modal for succes and error
         // Alert.alert("Success", "Profile updated successfully!");
@@ -169,7 +182,7 @@ export default function ProfileScreen({ navigation }) {
         setProfileImageUri(null);
       })
       .catch((err) => {
-         // use a modal for succes and error
+        // use a modal for succes and error
         // Alert.alert("Error", err);
       });
   };
@@ -190,7 +203,7 @@ export default function ProfileScreen({ navigation }) {
         passwordCurrent: oldPassword,
         password: newPassword,
         passwordConfirm: confirmPassword,
-      })
+      }),
     );
     setOldPassword("");
     setOldPasswordError("");
@@ -213,7 +226,7 @@ export default function ProfileScreen({ navigation }) {
   const handlePasswordConfirm = (value) => {
     setConfirmPassword(value);
     setPasswordConfirmError(
-      value === newPassword ? "" : "Passwords do not match"
+      value === newPassword ? "" : "Passwords do not match",
     );
   };
 
@@ -234,7 +247,7 @@ export default function ProfileScreen({ navigation }) {
       CommonActions.reset({
         index: 0,
         routes: [{ name: "Login" }],
-      })
+      }),
     );
   };
 
@@ -290,7 +303,7 @@ export default function ProfileScreen({ navigation }) {
           <Ionicons
             name="pencil"
             size={20}
-            color="#3b82f6"
+            color={COLORS.secondary}
             style={{ marginLeft: 10 }}
           />
         </TouchableOpacity>
@@ -341,7 +354,7 @@ export default function ProfileScreen({ navigation }) {
               >
                 <Text style={{ fontWeight: "bold", flex: 1 }}>{category}</Text>
                 <TouchableOpacity onPress={() => deleteCategory(category)}>
-                  <Ionicons name="close-circle" size={24} color="#ef4444" />
+                  <Text style={styles.deleteButton}>Eliminar Categoria</Text>
                 </TouchableOpacity>
               </View>
 
@@ -362,7 +375,7 @@ export default function ProfileScreen({ navigation }) {
                   <TouchableOpacity
                     onPress={() => deleteCondition(category, index)}
                   >
-                    <Ionicons name="close" size={20} color="#ef4444" />
+                    <Text style={styles.deleteButton}>Eliminar</Text>
                   </TouchableOpacity>
                 </View>
               ))}
@@ -382,7 +395,13 @@ export default function ProfileScreen({ navigation }) {
           />
 
           {/* Input and Button side-by-side */}
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 10,
+            }}
+          >
             <TextInput
               placeholder="Condition (e.g., Asthma)"
               value={newCondition}
@@ -392,9 +411,9 @@ export default function ProfileScreen({ navigation }) {
             <TouchableOpacity
               onPress={addMedicalCondition}
               style={{
-                backgroundColor: "#3b82f6",
+                backgroundColor: COLORS.secondary,
                 paddingHorizontal: 16,
-                paddingVertical: 12,
+                paddingVertical: 9,
                 borderRadius: 8,
               }}
             >
@@ -415,7 +434,7 @@ export default function ProfileScreen({ navigation }) {
       }
 
       const formattedDate = new Intl.DateTimeFormat("en-GB").format(
-        vaccineDate
+        vaccineDate,
       );
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -455,7 +474,7 @@ export default function ProfileScreen({ navigation }) {
               • {vaccine.name} ({vaccine.date})
             </Text>
             <TouchableOpacity onPress={() => deleteVaccine(index)}>
-              <Ionicons name="close" size={20} color="#ef4444" />
+              <Text style={styles.deleteButton}>Eliminar</Text>
             </TouchableOpacity>
           </View>
         ))}
@@ -502,7 +521,7 @@ export default function ProfileScreen({ navigation }) {
             <TouchableOpacity
               onPress={addVaccine}
               style={{
-                backgroundColor: "#3b82f6",
+                backgroundColor: COLORS.secondary,
                 paddingHorizontal: 16,
                 paddingVertical: 12,
                 borderRadius: 8,
@@ -804,7 +823,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     right: 0,
-    backgroundColor: "#3b82f6",
+    backgroundColor: COLORS.secondary,
     width: 30,
     height: 30,
     borderRadius: 15,
@@ -843,13 +862,13 @@ const styles = StyleSheet.create({
     flex: 1,
     color: "#111827",
     borderBottomWidth: 1,
-    borderBottomColor: "#3b82f6",
+    borderBottomColor: COLORS.secondary,
   },
   inputDropdown: {
     flex: 1,
   },
   saveButton: {
-    backgroundColor: "#3b82f6",
+    backgroundColor: COLORS.secondary,
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 8,
@@ -863,7 +882,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   secondaryButton: {
-    borderColor: "#3b82f6",
+    borderColor: COLORS.secondary,
     borderWidth: 1,
     paddingVertical: 12,
     paddingHorizontal: 32,
@@ -873,12 +892,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   secondaryButtonText: {
-    color: "#3b82f6",
+    color: COLORS.secondary,
     fontSize: 16,
     fontWeight: "bold",
   },
   closeButton: {
-    borderColor: "#ef4444",
+    borderColor: COLORS.error,
     borderWidth: 1,
     paddingVertical: 12,
     paddingHorizontal: 32,
@@ -931,4 +950,11 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   buttonOpacity: { opacity: VALUES.inactiveButtonOpacity },
+  deleteButton: {
+    backgroundColor: COLORS.error,
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 20,
+    color: COLORS.white,
+  },
 });

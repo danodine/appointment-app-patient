@@ -20,7 +20,7 @@ export const loginUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
     }
-  }
+  },
 );
 
 export const signupUser = createAsyncThunk(
@@ -37,7 +37,7 @@ export const signupUser = createAsyncThunk(
       street,
       city,
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const response = await axios.post(`${USER_URL}/signup`, {
@@ -64,14 +64,14 @@ export const signupUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Signup failed");
     }
-  }
+  },
 );
 
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (
     { passwordCurrent, password, passwordConfirm },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const token = await SecureStore.getItemAsync("token");
@@ -82,7 +82,7 @@ export const changePassword = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       const { token: newToken, data } = response.data;
       const user = data.user;
@@ -91,10 +91,10 @@ export const changePassword = createAsyncThunk(
       return { token: newToken, user };
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Password change failed"
+        err.response?.data?.message || "Password change failed",
       );
     }
-  }
+  },
 );
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
@@ -137,7 +137,7 @@ const authSlice = createSlice({
     clearAuth: (state) => {
       state.token = null;
       state.user = null;
-      state.loading= {
+      state.loading = {
         login: false,
         signup: false,
         changePassword: false,

@@ -15,10 +15,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { loginUser, clearLoginError } from "../../../redux/authSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { toggleLanguage } from "../../../utils/helpers";
+import { setLanguageTo } from "../../../utils/helpers";
+import { languages } from "../../../constants/vars";
 import STRINGS from "../../../constants/strings";
+import ModalComponent from "../../dashboard/components/AccountModal/Index";
 import styles from "./styles";
-import { COLORS } from "../../../styles/theme";
+import { COLORS, TYPES } from "../../../styles/theme";
 
 const LoginScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
@@ -27,12 +29,17 @@ const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalData, setModalData] = useState([]);
+  const [modalType, setModalType] = useState("");
+  const [modalTitle, setModalTitle] = useState("");
+
   const dispatch = useDispatch();
 
   useFocusEffect(
     React.useCallback(() => {
       dispatch(clearLoginError());
-    }, [])
+    }, []),
   );
 
   const handleLogin = () => {
@@ -54,8 +61,28 @@ const LoginScreen = ({ navigation }) => {
     }
   }, [user]);
 
+  const handleLanguage = () => {
+    setModalVisible(true);
+    setModalData(languages);
+    setModalType(TYPES.listSelector);
+    setModalTitle(STRINGS[language].account.languageSelect);
+  };
+
+  const handleSelect = (code) => {
+    setLanguageTo(code);
+    setModalVisible(false);
+  };
+
   return (
     <View style={{ flex: 1 }}>
+      <ModalComponent
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        handleSelect={handleSelect}
+        data={modalData}
+        title={modalTitle}
+        type={modalType}
+      />
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -111,11 +138,13 @@ const LoginScreen = ({ navigation }) => {
         </LinearGradient>
       </KeyboardAvoidingView>
       <View style={styles.footer}>
-        <Text style={styles.footerText}>
-          {STRINGS[language].login.country}
+        <Text style={styles.buttonSecondary}>
           <Text style={styles.bold}>{STRINGS[language].login.countryName}</Text>
         </Text>
-        <TouchableOpacity onPress={toggleLanguage}>
+        <TouchableOpacity
+          style={styles.buttonSecondary}
+          onPress={handleLanguage}
+        >
           <Text style={styles.footerText}>
             {STRINGS[language].login.language}
             <Text style={styles.bold}>

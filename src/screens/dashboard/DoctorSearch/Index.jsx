@@ -31,7 +31,7 @@ const HomeSearch = ({ navigation }) => {
       return () => {
         dispatch(clearSearch());
       };
-    }, [])
+    }, []),
   );
 
   const handleChangeSearch = (text) => {

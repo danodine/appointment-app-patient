@@ -42,6 +42,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 20,
   },
+  buttonSecondary: {
+    backgroundColor: COLORS.secondary,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 20,
+  },
   buttonText: {
     color: COLORS.black,
     fontWeight: FONTS.boldFont,

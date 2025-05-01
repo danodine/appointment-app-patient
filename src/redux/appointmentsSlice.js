@@ -11,9 +11,11 @@ export const getUpcomingAppointments = createAsyncThunk(
       const response = await axios.get(`${API_BASE}/user/upcoming/${userId}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Fetching upcoming appointments failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Fetching upcoming appointments failed",
+      );
     }
-  }
+  },
 );
 
 export const getPastAppointments = createAsyncThunk(
@@ -23,9 +25,11 @@ export const getPastAppointments = createAsyncThunk(
       const response = await axios.get(`${API_BASE}/user/past/${userId}`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Fetching past appointments failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Fetching past appointments failed",
+      );
     }
-  }
+  },
 );
 
 export const cancelAppointment = createAsyncThunk(
@@ -35,40 +39,54 @@ export const cancelAppointment = createAsyncThunk(
       const response = await axios.patch(`${API_BASE}/${appointmentId}/cancel`);
       return response.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Cancellation failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Cancellation failed",
+      );
     }
-  }
+  },
 );
 
 export const fetchAvailableDates = createAsyncThunk(
   "appointments/fetchAvailableDates",
   async ({ doctorId, location }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/available-dates/${doctorId}/${location}`);
+      const response = await axios.get(
+        `${API_BASE}/available-dates/${doctorId}/${location}`,
+      );
       return response.data.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Loading available dates failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Loading available dates failed",
+      );
     }
-  }
+  },
 );
 
 export const fetchAvailableTimes = createAsyncThunk(
   "appointments/fetchAvailableTimes",
-  async ({ doctorId, date, location, duration, currentTime }, { rejectWithValue }) => {
+  async (
+    { doctorId, date, location, duration, currentTime },
+    { rejectWithValue },
+  ) => {
     try {
       const params = new URLSearchParams({ duration, currentTime });
       const url = `${API_BASE}/available-times/${doctorId}/${date}/${location}?${params.toString()}`;
       const response = await axios.get(url);
       return response.data.data;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Loading available times failed");
+      return rejectWithValue(
+        err.response?.data?.message || "Loading available times failed",
+      );
     }
-  }
+  },
 );
 
 export const bookAppointment = createAsyncThunk(
   "appointments/book",
-  async ({ doctor, doctorName, doctorSpeciality, dateTime, location, duration }, { rejectWithValue }) => {
+  async (
+    { doctor, doctorName, doctorSpeciality, dateTime, location, duration },
+    { rejectWithValue },
+  ) => {
     try {
       const response = await axios.post(`${API_BASE}/new`, {
         doctor,
@@ -82,7 +100,7 @@ export const bookAppointment = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Booking failed");
     }
-  }
+  },
 );
 
 const appointmentsSlice = createSlice({

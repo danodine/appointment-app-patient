@@ -37,7 +37,7 @@ const AppointmentsScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { showActionSheetWithOptions } = useActionSheet();
   const { upcomingAppointmentsList, pastAppointmentsList } = useSelector(
-    (state) => state.appointments
+    (state) => state.appointments,
   );
   const language = useSelector((state) => state.language.language);
 
@@ -67,7 +67,7 @@ const AppointmentsScreen = ({ navigation }) => {
       return () => {
         dispatch(clearAppointmentsState());
       };
-    }, [dispatch, user?._id])
+    }, [dispatch, user?._id]),
   );
 
   useEffect(() => {
@@ -128,7 +128,7 @@ const AppointmentsScreen = ({ navigation }) => {
 
   const handleBookAppointment = async () => {
     const resultAction = await dispatch(
-      getDoctorById({ id: modalData?.doctor?._id })
+      getDoctorById({ id: modalData?.doctor?._id }),
     );
     const data = unwrapResult(resultAction);
     const doctorData = data.data;
@@ -198,7 +198,7 @@ const AppointmentsScreen = ({ navigation }) => {
           const appleMapsUrl = `http://maps.apple.com/?q=${query}`;
           Linking.openURL(appleMapsUrl);
         }
-      }
+      },
     );
   };
 
@@ -243,7 +243,7 @@ const AppointmentsScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() =>
                   openMapPrompt(
-                    `${modalData?.doctorAdrress?.street}, ${modalData?.doctorAdrress?.city}, ${modalData?.doctorAdrress?.country}`
+                    `${modalData?.doctorAdrress?.street}, ${modalData?.doctorAdrress?.city}, ${modalData?.doctorAdrress?.country}`,
                   )
                 }
               >

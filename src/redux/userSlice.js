@@ -2,7 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { BASE_URL, VERSION_URL } from "../../config";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
-import {appendProfileFields, appendSimpleFields, appendPhoto} from "../utils/helpers"
+import {
+  appendProfileFields,
+  appendSimpleFields,
+  appendPhoto,
+} from "../utils/helpers";
 
 const USER_ENDPOINT = `${BASE_URL}${VERSION_URL}/users`;
 
@@ -14,10 +18,10 @@ export const getCurrentUser = createAsyncThunk(
       return response.data.data.user;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "An error has occurred"
+        err.response?.data?.message || "An error has occurred",
       );
     }
-  }
+  },
 );
 
 export const updateUser = createAsyncThunk(
@@ -35,27 +39,27 @@ export const updateUser = createAsyncThunk(
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-        }
+        },
       );
 
       return response.data.data.user;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Update failed");
     }
-  }
+  },
 );
 
 export const deleteMe = createAsyncThunk(
-  'user/deleteMe',
+  "user/deleteMe",
   async (_, { rejectWithValue }) => {
     try {
       await axios.delete(`${USER_ENDPOINT}/deleteMe`);
-       await SecureStore.deleteItemAsync("token");
+      await SecureStore.deleteItemAsync("token");
       return true;
     } catch (error) {
-      return rejectWithValue(error.response?.data || 'Error deleting user');
+      return rejectWithValue(error.response?.data || "Error deleting user");
     }
-  }
+  },
 );
 
 const userSlice = createSlice({
@@ -107,7 +111,7 @@ const userSlice = createSlice({
         state.loading.update = false;
         state.error.update = action.payload;
       })
-      
+
       .addCase(deleteMe.pending, (state) => {
         state.loading.delete = true;
         state.error.delete = null;

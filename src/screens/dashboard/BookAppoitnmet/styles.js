@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
   timeSlotContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "center",
   },
   timeSlot: {
     paddingVertical: 10,

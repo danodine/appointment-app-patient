@@ -7,13 +7,13 @@ export const searchDoctors = createAsyncThunk(
   async ({ text }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/users/search?q=${text}`
+        `${BASE_URL}${VERSION_URL}/users/search?q=${text}`,
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  }
+  },
 );
 
 export const getDoctorById = createAsyncThunk(
@@ -21,13 +21,13 @@ export const getDoctorById = createAsyncThunk(
   async ({ id }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/users/doctor/${id}`
+        `${BASE_URL}${VERSION_URL}/users/doctor/${id}`,
       );
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  }
+  },
 );
 
 const doctorSlice = createSlice({
