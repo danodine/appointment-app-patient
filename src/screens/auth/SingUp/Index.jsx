@@ -64,50 +64,21 @@ const SingUpScreen = ({ navigation }) => {
   const [street, setStreet] = useState("");
 
   const handleRegister = async () => {
-    try {
-      await dispatch(
-        signupUser({
-          name,
-          email,
-          password,
-          passwordConfirm,
-          nationalId,
-          birthDate,
-          phone,
-          street,
-          city,
-        }),
-      ).unwrap();
+    await dispatch(
+      signupUser({
+        name,
+        email,
+        password,
+        passwordConfirm,
+        nationalId,
+        birthDate,
+        phone,
+        street,
+        city,
+      })
+    ).unwrap();
 
-      navigation.navigate("Login");
-    } catch (error) {
-      console.log("Error Block", error);
-      Alert.alert(text.error1, error.toString());
-
-      setName("");
-      setEmail("");
-      setPassword("");
-      setPasswordConfirm("");
-      setPhone("");
-      setBirthDate(new Date());
-      setNationalId("");
-      setCity("");
-      setStreet("");
-
-      setEmailTouched(false);
-      setPasswordTouched(false);
-      setPasswordConfirmTouched(false);
-      setPhoneTouched(false);
-      setBirthDateTouched(false);
-      setNationalIdTouched(false);
-
-      setEmailError("");
-      setPasswordError("");
-      setPasswordConfirmError("");
-      setPhoneError("");
-      setBirthDateError("");
-      setNationalIdError("");
-    }
+    navigation.navigate("Login");
   };
 
   const handleEmail = (value) => {
@@ -137,7 +108,7 @@ const SingUpScreen = ({ navigation }) => {
   const handleNationalId = (value) => {
     setNationalId(value);
     setNationalIdError(
-      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid,
+      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid
     );
   };
 
@@ -165,7 +136,6 @@ const SingUpScreen = ({ navigation }) => {
       setShow(false);
       return;
     }
-
 
     setBirthDate(tempDate);
     setBirthDateError("");

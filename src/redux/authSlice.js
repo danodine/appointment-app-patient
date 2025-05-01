@@ -134,6 +134,20 @@ const authSlice = createSlice({
         changePassword: null,
       };
     },
+    clearAuth: (state) => {
+      state.token = null;
+      state.user = null;
+      state.loading= {
+        login: false,
+        signup: false,
+        changePassword: false,
+      };
+      state.error = {
+        login: null,
+        signup: null,
+        changePassword: null,
+      };
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -198,6 +212,7 @@ export const {
   clearSignupError,
   clearChangePasswordError,
   clearAllErrors,
+  clearAuth,
 } = authSlice.actions;
 
 export default authSlice.reducer;

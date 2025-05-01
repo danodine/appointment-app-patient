@@ -1,5 +1,5 @@
 import { store } from "../redux/store";
-import { Linking } from 'react-native';
+import { Linking } from "react-native";
 import { setLanguage } from "../redux/languageSlice";
 import STRINGS from "../constants/strings";
 
@@ -15,7 +15,7 @@ export const setLanguageTo = (language) => {
 
 export const validateEcuadorianCedula = (cedula) => {
   if (!/^\d{10}$/.test(cedula)) {
-    return false; // Not exactly 10 digits
+    return false;
   }
 
   const provinceCode = parseInt(cedula.substring(0, 2), 10);
@@ -100,4 +100,48 @@ export const callPhone = (number) => {
 
 export const sendEmail = (emailAddress) => {
   Linking.openURL(`mailto:${emailAddress}`);
+};
+
+export const appendPhoto = (formData, uri) => {
+  if (!uri) return;
+
+  const name = uri.split("/").pop();
+  const ext = name.split(".").pop();
+  const type = `image/${ext}`;
+
+  formData.append("photo", { uri, name, type });
+};
+export const appendSimpleFields = (formData, userData) => {
+  for (const key in userData) {
+    if (key !== "profileImageUri" && key !== "profile") {
+      formData.append(key, userData[key]);
+    }
+  }
+};
+
+export const appendProfileFields = (formData, profile) => {
+  if (!profile) return;
+
+  const { address, medicalConditions, vaccines, ...rest } = profile;
+
+  if (address) {
+    formData.append("profile.address.street", address.street);
+    formData.append("profile.address.city", address.city);
+    formData.append("profile.address.country", address.country);
+  }
+
+  if (medicalConditions) {
+    formData.append(
+      "profile.medicalConditions",
+      JSON.stringify(medicalConditions)
+    );
+  }
+
+  if (vaccines) {
+    formData.append("profile.vaccines", JSON.stringify(vaccines));
+  }
+
+  for (const key in rest) {
+    formData.append(`profile.${key}`, rest[key]);
+  }
 };

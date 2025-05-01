@@ -24,8 +24,14 @@ import {
 import { isStrongPassword } from "../../../utils/helpers";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
-import { getCurrentUser, updateUser } from "../../../redux/userSlice";
-import { changePassword } from "../../../redux/authSlice";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { getCurrentUser, updateUser, deleteMe } from "../../../redux/userSlice";
+import {
+  changePassword,
+  logoutUser,
+  clearAuth,
+} from "../../../redux/authSlice";
+import { CommonActions } from "@react-navigation/native";
 import { BASE_URL } from "../../../../config";
 import { ICONS, COLORS, SIZES, VALUES, FONTS } from "../../../styles/theme";
 
@@ -39,7 +45,7 @@ if (
 export default function ProfileScreen({ navigation }) {
   const { currentUser } = useSelector((state) => state.users);
   const { changePasswordError } = useSelector((state) => state.auth);
-  console.log(changePasswordError)
+  console.log(changePasswordError);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -67,11 +73,19 @@ export default function ProfileScreen({ navigation }) {
 
   const [editingField, setEditingField] = useState(null);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
+  const [moreDetailsExpanded, setMoreDetailsExpanded] = useState(false);
   const [detailsExpandedConditions, setDetailsExpandedConditions] =
     useState(false);
   const [detailsExpandedVaccines, setDetailsExpandedVaccines] = useState(false);
 
-  const [profileImageUri, setProfileImageUri] = useState(null); // local file
+  const [profileImageUri, setProfileImageUri] = useState(null);
+
+  const [medicalConditions, setMedicalConditions] = useState({});
+  const [vaccines, setVaccines] = useState([]);
+  const [newVaccineName, setNewVaccineName] = useState("");
+
+  const [vaccineDate, setVaccineDate] = useState(new Date());
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -83,8 +97,6 @@ export default function ProfileScreen({ navigation }) {
     height: React.useRef(null),
     weight: React.useRef(null),
   };
-
-  const [medicalConditions, setMedicalConditions] = useState({});
 
   const [newCondition, setNewCondition] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(
@@ -106,6 +118,7 @@ export default function ProfileScreen({ navigation }) {
     setCountry(currentUser?.profile?.address?.country);
     setBlood(currentUser?.profile?.bloodType);
     setMedicalConditions(currentUser?.profile?.medicalConditions);
+    setVaccines(currentUser?.profile?.vaccines || []);
     setProfileImage(currentUser?.profile?.photo);
   }, [currentUser]);
 
@@ -125,7 +138,7 @@ export default function ProfileScreen({ navigation }) {
 
     setNewCondition("");
   };
-
+  console.log(vaccines);
   const handleSaveChanges = () => {
     const userData = {
       name,
@@ -136,6 +149,7 @@ export default function ProfileScreen({ navigation }) {
         weightKg: Number(weight),
         bloodType: blood,
         medicalConditions,
+        vaccines,
         address: {
           street: address,
           city: province,
@@ -208,20 +222,29 @@ export default function ProfileScreen({ navigation }) {
     !passwordConfirmError &&
     !oldPasswordError;
 
-  const handleCloseAccount = () => {
-    Alert.alert("Confirm", "Are you sure you want to close your account?", [
-      { text: "Cancel", style: "cancel" },
-      {
-        text: "Yes, Close It",
-        style: "destructive",
-        onPress: () => {
-          Alert.alert(
-            "Account Closed",
-            "Your account has been successfully closed."
-          );
-        },
-      },
-    ]);
+  const handleCloseAccount = async () => {
+    // Alert.alert("Confirm", "Are you sure you want to close your account?", [
+    //   { text: "Cancel", style: "cancel" },
+    //   {
+    //     text: "Yes, Close It",
+    //     style: "destructive",
+    //     onPress: () => {
+    //       Alert.alert(
+    //         "Account Closed",
+    //         "Your account has been successfully closed."
+    //       );
+    //     },
+    //   },
+    // ]);
+    await dispatch(deleteMe());
+    await dispatch(logoutUser());
+    await dispatch(clearAuth());
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      })
+    );
   };
 
   const handlePickImage = async () => {
@@ -392,9 +415,124 @@ export default function ProfileScreen({ navigation }) {
     );
   };
 
+  const renderVaccines = () => {
+    const addVaccine = () => {
+      if (!newVaccineName.trim()) {
+        Alert.alert("Error", "Please enter vaccine name.");
+        return;
+      }
+
+      const formattedDate = new Intl.DateTimeFormat("en-GB").format(
+        vaccineDate
+      );
+
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setVaccines((prev) => [
+        ...prev,
+        { name: newVaccineName.trim(), date: formattedDate },
+      ]);
+
+      setNewVaccineName("");
+      setVaccineDate(new Date());
+      setShowDatePicker(false);
+    };
+
+    const deleteVaccine = (index) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      setVaccines((prev) => {
+        const updated = [...prev];
+        updated.splice(index, 1);
+        return updated;
+      });
+    };
+
+    return (
+      <View style={{ width: "100%", marginTop: 10 }}>
+        {vaccines?.map((vaccine, index) => (
+          <View
+            key={index}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 8,
+              borderBottomWidth: 1,
+              borderBottomColor: "#e5e7eb",
+            }}
+          >
+            <Text style={{ flex: 1 }}>
+              • {vaccine.name} ({vaccine.date})
+            </Text>
+            <TouchableOpacity onPress={() => deleteVaccine(index)}>
+              <Ionicons name="close" size={20} color="#ef4444" />
+            </TouchableOpacity>
+          </View>
+        ))}
+
+        {/* Add new vaccine */}
+        <View style={{ marginTop: 20 }}>
+          <Text style={styles.fieldLabel}>Add New Vaccine</Text>
+          <TextInput
+            placeholder="Vaccine name (e.g., Covid)"
+            value={newVaccineName}
+            onChangeText={setNewVaccineName}
+            style={[styles.inputPass, { marginBottom: 10 }]}
+          />
+
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={[styles.inputPass, { flex: 1, marginRight: 10 }]}>
+              <Text style={styles.fieldLabel}>Date</Text>
+
+              <TouchableOpacity
+                onPress={() => setShowDatePicker(true)}
+                style={[styles.inputPass, { justifyContent: "center" }]}
+              >
+                <Text>
+                  {vaccineDate
+                    ? new Intl.DateTimeFormat("en-GB").format(vaccineDate)
+                    : "Select Date"}
+                </Text>
+              </TouchableOpacity>
+
+              {showDatePicker && (
+                <DateTimePicker
+                  value={vaccineDate}
+                  mode="date"
+                  display={Platform.OS === "ios" ? "spinner" : "default"}
+                  onChange={(event, selectedDate) => {
+                    const currentDate = selectedDate || vaccineDate;
+                    setShowDatePicker(Platform.OS === "ios");
+                    setVaccineDate(currentDate);
+                  }}
+                />
+              )}
+            </View>
+
+            <TouchableOpacity
+              onPress={addVaccine}
+              style={{
+                backgroundColor: "#3b82f6",
+                paddingHorizontal: 16,
+                paddingVertical: 12,
+                borderRadius: 8,
+                alignItems: "center",
+              }}
+            >
+              <Ionicons name="add" size={20} color="white" />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
   const toggleDetailsExpanded = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDetailsExpanded(!detailsExpanded);
+  };
+
+  const toggleMoreDetailsExpanded = () => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+    setMoreDetailsExpanded(!moreDetailsExpanded);
   };
 
   const toggleDetailsExpandedCondition = () => {
@@ -441,17 +579,12 @@ export default function ProfileScreen({ navigation }) {
               <Ionicons name="pencil" size={18} color="white" />
             </TouchableOpacity>
           </View>
-          {renderField("Name", name, setName, "name")}
-          {renderField("Email", email, setEmail, "email")}
-          {renderField("Phone", phone, setPhone, "phone")}
-          {renderField("Address", address, setAddress, "address")}
-
           <TouchableOpacity
             onPress={toggleDetailsExpanded}
             style={styles.dropdownHeader}
           >
             <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>More Details</Text>
+              <Text style={styles.labelDetails}>Details</Text>
               <Ionicons
                 name={detailsExpanded ? "chevron-up" : "chevron-down"}
                 size={24}
@@ -459,8 +592,30 @@ export default function ProfileScreen({ navigation }) {
               />
             </View>
           </TouchableOpacity>
-
           {detailsExpanded && (
+            <>
+              {renderField("Name", name, setName, "name")}
+              {renderField("Email", email, setEmail, "email")}
+              {renderField("Phone", phone, setPhone, "phone")}
+              {renderField("Address", address, setAddress, "address")}
+            </>
+          )}
+
+          <TouchableOpacity
+            onPress={toggleMoreDetailsExpanded}
+            style={styles.dropdownHeader}
+          >
+            <View style={styles.dropdownContent}>
+              <Text style={styles.labelDetails}>More Details</Text>
+              <Ionicons
+                name={moreDetailsExpanded ? "chevron-up" : "chevron-down"}
+                size={24}
+                color={COLORS.black}
+              />
+            </View>
+          </TouchableOpacity>
+
+          {moreDetailsExpanded && (
             <View style={{ width: "100%" }}>
               <View style={styles.valueContainerDrop}>
                 <Text style={styles.fieldLabel}>Province</Text>
@@ -528,7 +683,7 @@ export default function ProfileScreen({ navigation }) {
             </View>
           </TouchableOpacity>
 
-          {/*vacunas*/}
+          {detailsExpandedVaccines && renderVaccines()}
 
           <TouchableOpacity
             style={styles.saveButton}

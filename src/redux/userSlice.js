@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BASE_URL, VERSION_URL } from "../../config"; 
+import { BASE_URL, VERSION_URL } from "../../config";
+import * as SecureStore from "expo-secure-store";
 import axios from "axios";
+import {appendProfileFields, appendSimpleFields, appendPhoto} from "../utils/helpers"
 
 const USER_ENDPOINT = `${BASE_URL}${VERSION_URL}/users`;
 
@@ -11,48 +13,12 @@ export const getCurrentUser = createAsyncThunk(
       const response = await axios.get(`${USER_ENDPOINT}/me`);
       return response.data.data.user;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "An error has occurred");
+      return rejectWithValue(
+        err.response?.data?.message || "An error has occurred"
+      );
     }
   }
 );
-
-function appendSimpleFields(formData, userData) {
-  for (const key in userData) {
-    if (key !== "profileImageUri" && key !== "profile") {
-      formData.append(key, userData[key]);
-    }
-  }
-}
-
-function appendProfileFields(formData, profile) {
-  if (!profile) return;
-
-  const { address, medicalConditions, ...rest } = profile;
-
-  if (address) {
-    formData.append("profile.address.street", address.street);
-    formData.append("profile.address.city", address.city);
-    formData.append("profile.address.country", address.country);
-  }
-
-  if (medicalConditions) {
-    formData.append("profile.medicalConditions", JSON.stringify(medicalConditions));
-  }
-
-  for (const key in rest) {
-    formData.append(`profile.${key}`, rest[key]);
-  }
-}
-
-function appendPhoto(formData, uri) {
-  if (!uri) return;
-
-  const name = uri.split("/").pop();
-  const ext = name.split(".").pop();
-  const type = `image/${ext}`;
-
-  formData.append("photo", { uri, name, type });
-}
 
 export const updateUser = createAsyncThunk(
   "users/updateUser",
@@ -64,9 +30,13 @@ export const updateUser = createAsyncThunk(
       appendProfileFields(formData, userData.profile);
       appendPhoto(formData, userData.profileImageUri);
 
-      const response = await axios.patch(`${BASE_URL}${VERSION_URL}/users/updateMe`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.patch(
+        `${USER_ENDPOINT}/updateMe`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       return response.data.data.user;
     } catch (err) {
@@ -75,6 +45,19 @@ export const updateUser = createAsyncThunk(
   }
 );
 
+export const deleteMe = createAsyncThunk(
+  'user/deleteMe',
+  async (_, { rejectWithValue }) => {
+    console.log('holaaa')
+    try {
+      await axios.delete(`${USER_ENDPOINT}/deleteMe`);
+       await SecureStore.deleteItemAsync("token");
+      return true;
+    } catch (error) {
+      return rejectWithValue(error.response?.data || 'Error deleting user');
+    }
+  }
+);
 
 const userSlice = createSlice({
   name: "users",
@@ -83,10 +66,12 @@ const userSlice = createSlice({
     loading: {
       get: false,
       update: false,
+      delete: false,
     },
     error: {
       get: null,
       update: null,
+      delete: null,
     },
   },
   reducers: {
@@ -122,6 +107,19 @@ const userSlice = createSlice({
       .addCase(updateUser.rejected, (state, action) => {
         state.loading.update = false;
         state.error.update = action.payload;
+      })
+      
+      .addCase(deleteMe.pending, (state) => {
+        state.loading.delete = true;
+        state.error.delete = null;
+      })
+      .addCase(deleteMe.fulfilled, (state, action) => {
+        state.loading.delete = false;
+        state.currentUser = null;
+      })
+      .addCase(deleteMe.rejected, (state, action) => {
+        state.loading.delete = false;
+        state.error.delete = action.payload;
       });
   },
 });
