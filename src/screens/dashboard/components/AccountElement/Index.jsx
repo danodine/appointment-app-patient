@@ -1,15 +1,9 @@
 import React from "react";
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, TouchableOpacity, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import PropTypes from "prop-types";
-
-const screenWidth = Dimensions.get("window").width;
+import styles from "./styles";
+import { COLORS } from "../../../../styles/theme";
 
 const AccountElement = ({
   icon,
@@ -22,7 +16,7 @@ const AccountElement = ({
   return (
     <TouchableOpacity style={styles.cardItem} onPress={handleClick}>
       {icon ? (
-        <Ionicons name={icon} size={iconSize || 20} color="#000" />
+        <Ionicons name={icon} size={iconSize || 20} color={COLORS.black} />
       ) : null}
       <View style={styles.textItem}>
         {title ? <Text style={styles.item1}>{title}</Text> : null}
@@ -33,36 +27,6 @@ const AccountElement = ({
   );
 };
 
-const styles = StyleSheet.create({
-  cardItem: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    width: screenWidth - 40,
-    marginBottom: 16,
-    padding: 16,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 5,
-    transition: "transform 0.2s ease-in-out",
-  },
-  textItem: {
-    marginLeft: 20,
-  },
-  cardIcon: {
-    width: 40,
-    height: 40,
-    marginRight: 20,
-    marginLeft: 5,
-  },
-  item1: {
-    fontWeight: "bold",
-    fontSize: 16,
-  },
-});
 AccountElement.propTypes = {
   icon: PropTypes.string,
   iconSize: PropTypes.number,

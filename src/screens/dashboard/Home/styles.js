@@ -2,6 +2,7 @@ import { StyleSheet } from "react-native";
 import { COLORS, FONTS, SIZES } from "../../../styles/theme";
 
 const styles = StyleSheet.create({
+  keyboardView: { flex: 1 },
   container: {
     flex: 1,
     alignItems: "center",

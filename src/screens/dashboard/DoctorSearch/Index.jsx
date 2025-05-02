@@ -93,7 +93,11 @@ const HomeSearch = ({ navigation }) => {
               />
             ) : (
               <View style={styles.avatarPlaceholder}>
-                <Ionicons name="person" size={50} color="#9ca3af" />
+                <Ionicons
+                  name={ICONS.person}
+                  size={SIZES.icon50}
+                  color={COLORS.iconGrey}
+                />
               </View>
             )}
             <View>

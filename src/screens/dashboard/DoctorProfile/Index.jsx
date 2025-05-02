@@ -107,7 +107,11 @@ const DoctorProfileScreen = ({ route, navigation }) => {
           />
         ) : (
           <View style={styles.avatarPlaceholder}>
-            <Ionicons name="person" size={50} color="#9ca3af" />
+            <Ionicons
+              name={ICONS.person}
+              size={SIZES.icon50}
+              color={COLORS.iconGrey}
+            />
           </View>
         )}
         <Text style={styles.name}>{doctor?.name}</Text>
@@ -193,8 +197,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
         title={STRINGS[language].doctorProfile.schedule}
         icon={require("../../../assets/icons/time-icon.png")}
       >
-        {/* here it is */}
-        <View style={{ gap: 12, marginTop: 8 }}>
+        <View style={styles.timeChart}>
           {times?.map((item, index) => (
             <View key={index} style={styles.dayCard}>
               <Text style={styles.dayTitle}>{item.day}</Text>
@@ -204,7 +207,7 @@ const DoctorProfileScreen = ({ route, navigation }) => {
                     name="time-outline"
                     size={18}
                     color={COLORS.primary}
-                    style={{ marginRight: 8 }}
+                    style={styles.timeChartIcon}
                   />
                   <Text
                     style={styles.timeText}

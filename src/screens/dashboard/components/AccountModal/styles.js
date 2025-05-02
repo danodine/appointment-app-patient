@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonText: {
-    color: "#fff",
+    color: COLORS.white,
   },
   modalOverlay: {
     flex: 1,
@@ -19,12 +19,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
     padding: 20,
     borderRadius: 10,
-    backgroundColor: "white",
+    backgroundColor: COLORS.white,
     elevation: 10,
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+    fontWeight: FONTS.boldFont,
     marginBottom: 20,
   },
   option: {
@@ -34,12 +34,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: "center",
   },
-  cancelText: { color: "red" },
+  cancelText: { color: COLORS.error },
 
   typeButton: {
     paddingVertical: 8,
     paddingHorizontal: 16,
-    backgroundColor: "#70C1E3",
+    backgroundColor: COLORS.secondary,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -47,8 +47,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   typeButtonText: {
-    fontWeight: "bold",
-    color: "#000",
+    fontWeight: FONTS.boldFont,
+    color: COLORS.black,
   },
 });
 

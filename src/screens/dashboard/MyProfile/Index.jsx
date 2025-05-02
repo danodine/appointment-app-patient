@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  StyleSheet,
   Alert,
   ScrollView,
   KeyboardAvoidingView,
@@ -15,12 +14,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import {
-  provinces,
-  countrys,
-  bloodTypes,
-  medicalCategories,
-} from "../../../constants/vars";
+import { provinces, countrys, bloodTypes } from "../../../constants/vars";
 import { isStrongPassword } from "../../../utils/helpers";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,9 +25,13 @@ import {
   logoutUser,
   clearAuth,
 } from "../../../redux/authSlice";
+import PropTypes from "prop-types";
 import { CommonActions } from "@react-navigation/native";
+import TopBanner from "../components/TopBanner/Index";
 import { BASE_URL } from "../../../../config";
-import { ICONS, COLORS, SIZES, VALUES, FONTS } from "../../../styles/theme";
+import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import styles from "./syles";
+import STRINGS from "../../../constants/strings";
 
 if (
   Platform.OS === "android" &&
@@ -45,6 +43,8 @@ if (
 export default function ProfileScreen({ navigation }) {
   const { currentUser } = useSelector((state) => state.users);
   const { changePasswordError } = useSelector((state) => state.auth);
+  const language = useSelector((state) => state.language.language);
+
   console.log(changePasswordError);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -73,7 +73,6 @@ export default function ProfileScreen({ navigation }) {
 
   const [editingField, setEditingField] = useState(null);
   const [detailsExpanded, setDetailsExpanded] = useState(false);
-  const [moreDetailsExpanded, setMoreDetailsExpanded] = useState(false);
   const [detailsExpandedConditions, setDetailsExpandedConditions] =
     useState(false);
   const [detailsExpandedVaccines, setDetailsExpandedVaccines] = useState(false);
@@ -100,7 +99,7 @@ export default function ProfileScreen({ navigation }) {
 
   const [newCondition, setNewCondition] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(
-    medicalCategories[0]?.value || "",
+    STRINGS[language].medicalCategories[0]?.value || []
   );
 
   useEffect(() => {
@@ -112,14 +111,10 @@ export default function ProfileScreen({ navigation }) {
     setEmail(currentUser?.email);
     setPhone(currentUser?.phone);
     setHeight(
-      isNaN(currentUser?.profile?.heightCm)
-        ? 0
-        : currentUser?.profile?.heightCm,
+      isNaN(currentUser?.profile?.heightCm) ? 0 : currentUser?.profile?.heightCm
     );
     setWeight(
-      isNaN(currentUser?.profile?.weightKg)
-        ? 0
-        : currentUser?.profile?.weightKg,
+      isNaN(currentUser?.profile?.weightKg) ? 0 : currentUser?.profile?.weightKg
     );
     setAddress(currentUser?.profile?.address?.street);
     setProvince(currentUser?.profile?.address?.city);
@@ -128,7 +123,7 @@ export default function ProfileScreen({ navigation }) {
     setMedicalConditions(
       currentUser?.profile?.medicalConditions === undefined
         ? {}
-        : currentUser?.profile?.medicalConditions,
+        : currentUser?.profile?.medicalConditions
     );
     setVaccines(currentUser?.profile?.vaccines || []);
     setProfileImage(currentUser?.profile?.photo);
@@ -178,10 +173,12 @@ export default function ProfileScreen({ navigation }) {
       .then(() => {
         // use a modal for succes and error
         // Alert.alert("Success", "Profile updated successfully!");
+        showBanner("success", "Data saved successfully!");
         dispatch(getCurrentUser());
         setProfileImageUri(null);
       })
       .catch((err) => {
+        showBanner("error", "Failed to save data!");
         // use a modal for succes and error
         // Alert.alert("Error", err);
       });
@@ -203,7 +200,7 @@ export default function ProfileScreen({ navigation }) {
         passwordCurrent: oldPassword,
         password: newPassword,
         passwordConfirm: confirmPassword,
-      }),
+      })
     );
     setOldPassword("");
     setOldPasswordError("");
@@ -215,18 +212,22 @@ export default function ProfileScreen({ navigation }) {
 
   const handleOldPassword = (value) => {
     setOldPassword(value);
-    setOldPasswordError(value === "" ? "Old password must not be empty" : "");
+    setOldPasswordError(
+      value === "" ? STRINGS[language].myProfile.oldPasswordInvalid : ""
+    );
   };
 
   const handlePassword = (value) => {
     setNewPassword(value);
-    setPasswordError(isStrongPassword(value) ? "" : "Error de clavw");
+    setPasswordError(
+      isStrongPassword(value) ? "" : STRINGS[language].myProfile.passwordInvalid
+    );
   };
 
   const handlePasswordConfirm = (value) => {
     setConfirmPassword(value);
     setPasswordConfirmError(
-      value === newPassword ? "" : "Passwords do not match",
+      value === newPassword ? "" : STRINGS[language].myProfile.passwordMismatch
     );
   };
 
@@ -247,7 +248,7 @@ export default function ProfileScreen({ navigation }) {
       CommonActions.reset({
         index: 0,
         routes: [{ name: "Login" }],
-      }),
+      })
     );
   };
 
@@ -287,7 +288,7 @@ export default function ProfileScreen({ navigation }) {
             onChangeText={onChangeText}
             style={styles.input}
             autoFocus
-            onBlur={() => setEditingField(null)} // 👈 Reset editing when blur happens
+            onBlur={() => setEditingField(null)}
           />
         ) : (
           <Text style={styles.fieldValue}>{value}</Text>
@@ -301,10 +302,10 @@ export default function ProfileScreen({ navigation }) {
           }}
         >
           <Ionicons
-            name="pencil"
-            size={20}
+            name={ICONS.pencil}
+            size={SIZES.icon20}
             color={COLORS.secondary}
-            style={{ marginLeft: 10 }}
+            style={styles.pencilIcon}
           />
         </TouchableOpacity>
       </View>
@@ -331,93 +332,62 @@ export default function ProfileScreen({ navigation }) {
       });
     };
 
-    const deleteCategory = (category) => {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-      setMedicalConditions((prev) => {
-        const newState = { ...prev };
-        delete newState[category];
-        return newState;
-      });
-    };
-
     return (
-      <View style={{ width: "100%", marginTop: 10 }}>
+      <View style={styles.renderMainView}>
         {medicalConditions &&
           Object?.entries(medicalConditions)?.map(([category, conditions]) => (
-            <View key={category} style={{ marginBottom: 20 }}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  marginBottom: 8,
-                }}
-              >
-                <Text style={{ fontWeight: "bold", flex: 1 }}>{category}</Text>
-                <TouchableOpacity onPress={() => deleteCategory(category)}>
-                  <Text style={styles.deleteButton}>Eliminar Categoria</Text>
-                </TouchableOpacity>
+            <View key={category} style={styles.renderElementView}>
+              <View style={styles.renderTitleView}>
+                <Text style={styles.renderTitleText}>
+                  {STRINGS[language].medicalCategoryValues[category]}
+                </Text>
               </View>
 
-              {/* Conditions List */}
               {conditions.map((cond, index) => (
-                <View
-                  key={index}
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    marginLeft: 10,
-                    paddingVertical: 8,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#e5e7eb",
-                  }}
-                >
-                  <Text style={{ flex: 1 }}>• {cond}</Text>
+                <View key={index} style={styles.renderListView}>
+                  <Text style={styles.renderListText}>• {cond}</Text>
                   <TouchableOpacity
                     onPress={() => deleteCondition(category, index)}
                   >
-                    <Text style={styles.deleteButton}>Eliminar</Text>
+                    <Text style={styles.deleteButton}>
+                      {STRINGS[language].myProfile.eliminar}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               ))}
             </View>
           ))}
 
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.fieldLabel}>Add New Condition</Text>
+        <View style={styles.renderAddView}>
+          <Text style={styles.fieldLabel}>
+            {STRINGS[language].myProfile.addCondition}
+          </Text>
           <Dropdown
-            data={medicalCategories}
+            data={STRINGS[language].medicalCategories}
             labelField="label"
             valueField="value"
             value={selectedCategory}
             onChange={(item) => setSelectedCategory(item.value)}
-            placeholder="Select Category"
+            placeholder={STRINGS[language].myProfile.selectCategory}
             style={styles.inputPass}
           />
 
-          {/* Input and Button side-by-side */}
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginTop: 10,
-            }}
-          >
+          <View style={styles.renderInputButtonView}>
             <TextInput
-              placeholder="Condition (e.g., Asthma)"
+              placeholder={STRINGS[language].myProfile.conditionPlaceholder}
               value={newCondition}
               onChangeText={setNewCondition}
-              style={[styles.inputPass, { flex: 1, marginRight: 10 }]}
+              style={styles.renderAddInput}
             />
             <TouchableOpacity
               onPress={addMedicalCondition}
-              style={{
-                backgroundColor: COLORS.secondary,
-                paddingHorizontal: 16,
-                paddingVertical: 9,
-                borderRadius: 8,
-              }}
+              style={styles.renderAddButton}
             >
-              <Ionicons name="add" size={20} color="white" />
+              <Ionicons
+                name={ICONS.add}
+                size={SIZES.icon20}
+                color={COLORS.white}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -434,7 +404,7 @@ export default function ProfileScreen({ navigation }) {
       }
 
       const formattedDate = new Intl.DateTimeFormat("en-GB").format(
-        vaccineDate,
+        vaccineDate
       );
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -458,40 +428,36 @@ export default function ProfileScreen({ navigation }) {
     };
 
     return (
-      <View style={{ width: "100%", marginTop: 10 }}>
+      <View style={styles.renderMainView}>
         {vaccines?.map((vaccine, index) => (
-          <View
-            key={index}
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 8,
-              borderBottomWidth: 1,
-              borderBottomColor: "#e5e7eb",
-            }}
-          >
-            <Text style={{ flex: 1 }}>
+          <View key={index} style={styles.renderListView}>
+            <Text style={styles.renderListText}>
               • {vaccine.name} ({vaccine.date})
             </Text>
             <TouchableOpacity onPress={() => deleteVaccine(index)}>
-              <Text style={styles.deleteButton}>Eliminar</Text>
+              <Text style={styles.deleteButton}>
+                {STRINGS[language].myProfile.eliminar}
+              </Text>
             </TouchableOpacity>
           </View>
         ))}
 
-        {/* Add new vaccine */}
-        <View style={{ marginTop: 20 }}>
-          <Text style={styles.fieldLabel}>Add New Vaccine</Text>
+        <View style={styles.renderAddView}>
+          <Text style={styles.fieldLabel}>
+            {STRINGS[language].myProfile.addVaccine}
+          </Text>
           <TextInput
-            placeholder="Vaccine name (e.g., Covid)"
+            placeholder={STRINGS[language].myProfile.vaccineNamePlaceholder}
             value={newVaccineName}
             onChangeText={setNewVaccineName}
-            style={[styles.inputPass, { marginBottom: 10 }]}
+            style={styles.renderAddInput}
           />
 
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <View style={[styles.inputPass, { flex: 1, marginRight: 10 }]}>
-              <Text style={styles.fieldLabel}>Date</Text>
+          <View style={styles.renderInputButtonView}>
+            <View style={styles.renderAddInput}>
+              <Text style={styles.fieldLabel}>
+                {STRINGS[language].myProfile.date}
+              </Text>
 
               <TouchableOpacity
                 onPress={() => setShowDatePicker(true)}
@@ -500,35 +466,43 @@ export default function ProfileScreen({ navigation }) {
                 <Text>
                   {vaccineDate
                     ? new Intl.DateTimeFormat("en-GB").format(vaccineDate)
-                    : "Select Date"}
+                    : STRINGS[language].myProfile.SelectDate}
                 </Text>
               </TouchableOpacity>
 
               {showDatePicker && (
-                <DateTimePicker
-                  value={vaccineDate}
-                  mode="date"
-                  display={Platform.OS === "ios" ? "spinner" : "default"}
-                  onChange={(event, selectedDate) => {
-                    const currentDate = selectedDate || vaccineDate;
-                    setShowDatePicker(Platform.OS === "ios");
-                    setVaccineDate(currentDate);
-                  }}
-                />
+                <View>
+                  <DateTimePicker
+                    value={vaccineDate}
+                    mode="date"
+                    display={Platform.OS === "ios" ? "spinner" : "default"}
+                    onChange={(event, selectedDate) => {
+                      const currentDate = selectedDate || vaccineDate;
+                      setShowDatePicker(Platform.OS === "ios");
+                      setVaccineDate(currentDate);
+                    }}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowDatePicker(false)}
+                    style={styles.closeCalendatButton}
+                  >
+                    <Text style={styles.closeCalendatButtonText}>
+                      {STRINGS[language].myProfile.close}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               )}
             </View>
 
             <TouchableOpacity
               onPress={addVaccine}
-              style={{
-                backgroundColor: COLORS.secondary,
-                paddingHorizontal: 16,
-                paddingVertical: 12,
-                borderRadius: 8,
-                alignItems: "center",
-              }}
+              style={styles.renderAddButton}
             >
-              <Ionicons name="add" size={20} color="white" />
+              <Ionicons
+                name={ICONS.add}
+                size={SIZES.icon20}
+                color={COLORS.white}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -541,11 +515,6 @@ export default function ProfileScreen({ navigation }) {
     setDetailsExpanded(!detailsExpanded);
   };
 
-  const toggleMoreDetailsExpanded = () => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setMoreDetailsExpanded(!moreDetailsExpanded);
-  };
-
   const toggleDetailsExpandedCondition = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDetailsExpandedConditions(!detailsExpandedConditions);
@@ -555,12 +524,27 @@ export default function ProfileScreen({ navigation }) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDetailsExpandedVaccines(!detailsExpandedVaccines);
   };
+  const [banner, setBanner] = useState({
+    visible: false,
+    type: "",
+    message: "",
+  });
+
+  const showBanner = (type, message) => {
+    setBanner({ visible: true, type, message });
+  };
 
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={styles.keyboardView}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <TopBanner
+        visible={banner.visible}
+        type={banner.type}
+        message={banner.message}
+        onHide={() => setBanner({ ...banner, visible: false })}
+      />
       <ScrollView style={styles.mainContainer}>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
           <Ionicons
@@ -571,7 +555,6 @@ export default function ProfileScreen({ navigation }) {
         </TouchableOpacity>
 
         <View style={styles.container}>
-          {/* Avatar */}
           <View style={styles.avatarContainer}>
             {profileImage ? (
               <Image
@@ -583,11 +566,19 @@ export default function ProfileScreen({ navigation }) {
               />
             ) : (
               <View style={styles.avatarPlaceholder}>
-                <Ionicons name="person" size={50} color="#9ca3af" />
+                <Ionicons
+                  name={ICONS.person}
+                  size={SIZES.icon50}
+                  color={COLORS.iconGrey}
+                />
               </View>
             )}
             <TouchableOpacity style={styles.editIcon} onPress={handlePickImage}>
-              <Ionicons name="pencil" size={18} color="white" />
+              <Ionicons
+                name={ICONS.pencil}
+                size={SIZES.icon20}
+                color={COLORS.white}
+              />
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -595,41 +586,46 @@ export default function ProfileScreen({ navigation }) {
             style={styles.dropdownHeader}
           >
             <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>Details</Text>
+              <Text style={styles.labelDetails}>
+                {STRINGS[language].myProfile.details}
+              </Text>
               <Ionicons
-                name={detailsExpanded ? "chevron-up" : "chevron-down"}
-                size={24}
+                name={detailsExpanded ? ICONS.arrowUp : ICONS.arrowDown}
+                size={SIZES.icon20}
                 color={COLORS.black}
               />
             </View>
           </TouchableOpacity>
           {detailsExpanded && (
-            <>
-              {renderField("Name", name, setName, "name")}
-              {renderField("Email", email, setEmail, "email")}
-              {renderField("Phone", phone, setPhone, "phone")}
-              {renderField("Address", address, setAddress, "address")}
-            </>
-          )}
-
-          <TouchableOpacity
-            onPress={toggleMoreDetailsExpanded}
-            style={styles.dropdownHeader}
-          >
-            <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>More Details</Text>
-              <Ionicons
-                name={moreDetailsExpanded ? "chevron-up" : "chevron-down"}
-                size={24}
-                color={COLORS.black}
-              />
-            </View>
-          </TouchableOpacity>
-
-          {moreDetailsExpanded && (
-            <View style={{ width: "100%" }}>
+            <View style={styles.expandElementContainer}>
+              {renderField(
+                STRINGS[language].myProfile.name,
+                name,
+                setName,
+                "name"
+              )}
+              {renderField(
+                STRINGS[language].myProfile.email,
+                email,
+                setEmail,
+                "email"
+              )}
+              {renderField(
+                STRINGS[language].myProfile.phone,
+                phone,
+                setPhone,
+                "phone"
+              )}
+              {renderField(
+                STRINGS[language].myProfile.address,
+                address,
+                setAddress,
+                "address"
+              )}
               <View style={styles.valueContainerDrop}>
-                <Text style={styles.fieldLabel}>Province</Text>
+                <Text style={styles.fieldLabel}>
+                  {STRINGS[language].myProfile.province}
+                </Text>
                 <Dropdown
                   style={styles.inputDropdown}
                   data={provinces}
@@ -640,7 +636,9 @@ export default function ProfileScreen({ navigation }) {
                 />
               </View>
               <View style={styles.valueContainerDrop}>
-                <Text style={styles.fieldLabel}>Country</Text>
+                <Text style={styles.fieldLabel}>
+                  {STRINGS[language].myProfile.country}
+                </Text>
                 <Dropdown
                   style={styles.inputDropdown}
                   data={countrys}
@@ -650,10 +648,22 @@ export default function ProfileScreen({ navigation }) {
                   onChange={(item) => setCountry(item.value)}
                 />
               </View>
-              {renderField("Height (cm)", height, setHeight, "height")}
-              {renderField("Weight (kg)", weight, setWeight, "weight")}
+              {renderField(
+                STRINGS[language].myProfile.height,
+                height,
+                setHeight,
+                "height"
+              )}
+              {renderField(
+                STRINGS[language].myProfile.weight,
+                weight,
+                setWeight,
+                "weight"
+              )}
               <View style={styles.valueContainerDrop}>
-                <Text style={styles.fieldLabel}>Blod type</Text>
+                <Text style={styles.fieldLabel}>
+                  {STRINGS[language].myProfile.bloodType}
+                </Text>
                 <Dropdown
                   style={styles.inputDropdown}
                   data={bloodTypes}
@@ -665,15 +675,20 @@ export default function ProfileScreen({ navigation }) {
               </View>
             </View>
           )}
+
           <TouchableOpacity
             onPress={toggleDetailsExpandedCondition}
             style={styles.dropdownHeader}
           >
             <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>Medical Condidions</Text>
+              <Text style={styles.labelDetails}>
+                {STRINGS[language].myProfile.medicalConditions}
+              </Text>
               <Ionicons
-                name={detailsExpandedConditions ? "chevron-up" : "chevron-down"}
-                size={24}
+                name={
+                  detailsExpandedConditions ? ICONS.arrowUp : ICONS.arrowDown
+                }
+                size={SIZES.icon20}
                 color={COLORS.black}
               />
             </View>
@@ -685,10 +700,12 @@ export default function ProfileScreen({ navigation }) {
             style={styles.dropdownHeader}
           >
             <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>Vaccines</Text>
+              <Text style={styles.labelDetails}>
+                {STRINGS[language].myProfile.vaccines}
+              </Text>
               <Ionicons
-                name={detailsExpandedVaccines ? "chevron-up" : "chevron-down"}
-                size={24}
+                name={detailsExpandedVaccines ? ICONS.arrowUp : ICONS.arrowDown}
+                size={SIZES.icon20}
                 color={COLORS.black}
               />
             </View>
@@ -700,12 +717,16 @@ export default function ProfileScreen({ navigation }) {
             style={styles.saveButton}
             onPress={handleSaveChanges}
           >
-            <Text style={styles.saveButtonText}>Save Changes</Text>
+            <Text style={styles.saveButtonText}>
+              {STRINGS[language].myProfile.save}
+            </Text>
           </TouchableOpacity>
 
           {changePass && (
-            <View style={{ width: "100%" }}>
-              <Text style={styles.label}>Old Password</Text>
+            <View style={styles.expandElementContainer}>
+              <Text style={styles.label}>
+                {STRINGS[language].myProfile.oldPassword}
+              </Text>
               <TextInput
                 style={[
                   styles.inputPass,
@@ -716,14 +737,15 @@ export default function ProfileScreen({ navigation }) {
                 value={oldPassword}
                 onChangeText={handleOldPassword}
                 onBlur={() => setOldPasswordTouched(true)}
-                placeholder="Enter new password"
                 secureTextEntry
               />
               {oldPasswordError && oldPasswordTouched && (
                 <Text style={styles.errorText}>{oldPasswordError}</Text>
               )}
 
-              <Text style={styles.label}>New Password</Text>
+              <Text style={styles.label}>
+                {STRINGS[language].myProfile.newPassword}
+              </Text>
               <TextInput
                 style={[
                   styles.inputPass,
@@ -732,14 +754,15 @@ export default function ProfileScreen({ navigation }) {
                 value={newPassword}
                 onChangeText={handlePassword}
                 onBlur={() => setPasswordTouched(true)}
-                placeholder="Enter new password"
                 secureTextEntry
               />
               {passwordError && passwordTouched && (
                 <Text style={styles.errorText}>{passwordError}</Text>
               )}
 
-              <Text style={styles.label}>Confirm Password</Text>
+              <Text style={styles.label}>
+                {STRINGS[language].myProfile.newPasswordConfirm}
+              </Text>
               <TextInput
                 style={[
                   styles.inputPass,
@@ -749,7 +772,6 @@ export default function ProfileScreen({ navigation }) {
                 ]}
                 value={confirmPassword}
                 onChangeText={handlePasswordConfirm}
-                placeholder="Confirm new password"
                 secureTextEntry
                 onBlur={() => setPasswordConfirmTouched(true)}
               />
@@ -765,7 +787,9 @@ export default function ProfileScreen({ navigation }) {
                 onPress={handleSaveNewPassword}
                 disabled={!isFormValid}
               >
-                <Text style={styles.saveButtonText}>Save New Password</Text>
+                <Text style={styles.saveButtonText}>
+                  {STRINGS[language].myProfile.savePassword}
+                </Text>
               </TouchableOpacity>
             </View>
           )}
@@ -775,7 +799,9 @@ export default function ProfileScreen({ navigation }) {
             onPress={handleChangePassword}
           >
             <Text style={styles.secondaryButtonText}>
-              {changePass ? "Cancel" : "Change Password"}
+              {changePass
+                ? STRINGS[language].myProfile.cancel
+                : STRINGS[language].myProfile.changePassword}
             </Text>
           </TouchableOpacity>
 
@@ -783,7 +809,9 @@ export default function ProfileScreen({ navigation }) {
             style={styles.closeButton}
             onPress={handleCloseAccount}
           >
-            <Text style={styles.closeButtonText}>Close Account</Text>
+            <Text style={styles.closeButtonText}>
+              {STRINGS[language].myProfile.closeAccount}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -791,170 +819,10 @@ export default function ProfileScreen({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  mainContainer: {
-    flex: 1,
-    paddingHorizontal: 20,
-  },
-  container: {
-    paddingTop: SIZES.mainContainerPaddingTop70,
-    alignItems: "center",
-    paddingBottom: 40,
-  },
-  backButton: VALUES.backButtonColor,
-  avatarContainer: {
-    position: "relative",
-    marginBottom: 30,
-  },
-  avatarPlaceholder: {
-    width: 100,
-    height: 100,
-    backgroundColor: "#e5e7eb",
-    borderRadius: 50,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatar: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-  },
-  editIcon: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    backgroundColor: COLORS.secondary,
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 2,
-    borderColor: "#f9fafb",
-  },
-  fieldContainer: {
-    width: "100%",
-    marginBottom: 20,
-  },
-  fieldLabel: {
-    fontWeight: "bold",
-    marginBottom: 4,
-  },
-  valueContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    borderBottomWidth: 1,
-    borderBottomColor: "#d1d5db",
-    paddingBottom: 8,
-  },
-  valueContainerDrop: {
-    borderBottomWidth: 1,
-    borderBottomColor: "#d1d5db",
-    paddingBottom: 8,
-    marginBottom: 10,
-  },
-  fieldValue: {
-    color: "#111827",
-    flex: 1,
-  },
-  input: {
-    flex: 1,
-    color: "#111827",
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.secondary,
-  },
-  inputDropdown: {
-    flex: 1,
-  },
-  saveButton: {
-    backgroundColor: COLORS.secondary,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    marginTop: 20,
-    width: "100%",
-    alignItems: "center",
-  },
-  saveButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  secondaryButton: {
-    borderColor: COLORS.secondary,
-    borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    marginTop: 15,
-    width: "100%",
-    alignItems: "center",
-  },
-  secondaryButtonText: {
-    color: COLORS.secondary,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  closeButton: {
-    borderColor: COLORS.error,
-    borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 8,
-    marginTop: 15,
-    width: "100%",
-    alignItems: "center",
-  },
-  closeButtonText: {
-    color: "#ef4444",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  label: {
-    marginTop: 12,
-    marginBottom: 4,
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
-    letterSpacing: 1,
-  },
-  inputPass: {
-    width: "100%",
-    backgroundColor: COLORS.white,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-  },
-  dropdownHeader: {
-    width: "100%",
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  dropdownContent: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  labelDetails: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  errorBorder: {
-    borderColor: COLORS.error,
-    borderWidth: 1,
-    borderRadius: 8,
-  },
-  errorText: {
-    color: COLORS.error,
-    marginBottom: 8,
-    marginTop: 4,
-  },
-  buttonOpacity: { opacity: VALUES.inactiveButtonOpacity },
-  deleteButton: {
-    backgroundColor: COLORS.error,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 20,
-    color: COLORS.white,
-  },
-});
+ProfileScreen.propTypes = {
+  navigation: PropTypes.shape({
+    navigate: PropTypes.func.isRequired,
+    goBack: PropTypes.func.isRequired,
+    dispatch: PropTypes.func.isRequired,
+  }).isRequired,
+};

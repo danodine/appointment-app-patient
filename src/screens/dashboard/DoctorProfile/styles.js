@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   avatarPlaceholder: {
     width: 100,
     height: 100,
-    backgroundColor: "#e5e7eb",
+    backgroundColor: COLORS.iconGrey,
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
@@ -168,6 +168,8 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
+  timeChart: { gap: 12, marginTop: 8 },
+  timeChartIcon: { marginRight: 8 },
 });
 
 export default styles;

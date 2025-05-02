@@ -12,6 +12,8 @@ const COLORS = {
   error: "#FF0000",
   greyText: "#555",
   greyBorder: "#ccc",
+  whiteText: "#fff",
+  blackText: "#000",
   selectedMenuItem: "white",
   menuItem: "black",
   tagColor: "#d1eded",
@@ -21,6 +23,7 @@ const COLORS = {
   morning: "#B7E4C7",
   afternoon: "#FFD6A5",
   externalLink: "#0000EE",
+  iconGrey: "#9ca3af",
 };
 
 const FONTS = {
@@ -45,6 +48,12 @@ const ICONS = {
   shieldCheckmark: "shield-checkmark-outline",
   personCircle: "person-circle",
   closeIcon: "close",
+  person: "person",
+  search: "search",
+  pencil: "pencil",
+  add: "add",
+  arrowUp: "chevron-up",
+  arrowDown: "chevron-down",
 };
 
 const TYPES = {

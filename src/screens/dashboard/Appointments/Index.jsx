@@ -30,7 +30,7 @@ import { BASE_URL } from "../../../../config";
 import { Ionicons } from "@expo/vector-icons";
 import STRINGS from "../../../constants/strings";
 import styles from "./styles";
-import { COLORS } from "../../../styles/theme";
+import { COLORS, ICONS, SIZES } from "../../../styles/theme";
 import PropTypes from "prop-types";
 
 const AppointmentsScreen = ({ navigation }) => {
@@ -158,11 +158,14 @@ const AppointmentsScreen = ({ navigation }) => {
   const openMapPrompt = async (address) => {
     const query = encodeURIComponent(address);
 
-    const options = ["Open in Google Maps", "Open in Waze"];
+    const options = [
+      STRINGS[language].appointments.openGoogleMaps,
+      STRINGS[language].appointments.openWays,
+    ];
     if (Platform.OS === "ios") {
-      options.push("Open in Apple Maps");
+      options.push(STRINGS[language].appointments.openAppleMaps);
     }
-    options.push("Cancel");
+    options.push(STRINGS[language].appointments.cancel);
 
     const cancelButtonIndex = options.length - 1;
 
@@ -194,7 +197,6 @@ const AppointmentsScreen = ({ navigation }) => {
             Linking.openURL(wazeWebUrl);
           }
         } else if (Platform.OS === "ios" && buttonIndex === 2) {
-          // Apple Maps
           const appleMapsUrl = `http://maps.apple.com/?q=${query}`;
           Linking.openURL(appleMapsUrl);
         }
@@ -259,7 +261,7 @@ const AppointmentsScreen = ({ navigation }) => {
 
             <View style={styles.itemTextConteiner}>
               <Text style={styles.bold}>
-                {STRINGS[language].doctorProfile.email}
+                {STRINGS[language].doctorProfile.phone}
               </Text>
               <TouchableOpacity
                 onPress={() => callPhone(modalData?.doctorPhone)}
@@ -393,7 +395,11 @@ const AppointmentsScreen = ({ navigation }) => {
               />
             ) : (
               <View style={styles.avatarPlaceholder}>
-                <Ionicons name="person" size={50} color="#9ca3af" />
+                <Ionicons
+                  name={ICONS.person}
+                  size={SIZES.icon50}
+                  color={COLORS.iconGrey}
+                />
               </View>
             )}
             <View>

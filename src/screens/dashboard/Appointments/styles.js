@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   cardItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#fff",
+    backgroundColor: COLORS.white,
     width: screenWidth - 40,
     marginBottom: 16,
     padding: 16,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   avatarPlaceholder: {
     width: 70,
     height: 70,
-    backgroundColor: "#e5e7eb",
+    backgroundColor: COLORS.greyBorder,
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",

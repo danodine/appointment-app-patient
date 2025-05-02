@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { View, StyleSheet } from "react-native";
+import { View } from "react-native";
 import AccountElement from "../components/AccountElement/Index";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../../redux/authSlice";
@@ -10,6 +10,7 @@ import { ICONS, SIZES, TYPES } from "../../../styles/theme";
 import { setLanguageTo } from "../../../utils/helpers";
 import { languages } from "../../../constants/vars";
 import ModalComponent from "../components/AccountModal/Index";
+import styles from "./styles";
 
 const AccountScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
@@ -99,13 +100,5 @@ AccountScreen.propTypes = {
     dispatch: PropTypes.func.isRequired,
   }).isRequired,
 };
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-    marginTop: 30,
-    paddingTop: 50,
-  },
-});
 
 export default AccountScreen;
