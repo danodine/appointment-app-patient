@@ -25,7 +25,7 @@ import {
 } from "../../../utils/helpers";
 import styles from "./styles";
 import STRINGS from "../../../constants/strings";
-import { COLORS } from "../../../styles/theme";
+import { COLORS, FONT_SIZES } from "../../../styles/theme";
 
 const SingUpScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
@@ -51,7 +51,6 @@ const SingUpScreen = ({ navigation }) => {
 
   const [birthDate, setBirthDate] = useState(new Date());
   const [birthDateError, setBirthDateError] = useState("");
-  const [birthDateTouched, setBirthDateTouched] = useState(false);
   const [show, setShow] = useState(false);
   const [tempDate, setTempDate] = useState(new Date());
 
@@ -225,7 +224,7 @@ const SingUpScreen = ({ navigation }) => {
                 ]}
               />
             </Pressable>
-            {birthDateError && birthDateTouched && (
+            {birthDateError && (
               <Text style={styles.errorText}>{birthDateError}</Text>
             )}
             {Platform.OS === "android" && show && (
@@ -283,6 +282,12 @@ const SingUpScreen = ({ navigation }) => {
             valueField="value"
             value={city}
             onChange={(item) => setCity(item.value)}
+            itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+            selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+            placeholderStyle={{
+              fontSize: FONT_SIZES.inputText,
+              color: COLORS.ligthGreyText,
+            }}
           />
 
           <Text style={styles.label}>{text.street}</Text>

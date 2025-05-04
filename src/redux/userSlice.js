@@ -66,6 +66,7 @@ const userSlice = createSlice({
   name: "users",
   initialState: {
     currentUser: {},
+    cachedProfileImageUri: null,
     loading: {
       get: false,
       update: false,
@@ -84,6 +85,9 @@ const userSlice = createSlice({
     clearCurrentUser: (state) => {
       state.currentUser = {};
     },
+    setCachedProfileImageUri: (state, action) => {
+      state.cachedProfileImageUri = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -94,6 +98,10 @@ const userSlice = createSlice({
       .addCase(getCurrentUser.fulfilled, (state, action) => {
         state.loading.get = false;
         state.currentUser = action.payload;
+        const imageUri = action.payload.profile.photo
+          ? `${BASE_URL}/img/users/${action.payload.profile.photo}`
+          : null;
+        state.cachedProfileImageUri = imageUri;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
         state.loading.get = false;
@@ -106,6 +114,10 @@ const userSlice = createSlice({
       .addCase(updateUser.fulfilled, (state, action) => {
         state.loading.update = false;
         state.currentUser = action.payload;
+        const imageUri = action.payload.profile.photo
+          ? `${BASE_URL}/img/users/${action.payload.profile.photo}`
+          : null;
+        state.cachedProfileImageUri = imageUri;
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading.update = false;

@@ -69,7 +69,7 @@ const STRINGS = {
       nationalIDPlaceholder: "1234567890",
       cancel: "Cancel",
       ok: "Ok",
-      done: "Done",
+      done: "Seleccionar",
       streetPlaceholder: "Ejm: Machala y Salinas",
       emailPlaceholder: "Ejm: ejemplo@gmail.com",
     },
@@ -123,6 +123,8 @@ const STRINGS = {
       openWays: "Abrir con Waze",
       openAppleMaps: "Abrir con Apple Maps",
       cancel: "Cancelar",
+      noCurrent: "Actualmente no tiene citas",
+      noPasst: "No tiene citas pasadas",
     },
     account: {
       myProfile: "Mi perfil",
@@ -138,6 +140,7 @@ const STRINGS = {
     bookAppointment: {
       noSlots: "No se encuentran horarios disponibles para esta fecha",
       selectDate: "Seleccione una fehca",
+      selectType: "Seleccione el tipo de cita",
       timeSlots: "Horarios disponibles",
       confirmAppointment: "Confirmar Cita",
     },
@@ -199,7 +202,7 @@ const STRINGS = {
       email: "E-Mail",
       phone: "Telefono",
       address: "Dirección",
-      close: "Cerrar",
+      close: "Seleccionar",
     },
     medicalCategories: [
       { label: "Enfermedades Infecciosas", value: "IFDI" },
@@ -411,6 +414,8 @@ const STRINGS = {
       openWays: "Open with Waze",
       openAppleMaps: "Open with Apple Maps",
       cancel: "Cancel",
+      noCurrent: "You have no booked appointments",
+      noPasst: "You have no past appointments",
     },
     account: {
       myProfile: "My Profile",
@@ -426,6 +431,7 @@ const STRINGS = {
     bookAppointment: {
       noSlots: "No available slots for this date",
       selectDate: "Select a date",
+      selectType: "Select appointment type",
       timeSlots: "Available times",
       confirmAppointment: "Confirm Appointment",
     },
@@ -487,7 +493,7 @@ const STRINGS = {
       email: "E-Mail",
       phone: "Phone",
       address: "Adrress",
-      close: "Close",
+      close: "Done",
     },
     medicalCategories: [
       { label: "Infectious Diseases", value: "IFDI" },

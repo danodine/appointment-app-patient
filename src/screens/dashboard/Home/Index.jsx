@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   KeyboardAvoidingView,
   Text,
@@ -8,7 +8,8 @@ import {
   ScrollView,
   View,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUser } from "../../../redux/userSlice";
 import PropTypes from "prop-types";
 import { Ionicons } from "@expo/vector-icons";
 import styles from "./styles";
@@ -18,9 +19,15 @@ import { COLORS, ICONS, SIZES } from "../../../styles/theme";
 const HomeScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
 
+  const dispatch = useDispatch();
+
   const handleSearch = () => {
     navigation.navigate("DoctorSearch");
   };
+
+  useEffect(() => {
+    dispatch(getCurrentUser());
+  }, []);
 
   return (
     <KeyboardAvoidingView

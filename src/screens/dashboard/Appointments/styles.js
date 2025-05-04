@@ -1,17 +1,28 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS, FONTS, SIZES, VALUES } from "../../../styles/theme";
+import {
+  COLORS,
+  FONT_WEIGHT,
+  VALUES,
+  FONT_SIZES,
+  PADDINGS,
+} from "../../../styles/theme";
 
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 50,
-    paddingHorizontal: 20,
     flex: 1,
   },
+  mainElementContainer: {
+    paddingTop: 50,
+  },
+  elementContainer: {
+    marginHorizontal: 20,
+  },
+  flatlistElement: { marginBottom: 95 },
   title: {
-    fontWeight: FONTS.boldFont,
-    fontSize: SIZES.subTitleSize,
+    fontWeight: FONT_WEIGHT.boldFontBig,
+    fontSize: FONT_SIZES.sectionTitleBig,
     marginBottom: 20,
   },
   tabRow: {
@@ -20,11 +31,11 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
   },
   tab: {
-    fontSize: 16,
     marginRight: 20,
   },
   tabText: {
-    color: COLORS.black,
+    color: COLORS.blackText,
+    fontSize: FONT_SIZES.subtitle2,
   },
   underline: {
     marginTop: 4,
@@ -36,17 +47,18 @@ const styles = StyleSheet.create({
   cardItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.cardItemBackground,
     width: screenWidth - 40,
     marginBottom: 16,
     padding: 16,
     borderRadius: 12,
-    shadowColor: COLORS.black,
+    shadowColor: COLORS.cardItemShadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 5,
     transition: "transform 0.2s ease-in-out",
+    marginHorizontal: 20,
   },
   cardIcon: {
     width: 40,
@@ -55,8 +67,8 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   item1: {
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.subtitle2,
   },
   modalOverlay: {
     flex: 1,
@@ -76,25 +88,27 @@ const styles = StyleSheet.create({
   },
   cancelText: { color: COLORS.error },
   typeButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: PADDINGS.mediumButtonVertical,
+    paddingHorizontal: PADDINGS.mediumButtonHorizontal,
     backgroundColor: COLORS.secondary,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
     marginBottom: 10,
+    fontSize: FONT_SIZES.mediumButtonText,
     marginTop: 10,
   },
   typeButtonText: {
-    fontWeight: FONTS.boldFont,
-    color: COLORS.black,
+    fontWeight: FONT_WEIGHT.boldFont,
+    color: COLORS.whiteText,
   },
   buttonInactive: {
     opacity: VALUES.inactiveButtonOpacity,
   },
   doctorName: {
-    fontSize: SIZES.subTitleSize,
+    fontSize: FONT_SIZES.sectionTitleBig,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginBottom: 10,
   },
   itemTextConteiner: {
@@ -103,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   bold: {
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   newAppointmentButton: {
     position: "absolute",
@@ -111,14 +125,14 @@ const styles = StyleSheet.create({
     zIndex: 10,
     right: 20,
     backgroundColor: COLORS.secondary,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     borderRadius: 20,
   },
   newAppointmentButtonText: {
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    color: COLORS.whiteText,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.mediumButtonText,
   },
   linkElement: { color: COLORS.externalLink },
   active: { color: COLORS.green },
@@ -137,6 +151,23 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginRight: 20,
+  },
+  statusTagContainer: {
+    flex: 1,
+    position: "relative",
+  },
+  statusTagText: { position: "absolute", top: 0, right: 0, fontWeight: "bold" },
+  noDataContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginTop: -50,
+  },
+  nodataImage: {
+    width: "80%",
+    maxHeight: 300,
+    marginBottom: 20,
+    resizeMode: "contain",
   },
 });
 

@@ -1,19 +1,17 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS, VALUES } from "../../../../styles/theme";
+import {
+  COLORS,
+  FONT_SIZES,
+  FONT_WEIGHT,
+  PADDINGS,
+  VALUES,
+} from "../../../../styles/theme";
 
 const styles = StyleSheet.create({
-  button: {
-    backgroundColor: "#4A90E2",
-    padding: 12,
-    borderRadius: 8,
-  },
-  buttonText: {
-    color: COLORS.white,
-  },
   modalOverlay: {
     flex: 1,
     justifyContent: "center",
-    backgroundColor: "rgba(0,0,0,0.4)",
+    backgroundColor: COLORS.modalOverlay,
   },
   modalContent: {
     marginHorizontal: 30,
@@ -23,8 +21,8 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   title: {
-    fontSize: 18,
-    fontWeight: FONTS.boldFont,
+    fontSize: FONT_SIZES.subtitle1,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginBottom: 20,
   },
   option: {
@@ -37,8 +35,8 @@ const styles = StyleSheet.create({
   cancelText: { color: COLORS.error },
 
   typeButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: PADDINGS.mediumButtonVertical,
+    paddingHorizontal: PADDINGS.mediumButtonHorizontal,
     backgroundColor: COLORS.secondary,
     borderRadius: 20,
     alignItems: "center",
@@ -47,8 +45,8 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   typeButtonText: {
-    fontWeight: FONTS.boldFont,
-    color: COLORS.black,
+    fontWeight: FONT_WEIGHT.boldFont,
+    color: COLORS.whiteText,
   },
 });
 

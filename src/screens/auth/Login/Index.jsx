@@ -145,7 +145,7 @@ const LoginScreen = ({ navigation }) => {
           style={styles.buttonSecondary}
           onPress={handleLanguage}
         >
-          <Text style={styles.footerText}>
+          <Text>
             {STRINGS[language].login.language}
             <Text style={styles.bold}>
               {STRINGS[language].login.selectedLanguage}

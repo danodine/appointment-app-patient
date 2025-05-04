@@ -69,27 +69,29 @@ const AccountScreen = ({ navigation }) => {
         title={modalTitle}
         type={modalType}
       />
-      <AccountElement
-        icon={ICONS.personCircle}
-        iconSize={SIZES.icon50}
-        title={STRINGS[language].account.myProfile}
-        subtitle={STRINGS[language].account.editProfile}
-        subtitle2={STRINGS[language].account.resetPassword}
-        handleClick={handleProfile}
-      />
-      <AccountElement
-        icon={ICONS.globe}
-        iconSize={SIZES.icon50}
-        title={STRINGS[language].account.language}
-        subtitle={STRINGS[language].account.selectedLanguage}
-        handleClick={handleLanguage}
-      />
-      <AccountElement
-        icon={ICONS.closeIcon}
-        iconSize={SIZES.icon50}
-        title={STRINGS[language].account.logOut}
-        handleClick={handleLogOutModal}
-      />
+      <View style={styles.elementContainer}>
+        <AccountElement
+          icon={ICONS.personCircle}
+          iconSize={SIZES.icon50}
+          title={STRINGS[language].account.myProfile}
+          subtitle={STRINGS[language].account.editProfile}
+          subtitle2={STRINGS[language].account.resetPassword}
+          handleClick={handleProfile}
+        />
+        <AccountElement
+          icon={ICONS.globe}
+          iconSize={SIZES.icon50}
+          title={STRINGS[language].account.language}
+          subtitle={STRINGS[language].account.selectedLanguage}
+          handleClick={handleLanguage}
+        />
+        <AccountElement
+          icon={ICONS.closeIcon}
+          iconSize={SIZES.icon50}
+          title={STRINGS[language].account.logOut}
+          handleClick={handleLogOutModal}
+        />
+      </View>
     </View>
   );
 };

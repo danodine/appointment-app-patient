@@ -1,5 +1,11 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES, FONTS, VALUES } from "../../../styles/theme";
+import {
+  COLORS,
+  FONT_SIZES,
+  FONT_WEIGHT,
+  PADDINGS,
+  VALUES,
+} from "../../../styles/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,40 +14,40 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   title: {
-    fontSize: SIZES.titleSize,
-    color: COLORS.black,
+    fontSize: FONT_SIZES.pageTitle,
+    color: COLORS.blackText,
     textAlign: "center",
     paddingTop: 30,
     paddingBottom: 30,
   },
   bold: {
-    fontWeight: "700",
+    fontWeight: FONT_WEIGHT.boldFontBig,
   },
   label: {
     marginTop: 12,
     marginBottom: 4,
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
     letterSpacing: 1,
+    fontSize: FONT_SIZES.inputTitle,
+    color: COLORS.blackText,
   },
   input: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackground,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 16,
   },
   button: {
     backgroundColor: COLORS.secondary,
     marginTop: 24,
-    paddingVertical: 12,
+    paddingVertical: PADDINGS.mainButtonVertical,
     borderRadius: 12,
     alignItems: "center",
   },
   buttonText: {
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    color: COLORS.blackText,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.bigButtonText,
   },
   errorBorder: {
     borderColor: COLORS.error,
@@ -61,12 +67,11 @@ const styles = StyleSheet.create({
   },
   datePickerContainerView: {
     flex: 1,
-    backgroundColor: COLORS.black,
     justifyContent: "center",
     padding: 20,
   },
   datePickerView: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
     borderRadius: 10,
     padding: 20,
   },

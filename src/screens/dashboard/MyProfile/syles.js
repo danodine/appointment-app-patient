@@ -1,5 +1,11 @@
 import { StyleSheet } from "react-native";
-import { COLORS, SIZES, VALUES, FONTS } from "../../../styles/theme";
+import {
+  COLORS,
+  VALUES,
+  FONT_WEIGHT,
+  PADDINGS,
+  FONT_SIZES,
+} from "../../../styles/theme";
 
 const styles = StyleSheet.create({
   keyboardView: { flex: 1 },
@@ -8,7 +14,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   container: {
-    paddingTop: SIZES.mainContainerPaddingTop70,
+    paddingTop: PADDINGS.mainTop,
     alignItems: "center",
     paddingBottom: 40,
   },
@@ -48,7 +54,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   fieldLabel: {
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginBottom: 4,
   },
   valueContainer: {
@@ -78,23 +84,23 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: COLORS.secondary,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     borderRadius: 8,
     marginTop: 20,
     width: "100%",
     alignItems: "center",
   },
   saveButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
+    color: COLORS.whiteText,
+    fontSize: FONT_SIZES.mediumButtonText,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   secondaryButton: {
     borderColor: COLORS.secondary,
     borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     borderRadius: 8,
     marginTop: 15,
     width: "100%",
@@ -102,14 +108,14 @@ const styles = StyleSheet.create({
   },
   secondaryButtonText: {
     color: COLORS.secondary,
-    fontSize: 16,
-    fontWeight: FONTS.boldFont,
+    fontSize: FONT_SIZES.mediumButtonText,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   closeButton: {
     borderColor: COLORS.error,
     borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     borderRadius: 8,
     marginTop: 15,
     width: "100%",
@@ -117,19 +123,19 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     color: COLORS.error,
-    fontSize: 16,
-    fontWeight: FONTS.boldFont,
+    fontSize: FONT_SIZES.mediumButtonText,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   label: {
     marginTop: 12,
     marginBottom: 4,
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
+    color: COLORS.blackText,
+    fontWeight: FONT_WEIGHT.boldFont,
     letterSpacing: 1,
   },
   inputPass: {
     width: "100%",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -145,8 +151,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   labelDetails: {
-    fontSize: 16,
-    fontWeight: FONTS.boldFont,
+    fontSize: FONT_SIZES.subtitle2,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   errorBorder: {
     borderColor: COLORS.error,
@@ -161,12 +167,11 @@ const styles = StyleSheet.create({
   buttonOpacity: { opacity: VALUES.inactiveButtonOpacity },
   deleteButton: {
     backgroundColor: COLORS.error,
-    paddingHorizontal: 10,
-    paddingVertical: 3,
+    paddingHorizontal: PADDINGS.smallButtonHorizontal,
+    paddingVertical: PADDINGS.smallButtonVertical,
     borderRadius: 20,
-    color: COLORS.white,
+    color: COLORS.whiteText,
   },
-  // new stles not in order
   pencilIcon: {
     marginLeft: 10,
   },
@@ -180,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
-  renderTitleText: { fontWeight: FONTS.boldFont, flex: 1 },
+  renderTitleText: { fontWeight: FONT_WEIGHT.boldFont, flex: 1 },
   renderListView: {
     flexDirection: "row",
     alignItems: "center",
@@ -200,7 +205,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 10,
     width: "100%",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -214,15 +219,15 @@ const styles = StyleSheet.create({
   expandElementContainer: { width: "100%" },
   closeCalendatButton: {
     marginTop: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    paddingHorizontal: PADDINGS.smallButtonHorizontal,
+    paddingVertical: PADDINGS.smallButtonVertical,
     borderRadius: 20,
     alignSelf: "center",
     backgroundColor: COLORS.secondary,
   },
   closeCalendatButtonText: {
-    color: COLORS.black
-  }
+    color: COLORS.whiteText,
+  },
 });
 
 export default styles;

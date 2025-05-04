@@ -20,10 +20,11 @@ import { ICONS, COLORS, SIZES } from "../../../styles/theme";
 const HomeSearch = ({ navigation }) => {
   const { doctorsList } = useSelector((state) => state.doctor);
   const language = useSelector((state) => state.language.language);
-  console.log(doctorsList);
+
   const dispatch = useDispatch();
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [serachIsActive, setSerachIsActive] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
@@ -38,9 +39,11 @@ const HomeSearch = ({ navigation }) => {
     setSearchTerm(text);
 
     if (text.length < 3) {
+      setSerachIsActive(false);
       dispatch(clearSearch());
     }
     if (text.length >= 3) {
+      setSerachIsActive(true);
       dispatch(searchDoctors({ text }));
     }
   };
@@ -54,9 +57,8 @@ const HomeSearch = ({ navigation }) => {
     dispatch(clearSearch());
     navigation.goBack();
   };
-
   return (
-    <View style={styles.containerCard} keyboardShouldPersistTaps="handled">
+    <View style={styles.mainContainer} keyboardShouldPersistTaps="handled">
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
         <Ionicons
           name={ICONS.backArrow}
@@ -64,55 +66,69 @@ const HomeSearch = ({ navigation }) => {
           color={COLORS.black}
         />
       </TouchableOpacity>
+      <View style={styles.containerCard}>
+        <Text style={styles.inputText}>
+          {STRINGS[language].doctorSearch.searchLabel}
+        </Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder={STRINGS[language].doctorSearch.seacrhPlaceholder}
+          value={searchTerm}
+          onChangeText={(text) => handleChangeSearch(text)}
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
 
-      <Text style={styles.inputText}>
-        {STRINGS[language].doctorSearch.searchLabel}
-      </Text>
-      <TextInput
-        style={styles.searchInput}
-        placeholder={STRINGS[language].doctorSearch.seacrhPlaceholder}
-        value={searchTerm}
-        onChangeText={(text) => handleChangeSearch(text)}
-        autoCapitalize="none"
-        autoCorrect={false}
-      />
-      <FlatList
-        data={doctorsList}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.doctorItem}
-            onPress={() => handleSelect(item)}
-          >
-            {item.profile.photo ? (
-              <Image
-                source={{
-                  uri: `${BASE_URL}/img/users/${item.profile.photo}`,
-                }}
-                style={styles.avatar}
-              />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Ionicons
-                  name={ICONS.person}
-                  size={SIZES.icon50}
-                  color={COLORS.iconGrey}
-                />
-              </View>
+        {doctorsList.length > 0 ? (
+          <FlatList
+            data={doctorsList}
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.doctorItem}
+                onPress={() => handleSelect(item)}
+              >
+                {item.profile.photo ? (
+                  <Image
+                    source={{
+                      uri: `${BASE_URL}/img/users/${item.profile.photo}`,
+                    }}
+                    style={styles.avatar}
+                  />
+                ) : (
+                  <View style={styles.avatarPlaceholder}>
+                    <Ionicons
+                      name={ICONS.person}
+                      size={SIZES.icon50}
+                      color={COLORS.iconGrey}
+                    />
+                  </View>
+                )}
+                <View>
+                  <Text style={styles.doctorName}>{item.name}</Text>
+                  <Text>
+                    {STRINGS[language].speciality[item?.profile?.specialtyId]}
+                  </Text>
+                  <Text>
+                    {item.profile.address.city} {item.profile.address.country}
+                  </Text>
+                </View>
+              </TouchableOpacity>
             )}
-            <View>
-              <Text style={styles.doctorName}>{item.name}</Text>
-              <Text>
-                {STRINGS[language].speciality[item?.profile?.specialtyId]}
-              </Text>
-              <Text>
-                {item.profile.address.city} {item.profile.address.country}
-              </Text>
+            contentContainerStyle={styles.list}
+          />
+        ) : (
+          serachIsActive && (
+            <View style={styles.noDataContainer}>
+              <Image
+                source={require("../../../assets/NoDoctors.png")}
+                style={styles.nodataImage}
+              />
+              <Text>No se encontraron resultados</Text>
             </View>
-          </TouchableOpacity>
+          )
         )}
-        contentContainerStyle={styles.list}
-      />
+      </View>
     </View>
   );
 };

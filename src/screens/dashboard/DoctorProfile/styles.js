@@ -1,5 +1,11 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS, VALUES } from "../../../styles/theme";
+import {
+  COLORS,
+  FONT_SIZES,
+  FONT_WEIGHT,
+  PADDINGS,
+  VALUES,
+} from "../../../styles/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -15,29 +21,29 @@ const styles = StyleSheet.create({
   profileContainer: {
     alignItems: "center",
     marginVertical: 16,
-    marginTop: 50,
+    marginTop: PADDINGS.mainTop,
   },
   name: {
-    fontWeight: FONTS.boldFont,
-    fontSize: 18,
+    fontWeight: FONT_WEIGHT.boldFontBig,
+    fontSize: FONT_SIZES.headerTitle,
     marginTop: 8,
   },
   specialty: {
-    fontSize: 16,
+    fontSize: FONT_SIZES.subtitle1,
     color: COLORS.greyText,
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginVertical: 10,
   },
   button: {
-    paddingVertical: 8,
-    paddingHorizontal: 16,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     backgroundColor: COLORS.secondary,
     borderRadius: 20,
     marginBottom: 10,
   },
   buttonText: {
-    fontWeight: FONTS.boldFont,
-    color: COLORS.black,
+    fontWeight: FONT_WEIGHT.boldFont,
+    color: COLORS.whiteText,
   },
   section: {
     marginBottom: 20,
@@ -47,7 +53,7 @@ const styles = StyleSheet.create({
   },
   selectorText: {
     paddingBottom: 7,
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   radioButtons: {
     flexDirection: "row",
@@ -60,8 +66,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   sectionTitle: {
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.subtitle2,
     marginLeft: 8,
   },
   sectionContent: {
@@ -80,7 +86,7 @@ const styles = StyleSheet.create({
     margin: 4,
   },
   tagText: {
-    fontSize: 12,
+    fontSize: FONT_SIZES.xsText,
   },
   underline: {
     marginTop: -3,
@@ -107,7 +113,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.black,
   },
   bold: {
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   phoneText: {
     marginBottom: 7,
@@ -125,9 +131,9 @@ const styles = StyleSheet.create({
   },
   dayTitle: {
     fontSize: 14,
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginBottom: 8,
-    color: COLORS.primary,
+    color: COLORS.blackText,
   },
   timeSlot: {
     flexDirection: "row",
@@ -135,7 +141,7 @@ const styles = StyleSheet.create({
     marginBottom: 11,
   },
   timeText: {
-    color: COLORS.textPrimary,
+    color: COLORS.blackText,
   },
   tagTime: {
     position: "absolute",
@@ -146,9 +152,9 @@ const styles = StyleSheet.create({
   },
   tagTextTime: {
     fontSize: 12,
-    color: COLORS.textPrimary,
+    color: COLORS.blackText,
   },
-  linkElement: { color: COLORS.externalLink, fontSize: 12 },
+  linkElement: { color: COLORS.externalLink },
   touchableElement: { marginTop: 12 },
   touchableElementContainer: { flexDirection: "row", alignItems: "center" },
   avatar: {

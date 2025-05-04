@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS, VALUES } from "../../../styles/theme";
+import { COLORS, FONT_SIZES, FONT_WEIGHT, VALUES } from "../../../styles/theme";
 
 const styles = StyleSheet.create({
   container: {
@@ -8,26 +8,26 @@ const styles = StyleSheet.create({
   },
   backButton: VALUES.backButtonColor,
   doctorCard: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.cardItemBackground,
     borderRadius: 20,
     padding: 16,
-    shadowColor: COLORS.black,
+    shadowColor: COLORS.cardItemShadow,
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
     marginTop: 110,
   },
   doctorName: {
-    fontSize: 20,
-    fontWeight: FONTS.boldFont,
+    fontSize: FONT_SIZES.headerTitle,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginBottom: 4,
   },
   doctorSubtitle: {
     color: COLORS.greyText,
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: FONTS.boldFont,
+    fontSize: FONT_SIZES.subtitle2,
+    fontWeight: FONT_WEIGHT.boldFont,
     marginTop: 24,
     marginBottom: 8,
   },
@@ -43,17 +43,17 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     borderWidth: 1,
     borderColor: COLORS.greyBorder,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
   },
   timeSlotSelected: {
     backgroundColor: COLORS.secondary,
     borderColor: COLORS.secondary,
   },
   timeSlotText: {
-    color: COLORS.black,
+    color: COLORS.blackText,
   },
   timeSlotTextSelected: {
-    color: COLORS.white,
+    color: COLORS.whiteText,
   },
   confirmButton: {
     alignSelf: "center",
@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   confirmButtonText: {
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    color: COLORS.whiteText,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.mediumButtonText,
   },
   confirmButtonDisabled: {
     opacity: VALUES.inactiveButtonOpacity,
@@ -78,11 +78,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    fontSize: 16,
   },
 });
 

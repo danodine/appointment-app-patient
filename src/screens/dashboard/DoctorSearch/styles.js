@@ -1,17 +1,28 @@
 import { Dimensions, StyleSheet } from "react-native";
-import { COLORS, FONTS, SIZES, VALUES } from "../../../styles/theme";
+import {
+  COLORS,
+  FONT_SIZES,
+  FONT_WEIGHT,
+  PADDINGS,
+  SIZES,
+  VALUES,
+} from "../../../styles/theme";
 const screenWidth = Dimensions.get("window").width;
 
 const styles = StyleSheet.create({
-  containerCard: {
+  mainContainer: {
     flex: 1,
-    paddingTop: SIZES.mainContainerPaddingTop90,
+  },
+  containerCard: {
     paddingHorizontal: 20,
+    paddingTop: PADDINGS.mainTop,
   },
   backButton: { ...VALUES.backButtonColor, left: 20 },
   inputText: {
     paddingTop: 30,
     paddingBottom: 5,
+    fontSize: FONT_SIZES.inputTitle,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   list: {
     paddingBottom: 100,
@@ -19,12 +30,12 @@ const styles = StyleSheet.create({
   doctorItem: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.cardItemBackground,
     width: screenWidth - 40,
     marginBottom: 16,
     padding: 16,
     borderRadius: 12,
-    shadowColor: COLORS.width,
+    shadowColor: COLORS.cardItemShadow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
@@ -38,16 +49,16 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   doctorName: {
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.subtitle2,
   },
   searchInput: {
     width: "100%",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
     padding: 12,
     borderRadius: 10,
     marginBottom: 15,
-    fontSize: 16,
+    fontSize: FONT_SIZES.inputText,
   },
   avatar: {
     width: 70,
@@ -62,6 +73,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     alignItems: "center",
     justifyContent: "center",
+  },
+  noDataContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    marginTop: -100,
+  },
+  nodataImage: {
+    width: "80%",
+    maxHeight: 300,
+    marginBottom: 20,
+    resizeMode: "contain",
   },
 });
 

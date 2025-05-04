@@ -1,12 +1,17 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS, SIZES } from "../../../styles/theme";
+import {
+  COLORS,
+  FONT_WEIGHT,
+  FONT_SIZES,
+  PADDINGS,
+} from "../../../styles/theme";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
     paddingHorizontal: 20,
-    paddingTop: SIZES.mainContainerPaddingTop70,
+    paddingTop: 70,
   },
   logoContainer: {
     alignItems: "center",
@@ -19,16 +24,16 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
-    fontSize: SIZES.subTitleSize,
+    fontSize: FONT_SIZES.sectionTitleBig,
     letterSpacing: 2,
     marginVertical: 20,
-    color: COLORS.textColorMain,
-    fontWeight: FONTS.boldFont,
+    color: COLORS.blackText,
+    fontWeight: FONT_WEIGHT.boldFont,
     paddingBottom: 10,
   },
   input: {
     width: "100%",
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.inputBackgeound,
     padding: 12,
     borderRadius: 10,
     marginBottom: 15,
@@ -36,8 +41,8 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: COLORS.secondary,
-    paddingVertical: 12,
-    paddingHorizontal: 30,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     borderRadius: 20,
     marginTop: 20,
     marginBottom: 20,
@@ -49,19 +54,21 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   buttonText: {
-    color: COLORS.black,
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    color: COLORS.blackText,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.bigButtonText,
   },
   forgotPassword: {
-    color: COLORS.link,
+    color: COLORS.blackText,
     marginTop: "10%",
     marginBottom: "6%",
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.textButton,
   },
   signup: {
-    fontWeight: FONTS.boldFont,
-    color: COLORS.link,
+    fontWeight: FONT_WEIGHT.boldFont,
+    color: COLORS.blackText,
+    fontSize: 15,
   },
   footer: {
     position: "absolute",
@@ -71,11 +78,8 @@ const styles = StyleSheet.create({
     width: "90%",
     paddingLeft: 35,
   },
-  footerText: {
-    fontSize: 14,
-  },
   bold: {
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
   },
   error: {
     color: COLORS.error,

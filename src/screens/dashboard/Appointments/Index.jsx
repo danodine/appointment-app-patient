@@ -203,7 +203,6 @@ const AppointmentsScreen = ({ navigation }) => {
       },
     );
   };
-
   return (
     <View style={styles.container}>
       <Modal
@@ -356,74 +355,104 @@ const AppointmentsScreen = ({ navigation }) => {
           </View>
         </View>
       </Modal>
-      <Text style={styles.title}>
-        {STRINGS[language].appointments.myAppointments}
-      </Text>
 
-      <View style={styles.tabRow}>
-        <TouchableOpacity
-          style={styles.tab}
-          onPress={handleUpcomingAppointments}
-        >
-          <Text style={[styles.tabText, styles.activeTabText]}>
-            {STRINGS[language].appointments.nextAppointments}
+      <View style={styles.mainElementContainer}>
+        <View style={styles.elementContainer}>
+          <Text style={styles.title}>
+            {STRINGS[language].appointments.myAppointments}
           </Text>
-          {activeTab === 0 && <View style={styles.underline} />}
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.tab} onPress={handlePasstAppointments}>
-          <Text style={styles.tabText}>
-            {STRINGS[language].appointments.pastAppointments}
-          </Text>
-          {activeTab === 1 && <View style={styles.underline} />}
-        </TouchableOpacity>
-      </View>
 
-      <FlatList
-        data={appointments}
-        keyExtractor={(item) => item?._id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.cardItem}
-            onPress={() => handleAppointment(item)}
-          >
-            {item?.doctorPhoto ? (
-              <Image
-                source={{
-                  uri: `${BASE_URL}/img/users/${item?.doctorPhoto}`,
-                }}
-                style={styles.avatar}
-              />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Ionicons
-                  name={ICONS.person}
-                  size={SIZES.icon50}
-                  color={COLORS.iconGrey}
-                />
-              </View>
-            )}
-            <View>
-              <Text style={styles.item1}>{item.doctorName}</Text>
-              <Text>{STRINGS[language].speciality[item.doctorSpeciality]}</Text>
-              <Text>{formatDateText(item.dateTime, language)}</Text>
-              <Text>
-                {formatTime(item?.dateTime)} -{" "}
-                {formatTime(item?.dateTime, item?.duration)}
+          <View style={styles.tabRow}>
+            <TouchableOpacity
+              style={styles.tab}
+              onPress={handleUpcomingAppointments}
+            >
+              <Text style={[styles.tabText, styles.activeTabText]}>
+                {STRINGS[language].appointments.nextAppointments}
               </Text>
-              <Text
-                style={{
-                  color:
-                    item.status === "cancelled" ? COLORS.error : COLORS.green,
-                }}
+              {activeTab === 0 && <View style={styles.underline} />}
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.tab}
+              onPress={handlePasstAppointments}
+            >
+              <Text style={styles.tabText}>
+                {STRINGS[language].appointments.pastAppointments}
+              </Text>
+              {activeTab === 1 && <View style={styles.underline} />}
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {appointments?.length > 0 ? (
+          <FlatList
+            data={appointments}
+            keyExtractor={(item) => item?._id}
+            style={styles.flatlistElement}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.cardItem}
+                onPress={() => handleAppointment(item)}
               >
-                {activeTab === 0
-                  ? STRINGS[language].appointments[item.status].cero
-                  : STRINGS[language].appointments[item.status].uno}
-              </Text>
-            </View>
-          </TouchableOpacity>
+                {item?.doctorPhoto ? (
+                  <Image
+                    source={{
+                      uri: `${BASE_URL}/img/users/${item?.doctorPhoto}`,
+                    }}
+                    style={styles.avatar}
+                  />
+                ) : (
+                  <View style={styles.avatarPlaceholder}>
+                    <Ionicons
+                      name={ICONS.person}
+                      size={SIZES.icon50}
+                      color={COLORS.iconGrey}
+                    />
+                  </View>
+                )}
+                <View style={styles.statusTagContainer}>
+                  <Text
+                    style={[
+                      styles.statusTagText,
+                      {
+                        color:
+                          item.status === "cancelled"
+                            ? COLORS.error
+                            : COLORS.green,
+                      },
+                    ]}
+                  >
+                    {activeTab === 0
+                      ? STRINGS[language].appointments[item.status].cero
+                      : STRINGS[language].appointments[item.status].uno}
+                  </Text>
+                  <Text style={styles.item1}>{item.doctorName}</Text>
+                  <Text>
+                    {STRINGS[language].speciality[item.doctorSpeciality]}
+                  </Text>
+                  <Text>{formatDateText(item.dateTime, language)}</Text>
+                  <Text>
+                    {formatTime(item?.dateTime)} -{" "}
+                    {formatTime(item?.dateTime, item?.duration)}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+        ) : (
+          <View style={styles.noDataContainer}>
+            <Image
+              source={require("../../../assets/noAppointmentsData.png")}
+              style={styles.nodataImage}
+            />
+            {activeTab === 0 ? (
+              <Text>{STRINGS[language].appointments.noCurrent}</Text>
+            ) : (
+              <Text>{STRINGS[language].appointments.noPasst}</Text>
+            )}
+          </View>
         )}
-      />
+      </View>
       <TouchableOpacity
         style={styles.newAppointmentButton}
         onPress={handleNewAppointment}

@@ -29,7 +29,7 @@ import PropTypes from "prop-types";
 import { CommonActions } from "@react-navigation/native";
 import TopBanner from "../components/TopBanner/Index";
 import { BASE_URL } from "../../../../config";
-import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import { ICONS, COLORS, SIZES, FONT_SIZES } from "../../../styles/theme";
 import styles from "./syles";
 import STRINGS from "../../../constants/strings";
 
@@ -41,7 +41,9 @@ if (
 }
 
 export default function ProfileScreen({ navigation }) {
-  const { currentUser } = useSelector((state) => state.users);
+  const { currentUser, cachedProfileImageUri } = useSelector(
+    (state) => state.users,
+  );
   const { changePasswordError } = useSelector((state) => state.auth);
   const language = useSelector((state) => state.language.language);
 
@@ -99,11 +101,13 @@ export default function ProfileScreen({ navigation }) {
 
   const [newCondition, setNewCondition] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(
-    STRINGS[language].medicalCategories[0]?.value || []
+    STRINGS[language].medicalCategories[0]?.value || [],
   );
 
   useEffect(() => {
-    dispatch(getCurrentUser());
+    if (!currentUser) {
+      dispatch(getCurrentUser());
+    }
   }, []);
 
   useEffect(() => {
@@ -111,10 +115,14 @@ export default function ProfileScreen({ navigation }) {
     setEmail(currentUser?.email);
     setPhone(currentUser?.phone);
     setHeight(
-      isNaN(currentUser?.profile?.heightCm) ? 0 : currentUser?.profile?.heightCm
+      isNaN(currentUser?.profile?.heightCm)
+        ? 0
+        : currentUser?.profile?.heightCm,
     );
     setWeight(
-      isNaN(currentUser?.profile?.weightKg) ? 0 : currentUser?.profile?.weightKg
+      isNaN(currentUser?.profile?.weightKg)
+        ? 0
+        : currentUser?.profile?.weightKg,
     );
     setAddress(currentUser?.profile?.address?.street);
     setProvince(currentUser?.profile?.address?.city);
@@ -123,10 +131,10 @@ export default function ProfileScreen({ navigation }) {
     setMedicalConditions(
       currentUser?.profile?.medicalConditions === undefined
         ? {}
-        : currentUser?.profile?.medicalConditions
+        : currentUser?.profile?.medicalConditions,
     );
     setVaccines(currentUser?.profile?.vaccines || []);
-    setProfileImage(currentUser?.profile?.photo);
+    setProfileImage(profileImageUri || cachedProfileImageUri);
   }, [currentUser]);
 
   const addMedicalCondition = () => {
@@ -200,7 +208,7 @@ export default function ProfileScreen({ navigation }) {
         passwordCurrent: oldPassword,
         password: newPassword,
         passwordConfirm: confirmPassword,
-      })
+      }),
     );
     setOldPassword("");
     setOldPasswordError("");
@@ -213,21 +221,23 @@ export default function ProfileScreen({ navigation }) {
   const handleOldPassword = (value) => {
     setOldPassword(value);
     setOldPasswordError(
-      value === "" ? STRINGS[language].myProfile.oldPasswordInvalid : ""
+      value === "" ? STRINGS[language].myProfile.oldPasswordInvalid : "",
     );
   };
 
   const handlePassword = (value) => {
     setNewPassword(value);
     setPasswordError(
-      isStrongPassword(value) ? "" : STRINGS[language].myProfile.passwordInvalid
+      isStrongPassword(value)
+        ? ""
+        : STRINGS[language].myProfile.passwordInvalid,
     );
   };
 
   const handlePasswordConfirm = (value) => {
     setConfirmPassword(value);
     setPasswordConfirmError(
-      value === newPassword ? "" : STRINGS[language].myProfile.passwordMismatch
+      value === newPassword ? "" : STRINGS[language].myProfile.passwordMismatch,
     );
   };
 
@@ -248,7 +258,7 @@ export default function ProfileScreen({ navigation }) {
       CommonActions.reset({
         index: 0,
         routes: [{ name: "Login" }],
-      })
+      }),
     );
   };
 
@@ -370,6 +380,12 @@ export default function ProfileScreen({ navigation }) {
             onChange={(item) => setSelectedCategory(item.value)}
             placeholder={STRINGS[language].myProfile.selectCategory}
             style={styles.inputPass}
+            itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+            selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+            placeholderStyle={{
+              fontSize: FONT_SIZES.inputText,
+              color: COLORS.ligthGreyText,
+            }}
           />
 
           <View style={styles.renderInputButtonView}>
@@ -404,7 +420,7 @@ export default function ProfileScreen({ navigation }) {
       }
 
       const formattedDate = new Intl.DateTimeFormat("en-GB").format(
-        vaccineDate
+        vaccineDate,
       );
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -559,8 +575,7 @@ export default function ProfileScreen({ navigation }) {
             {profileImage ? (
               <Image
                 source={{
-                  uri:
-                    profileImageUri || `${BASE_URL}/img/users/${profileImage}`,
+                  uri: profileImage,
                 }}
                 style={styles.avatar}
               />
@@ -602,25 +617,25 @@ export default function ProfileScreen({ navigation }) {
                 STRINGS[language].myProfile.name,
                 name,
                 setName,
-                "name"
+                "name",
               )}
               {renderField(
                 STRINGS[language].myProfile.email,
                 email,
                 setEmail,
-                "email"
+                "email",
               )}
               {renderField(
                 STRINGS[language].myProfile.phone,
                 phone,
                 setPhone,
-                "phone"
+                "phone",
               )}
               {renderField(
                 STRINGS[language].myProfile.address,
                 address,
                 setAddress,
-                "address"
+                "address",
               )}
               <View style={styles.valueContainerDrop}>
                 <Text style={styles.fieldLabel}>
@@ -633,6 +648,12 @@ export default function ProfileScreen({ navigation }) {
                   valueField="value"
                   value={province}
                   onChange={(item) => setProvince(item.value)}
+                  itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                  selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                  placeholderStyle={{
+                    fontSize: FONT_SIZES.inputText,
+                    color: COLORS.ligthGreyText,
+                  }}
                 />
               </View>
               <View style={styles.valueContainerDrop}>
@@ -646,19 +667,25 @@ export default function ProfileScreen({ navigation }) {
                   valueField="value"
                   value={country}
                   onChange={(item) => setCountry(item.value)}
+                  itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                  selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                  placeholderStyle={{
+                    fontSize: FONT_SIZES.inputText,
+                    color: COLORS.ligthGreyText,
+                  }}
                 />
               </View>
               {renderField(
                 STRINGS[language].myProfile.height,
                 height,
                 setHeight,
-                "height"
+                "height",
               )}
               {renderField(
                 STRINGS[language].myProfile.weight,
                 weight,
                 setWeight,
-                "weight"
+                "weight",
               )}
               <View style={styles.valueContainerDrop}>
                 <Text style={styles.fieldLabel}>
@@ -671,6 +698,12 @@ export default function ProfileScreen({ navigation }) {
                   valueField="value"
                   value={blood}
                   onChange={(item) => setBlood(item.value)}
+                  itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                  selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                  placeholderStyle={{
+                    fontSize: FONT_SIZES.inputText,
+                    color: COLORS.ligthGreyText,
+                  }}
                 />
               </View>
             </View>

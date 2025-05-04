@@ -17,7 +17,7 @@ import {
   bookAppointment,
 } from "../../../redux/appointmentsSlice";
 import PropTypes from "prop-types";
-import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import { ICONS, COLORS, SIZES, FONT_SIZES } from "../../../styles/theme";
 import STRINGS from "../../../constants/strings";
 import styles from "./styles";
 import { getCurrentTimeHHSS } from "../../../utils/helpers";
@@ -198,7 +198,10 @@ const BookAppointmentScreen = ({ route, navigation }) => {
 
       {selectedDate && (
         <>
-          <Text style={styles.sectionTitle}>Seleccione el tipo de cita</Text>
+          <Text style={styles.sectionTitle}>
+            {" "}
+            {STRINGS[language].bookAppointment.selectType}
+          </Text>
           <Dropdown
             style={styles.input}
             data={treatments}
@@ -206,6 +209,12 @@ const BookAppointmentScreen = ({ route, navigation }) => {
             valueField="value"
             value={treatmentTime}
             onChange={(item) => handleSelectedTreatment(item)}
+            itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+            selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+            placeholderStyle={{
+              fontSize: FONT_SIZES.inputText,
+              color: COLORS.ligthGreyText,
+            }}
           />
         </>
       )}

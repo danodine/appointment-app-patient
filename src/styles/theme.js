@@ -5,38 +5,71 @@ const COLORS = {
     "rgba(108, 166, 244, 0.66)",
   ],
   secondary: "#70C1E3",
-  textColorMain: "#333",
-  link: "#222",
+
   white: "#fff",
-  black: "#000",
-  error: "#FF0000",
-  greyText: "#555",
-  greyBorder: "#ccc",
-  whiteText: "#fff",
-  blackText: "#000",
+
+  selectedItem: "#2563EB",
   selectedMenuItem: "white",
   menuItem: "black",
+
+  ligthGreyText: "#A9A9A9",
+  cardItemBackground: "#fff",
+  cardItemShadow: "#121212",
+  blackText: "#1C1C1E",
+  greyText: "#555",
+  whiteText: "#fff",
+  inputBackgeound: "#fff",
+
+  iconGrey: "#9ca3af",
+  error: "#FF0000",
+  externalLink: "#0000EE",
+  morning: "#B7E4C7",
+  afternoon: "#FFD6A5",
+  black: "#000",
+
+  greyBorder: "#ccc",
   tagColor: "#d1eded",
   green: "#34B233",
   modalOverlay: "rgba(0,0,0,0.4)",
-  selectedItem: "#2563EB",
-  morning: "#B7E4C7",
-  afternoon: "#FFD6A5",
-  externalLink: "#0000EE",
-  iconGrey: "#9ca3af",
 };
 
-const FONTS = {
+const FONT_WEIGHT = {
   boldFont: "600",
+  boldFontBig: "700",
+};
+
+const FONT_SIZES = {
+  pageTitle: 28,
+  sectionTitleBig: 22,
+
+  inputTitle: 14.5,
+  inputText: 14,
+
+  bigButtonText: 17,
+  mediumButtonText: 16,
+  textButton: 15,
+
+  headerTitle: 20,
+  subtitle1: 18,
+  subtitle2: 16,
+  xsText: 13,
+
+  generalText: 14,
+};
+
+const PADDINGS = {
+  mainButtonVertical: 12,
+  mainButtonHorizontal: 30,
+  mediumButtonVertical: 8,
+  mediumButtonHorizontal: 16,
+  smallButtonVertical: 3,
+  smallButtonHorizontal: 10,
+  mainTop: 90,
 };
 
 const SIZES = {
   icon50: 50,
   icon20: 20,
-  titleSize: 28,
-  subTitleSize: 22,
-  mainContainerPaddingTop70: 70,
-  mainContainerPaddingTop90: 90,
 };
 
 const ICONS = {
@@ -73,4 +106,13 @@ const VALUES = {
   },
 };
 
-export { COLORS, FONTS, SIZES, ICONS, TYPES, VALUES };
+export {
+  COLORS,
+  FONT_WEIGHT,
+  SIZES,
+  ICONS,
+  TYPES,
+  VALUES,
+  FONT_SIZES,
+  PADDINGS,
+};

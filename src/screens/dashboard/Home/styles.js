@@ -1,12 +1,17 @@
 import { StyleSheet } from "react-native";
-import { COLORS, FONTS, SIZES } from "../../../styles/theme";
+import {
+  COLORS,
+  FONT_SIZES,
+  FONT_WEIGHT,
+  PADDINGS,
+} from "../../../styles/theme";
 
 const styles = StyleSheet.create({
   keyboardView: { flex: 1 },
   container: {
     flex: 1,
     alignItems: "center",
-    paddingTop: SIZES.mainContainerPaddingTop90,
+    paddingTop: PADDINGS.mainTop,
     paddingHorizontal: 20,
   },
   logoContainer: {
@@ -22,25 +27,28 @@ const styles = StyleSheet.create({
   searchButton: {
     flexDirection: "row",
     backgroundColor: COLORS.secondary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
     borderRadius: 20,
     marginBottom: 60,
   },
   searchText: {
-    color: COLORS.white,
+    color: COLORS.whiteText,
     marginLeft: 8,
-    fontWeight: FONTS.boldFont,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.mediumButtonText,
   },
   healthPartner: {
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.subtitle1,
     paddingTop: 40,
+    color: COLORS.blackText,
   },
   healthPartnerTwo: {
     paddingBottom: 20,
-    fontWeight: FONTS.boldFont,
-    fontSize: 16,
+    fontWeight: FONT_WEIGHT.boldFont,
+    fontSize: FONT_SIZES.subtitle1,
+    color: COLORS.blackText,
   },
   icon: {
     width: 110,
@@ -50,7 +58,7 @@ const styles = StyleSheet.create({
   },
   description: {
     textAlign: "center",
-    fontSize: 13,
+    fontSize: FONT_SIZES.xsText,
     marginTop: 6,
   },
 });
