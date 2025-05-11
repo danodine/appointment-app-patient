@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
 import { BASE_URL, VERSION_URL } from "../../config";
+import axiosInstance from "../utils/axiosInstance";
 
 const USER_URL = `${BASE_URL}${VERSION_URL}/users`;
 
@@ -75,8 +76,8 @@ export const changePassword = createAsyncThunk(
   ) => {
     try {
       const token = await SecureStore.getItemAsync("token");
-      const response = await axios.patch(
-        `${USER_URL}/updateMyPassword`,
+      const response = await axiosInstance.patch(
+        `/users/updateMyPassword`,
         { passwordCurrent, password, passwordConfirm },
         {
           headers: {
@@ -116,6 +117,10 @@ const authSlice = createSlice({
       signup: null,
       changePassword: null,
     },
+    authBanner: {
+      type: null,
+      message: null,
+    },
   },
   reducers: {
     clearLoginError: (state) => {
@@ -146,6 +151,12 @@ const authSlice = createSlice({
         login: null,
         signup: null,
         changePassword: null,
+      };
+    },
+    clearAuthBanner: (state) => {
+      state.authBanner = {
+        type: null,
+        message: null,
       };
     },
   },
@@ -185,10 +196,18 @@ const authSlice = createSlice({
         state.loading.changePassword = false;
         state.token = action.payload.token;
         state.user = action.payload.user;
+        state.authBanner = {
+          type: "success",
+          message: "Password changed successfully.",
+        };
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.loading.changePassword = false;
         state.error.changePassword = action.payload;
+        state.authBanner = {
+          type: "error",
+          message: action.payload || "Password change failed.",
+        };
       })
       .addCase(logoutUser.fulfilled, (state) => {
         state.token = null;
@@ -213,6 +232,7 @@ export const {
   clearChangePasswordError,
   clearAllErrors,
   clearAuth,
+  clearAuthBanner,
 } = authSlice.actions;
 
 export default authSlice.reducer;

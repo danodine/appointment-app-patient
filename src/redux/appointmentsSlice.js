@@ -1,94 +1,91 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BASE_URL, VERSION_URL } from "../../config";
-import axios from "axios";
-
-const API_BASE = `${BASE_URL}${VERSION_URL}/appointments`;
+import axiosInstance from "../utils/axiosInstance";
 
 export const getUpcomingAppointments = createAsyncThunk(
   "appointments/getUpcoming",
   async ({ userId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/user/upcoming/${userId}`);
+      const response = await axiosInstance.get(
+        `/appointments/user/upcoming/${userId}`
+      );
       return response.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Fetching upcoming appointments failed",
+        err.response?.data?.message || "Fetching upcoming appointments failed"
       );
     }
-  },
+  }
 );
 
 export const getPastAppointments = createAsyncThunk(
   "appointments/getPast",
   async ({ userId }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_BASE}/user/past/${userId}`);
+      const response = await axiosInstance.get(
+        `/appointments/user/past/${userId}`
+      );
       return response.data;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Fetching past appointments failed",
+        err.response?.data?.message || "Fetching past appointments failed"
       );
     }
-  },
+  }
 );
 
 export const cancelAppointment = createAsyncThunk(
   "appointments/cancel",
   async ({ appointmentId }, { rejectWithValue }) => {
     try {
-      const response = await axios.patch(`${API_BASE}/${appointmentId}/cancel`);
+      const response = await axiosInstance.patch(
+        `/appointments/${appointmentId}/cancel`
+      );
       return response.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Cancellation failed",
-      );
+      return rejectWithValue(err.response?.data?.message);
     }
-  },
+  }
 );
 
 export const fetchAvailableDates = createAsyncThunk(
   "appointments/fetchAvailableDates",
   async ({ doctorId, location }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${API_BASE}/available-dates/${doctorId}/${location}`,
+      const response = await axiosInstance.get(
+        `/appointments/available-dates/${doctorId}/${location}`
       );
       return response.data.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Loading available dates failed",
-      );
+      return rejectWithValue(err.response?.data?.message);
     }
-  },
+  }
 );
 
 export const fetchAvailableTimes = createAsyncThunk(
   "appointments/fetchAvailableTimes",
   async (
     { doctorId, date, location, duration, currentTime },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const params = new URLSearchParams({ duration, currentTime });
-      const url = `${API_BASE}/available-times/${doctorId}/${date}/${location}?${params.toString()}`;
-      const response = await axios.get(url);
+      const url = `/appointments/available-times/${doctorId}/${date}/${location}?${params.toString()}`;
+      const response = await axiosInstance.get(url);
       return response.data.data;
     } catch (err) {
-      return rejectWithValue(
-        err.response?.data?.message || "Loading available times failed",
-      );
+      return rejectWithValue(err.response?.data?.message);
     }
-  },
+  }
 );
 
 export const bookAppointment = createAsyncThunk(
   "appointments/book",
   async (
     { doctor, doctorName, doctorSpeciality, dateTime, location, duration },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
-      const response = await axios.post(`${API_BASE}/new`, {
+      const response = await axiosInstance.post(`/appointments/new`, {
         doctor,
         doctorName,
         doctorSpeciality,
@@ -100,7 +97,7 @@ export const bookAppointment = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Booking failed");
     }
-  },
+  }
 );
 
 const appointmentsSlice = createSlice({
@@ -114,12 +111,14 @@ const appointmentsSlice = createSlice({
       upcoming: false,
       past: false,
       calendar: false,
+      time: false,
       booking: false,
     },
     error: {
       upcoming: null,
       past: null,
       calendar: null,
+      time: null,
       booking: null,
     },
   },
@@ -133,12 +132,23 @@ const appointmentsSlice = createSlice({
         upcoming: false,
         past: false,
         calendar: false,
+        time: false,
         booking: false,
       };
       state.error = {
         upcoming: null,
         past: null,
         calendar: null,
+        time: null,
+        booking: null,
+      };
+    },
+    clearAppointmentsErrors: (state) => {
+      state.error = {
+        upcoming: null,
+        past: null,
+        calendar: null,
+        time: null,
         booking: null,
       };
     },
@@ -185,15 +195,15 @@ const appointmentsSlice = createSlice({
         state.error.calendar = action.payload;
       })
       .addCase(fetchAvailableTimes.pending, (state) => {
-        state.loading.calendar = true;
-        state.error.calendar = null;
+        state.loading.time = true;
+        state.error.time = null;
       })
       .addCase(fetchAvailableTimes.fulfilled, (state, action) => {
-        state.loading.calendar = false;
+        state.loading.time = false;
         state.availableTimes = action.payload;
       })
       .addCase(fetchAvailableTimes.rejected, (state, action) => {
-        state.loading.calendar = false;
+        state.loading.time = false;
         state.error.calendar = action.payload;
       })
       .addCase(bookAppointment.pending, (state) => {
@@ -210,5 +220,6 @@ const appointmentsSlice = createSlice({
   },
 });
 
-export const { clearAppointmentsState } = appointmentsSlice.actions;
+export const { clearAppointmentsState, clearAppointmentsErrors } =
+  appointmentsSlice.actions;
 export default appointmentsSlice.reducer;

@@ -133,7 +133,7 @@ export const appendProfileFields = (formData, profile) => {
   if (medicalConditions) {
     formData.append(
       "profile.medicalConditions",
-      JSON.stringify(medicalConditions),
+      JSON.stringify(medicalConditions)
     );
   }
 
@@ -144,4 +144,7 @@ export const appendProfileFields = (formData, profile) => {
   for (const key in rest) {
     formData.append(`profile.${key}`, rest[key]);
   }
+};
+export const replaceVal = (template, value) => {
+  return template.replace(/{VAL}/g, value);
 };

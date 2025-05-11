@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   Text,
@@ -7,6 +7,7 @@ import {
   View,
   TextInput,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { searchDoctors, clearSearch } from "../../../redux/doctorSlice";
@@ -16,9 +17,10 @@ import PropTypes from "prop-types";
 import { BASE_URL } from "../../../../config";
 import STRINGS from "../../../constants/strings";
 import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import TopBanner from "../components/TopBanner/Index";
 
 const HomeSearch = ({ navigation }) => {
-  const { doctorsList } = useSelector((state) => state.doctor);
+  const { doctorsList, error, loading } = useSelector((state) => state.doctor);
   const language = useSelector((state) => state.language.language);
 
   const dispatch = useDispatch();
@@ -26,13 +28,34 @@ const HomeSearch = ({ navigation }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [serachIsActive, setSerachIsActive] = useState(false);
 
+  const [banner, setBanner] = useState({
+    visible: false,
+    type: "",
+    message: "",
+  });
+
+  useEffect(() => {
+    if (error.search) {
+      showBanner(
+        "error",
+        STRINGS[language].doctorSearch[error.search] ||
+          STRINGS[language].doctorSearch.errorOcured
+      );
+      dispatch(clearSearch());
+    }
+  }, [error.signup]);
+
+  const showBanner = (type, message) => {
+    setBanner({ visible: true, type, message });
+  };
+
   useFocusEffect(
     useCallback(() => {
       setSearchTerm("");
       return () => {
         dispatch(clearSearch());
       };
-    }, []),
+    }, [])
   );
 
   const handleChangeSearch = (text) => {
@@ -66,6 +89,12 @@ const HomeSearch = ({ navigation }) => {
           color={COLORS.black}
         />
       </TouchableOpacity>
+      <TopBanner
+        visible={banner.visible}
+        type={banner.type}
+        message={banner.message}
+        onHide={() => setBanner({ ...banner, visible: false })}
+      />
       <View style={styles.containerCard}>
         <Text style={styles.inputText}>
           {STRINGS[language].doctorSearch.searchLabel}
@@ -78,7 +107,11 @@ const HomeSearch = ({ navigation }) => {
           autoCapitalize="none"
           autoCorrect={false}
         />
-
+        {loading.search && (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color={COLORS.secondary} />
+          </View>
+        )}
         {doctorsList.length > 0 ? (
           <FlatList
             data={doctorsList}
@@ -118,7 +151,8 @@ const HomeSearch = ({ navigation }) => {
             contentContainerStyle={styles.list}
           />
         ) : (
-          serachIsActive && (
+          serachIsActive &&
+          !loading.search && (
             <View style={styles.noDataContainer}>
               <Image
                 source={require("../../../assets/NoDoctors.png")}

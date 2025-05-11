@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     color: COLORS.blackText,
   },
   input: {
-    backgroundColor: COLORS.inputBackground,
+    backgroundColor: COLORS.inputBackgeound,
     borderRadius: 10,
     paddingHorizontal: 12,
     paddingVertical: 10,

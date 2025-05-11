@@ -72,10 +72,16 @@ const STRINGS = {
       done: "Seleccionar",
       streetPlaceholder: "Ejm: Machala y Salinas",
       emailPlaceholder: "Ejm: ejemplo@gmail.com",
+      emailDuplicate:
+        "Un usuario con el correo {VAL} ya está en uso, intente resetear su clave",
+      idDuplicate: "Un usuario con el cedula {VAL} ya esta en uso",
+      errorFromDb: "Ha ocurrido un error intente nuevamente",
     },
     doctorSearch: {
       searchLabel: "Nombre, Especialidad",
       seachPlaceholder: "Buscar",
+      SearchQueryIsRequired: "Se requiere un criterio de busqueda",
+      errorOcured: "Ocurrió un error, intente nuevamente",
     },
     doctorProfile: {
       bookAppointment: "Agendar Cita",
@@ -92,6 +98,9 @@ const STRINGS = {
       morning: "Morning",
       afternoon: "Afternoon",
       fullDay: "Todo el dia",
+      errorLoadingData:
+        "Ocurrió un error al cargar los datos, intente nuevamente",
+      errorBooking: "Ocurrió un error, intente nuevamente",
     },
     appointments: {
       myAppointments: "Mis Citas",
@@ -143,6 +152,8 @@ const STRINGS = {
       selectType: "Seleccione el tipo de cita",
       timeSlots: "Horarios disponibles",
       confirmAppointment: "Confirmar Cita",
+      errorDataDates: "Error al cargar las fechas",
+      errorDataTimes: "Error al cargar los horarios",
     },
     daysOfWeek: [
       "Domingo",
@@ -197,12 +208,18 @@ const STRINGS = {
       savePassword: "Guardar nueva clave",
       cancel: "Cancelar",
       changePassword: "Cambiar clave",
-      closeAccount: "Cerrar cuenta",
+      closeAccount: "Eliminar cuenta",
       name: "Nombre",
       email: "E-Mail",
       phone: "Telefono",
       address: "Dirección",
       close: "Seleccionar",
+      banerSuccess: "Datos actualizados con exito",
+      banerError: "Hubo un error en la actualización de datos",
+      noCondition:
+        "No hay condiciones médicas agregadas, por favor agregue una",
+      noVaccine: "No hay vacunas agregadas, por favor agregue una",
+      banerErrorGetUser: "Hubo un error al obtener los datos del usuario",
     },
     medicalCategories: [
       { label: "Enfermedades Infecciosas", value: "IFDI" },
@@ -363,10 +380,16 @@ const STRINGS = {
       done: "Done",
       streetPlaceholder: "Ex: Machala and Salinas",
       emailPlaceholder: "Ex: example@gmail.com",
+      emailDuplicate:
+        "A user with the email: {VAL} is already in use, please try resetting your password",
+      idDuplicate: "A user with the ID {VAL} is already in use",
+      errorFromDb: "An error has occurred, please try again",
     },
     doctorSearch: {
       searchLabel: "Name, Specialty",
       seachPlaceholder: "Search",
+      SearchQueryIsRequired: "Search query is required",
+      errorOcured: "An error occurred, please try again",
     },
     doctorProfile: {
       bookAppointment: "Book Appointment",
@@ -383,6 +406,9 @@ const STRINGS = {
       morning: "Morning",
       afternoon: "Afternoon",
       fullDay: "Full Day",
+      errorLoadingData:
+        "An error occurred while loading the data, please try again",
+      errorBooking: "An error occurred, please try again",
     },
     appointments: {
       myAppointments: "My Appointments",
@@ -434,6 +460,8 @@ const STRINGS = {
       selectType: "Select appointment type",
       timeSlots: "Available times",
       confirmAppointment: "Confirm Appointment",
+      errorDataDates: "Error loading dates",
+      errorDataTimes: "Error loading times",
     },
     daysOfWeek: [
       "Sunday",
@@ -488,12 +516,17 @@ const STRINGS = {
       savePassword: "Save new password",
       cancel: "Cancel",
       changePassword: "Change password",
-      closeAccount: "Close account",
+      closeAccount: "Delete account",
       name: "Name",
       email: "E-Mail",
       phone: "Phone",
       address: "Adrress",
       close: "Done",
+      banerSuccess: "Data succesfuly updated",
+      banerError: "There was an error updating",
+      noCondition: "No medical conditions added, please add one",
+      noVaccine: "No vaccines added, please add one",
+      banerErrorGetUser: "There was an error getting user data",
     },
     medicalCategories: [
       { label: "Infectious Diseases", value: "IFDI" },

@@ -5,13 +5,10 @@ const COLORS = {
     "rgba(108, 166, 244, 0.66)",
   ],
   secondary: "#70C1E3",
-
   white: "#fff",
-
   selectedItem: "#2563EB",
   selectedMenuItem: "white",
   menuItem: "black",
-
   ligthGreyText: "#A9A9A9",
   cardItemBackground: "#fff",
   cardItemShadow: "#121212",
@@ -19,14 +16,12 @@ const COLORS = {
   greyText: "#555",
   whiteText: "#fff",
   inputBackgeound: "#fff",
-
   iconGrey: "#9ca3af",
   error: "#FF0000",
   externalLink: "#0000EE",
   morning: "#B7E4C7",
   afternoon: "#FFD6A5",
   black: "#000",
-
   greyBorder: "#ccc",
   tagColor: "#d1eded",
   green: "#34B233",
@@ -41,19 +36,15 @@ const FONT_WEIGHT = {
 const FONT_SIZES = {
   pageTitle: 28,
   sectionTitleBig: 22,
-
   inputTitle: 14.5,
   inputText: 14,
-
   bigButtonText: 17,
   mediumButtonText: 16,
   textButton: 15,
-
   headerTitle: 20,
   subtitle1: 18,
   subtitle2: 16,
   xsText: 13,
-
   generalText: 14,
 };
 

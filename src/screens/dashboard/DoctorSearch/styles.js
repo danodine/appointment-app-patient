@@ -4,7 +4,6 @@ import {
   FONT_SIZES,
   FONT_WEIGHT,
   PADDINGS,
-  SIZES,
   VALUES,
 } from "../../../styles/theme";
 const screenWidth = Dimensions.get("window").width;
@@ -85,6 +84,10 @@ const styles = StyleSheet.create({
     maxHeight: 300,
     marginBottom: 20,
     resizeMode: "contain",
+  },
+  loaderContainer: {
+    paddingTop: 30,
+    transform: [{ scale: 2 }]
   },
 });
 

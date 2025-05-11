@@ -169,6 +169,10 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     resizeMode: "contain",
   },
+  loaderContainer: {
+    paddingTop: 30,
+    transform: [{ scale: 2 }],
+  },
 });
 
 export default styles;

@@ -1,33 +1,28 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BASE_URL, VERSION_URL } from "../../config";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 export const searchDoctors = createAsyncThunk(
   "doctors/searchDoctors",
   async ({ text }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/users/search?q=${text}`,
-      );
+      const response = await axiosInstance.get(`/users/search?q=${text}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  },
+  }
 );
 
 export const getDoctorById = createAsyncThunk(
   "doctors/byId",
   async ({ id }, { rejectWithValue }) => {
     try {
-      const response = await axios.get(
-        `${BASE_URL}${VERSION_URL}/users/doctor/${id}`,
-      );
+      const response = await axiosInstance.get(`/users/doctor/${id}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");
     }
-  },
+  }
 );
 
 const doctorSlice = createSlice({
@@ -54,6 +49,10 @@ const doctorSlice = createSlice({
       state.doctor = {};
       state.loading.getById = false;
       state.error.getById = null;
+    },
+    clearDoctorError: (state) => {
+      state.error.getById = null;
+      state.error.search = null;
     },
   },
   extraReducers: (builder) => {
@@ -85,5 +84,5 @@ const doctorSlice = createSlice({
   },
 });
 
-export const { clearSearch, clearById } = doctorSlice.actions;
+export const { clearSearch, clearById, clearDoctorError } = doctorSlice.actions;
 export default doctorSlice.reducer;

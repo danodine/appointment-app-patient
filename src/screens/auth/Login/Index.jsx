@@ -24,7 +24,7 @@ import { COLORS, TYPES } from "../../../styles/theme";
 
 const LoginScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
-  const { user, loading, loginError } = useSelector((state) => state.auth);
+  const { user, loading, error } = useSelector((state) => state.auth);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -44,6 +44,7 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = () => {
     dispatch(loginUser({ email, password }));
+
   };
   const handleSingUp = () => {
     navigation.reset({
@@ -120,7 +121,7 @@ const LoginScreen = ({ navigation }) => {
               onChangeText={setPassword}
             />
             {loading.login && <ActivityIndicator size="small" />}
-            {loginError && <Text style={styles.error}>{loginError}</Text>}
+            {error.login && <Text style={styles.error}>{error.login}</Text>}
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
               <Text style={styles.buttonText}>
                 {STRINGS[language].login.logIn}

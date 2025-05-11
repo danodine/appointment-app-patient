@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Text,
   TextInput,
@@ -13,7 +13,7 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import PropTypes from "prop-types";
 import { LinearGradient } from "expo-linear-gradient";
-import { signupUser } from "../../../redux/authSlice";
+import { signupUser, clearSignupError } from "../../../redux/authSlice";
 import { provinces } from "../../../constants/vars";
 import { useDispatch, useSelector } from "react-redux";
 import { Ionicons } from "@expo/vector-icons";
@@ -22,14 +22,18 @@ import {
   validateEcuadorianCedula,
   isStrongPassword,
   formatDate,
+  replaceVal,
 } from "../../../utils/helpers";
 import styles from "./styles";
 import STRINGS from "../../../constants/strings";
+import TopBanner from "../../dashboard/components/TopBanner/Index";
 import { COLORS, FONT_SIZES } from "../../../styles/theme";
 
 const SingUpScreen = ({ navigation }) => {
   const language = useSelector((state) => state.language.language);
+  const { error } = useSelector((state) => state.auth);
   const text = STRINGS[language].signupUser;
+
   const dispatch = useDispatch();
 
   const [name, setName] = useState("");
@@ -61,6 +65,31 @@ const SingUpScreen = ({ navigation }) => {
   const [city, setCity] = useState("");
   const [street, setStreet] = useState("");
 
+  const [banner, setBanner] = useState({
+    visible: false,
+    type: "",
+    message: "",
+  });
+
+  useEffect(() => {
+    if (error.signup) {
+      const [type, field, value] = (error?.signup ?? "").split(",");
+      if (type === "dupKey") {
+        if (field === "email") {
+          showBanner(
+            "error",
+            replaceVal(STRINGS[language].signupUser.emailDuplicate, value)
+          );
+        } else {
+          showBanner("error", STRINGS[language].signupUser.errorFromDb);
+        }
+      } else {
+        showBanner("error", STRINGS[language].signupUser.errorFromDb);
+      }
+      dispatch(clearSignupError());
+    }
+  }, [error.signup]);
+
   const handleRegister = async () => {
     await dispatch(
       signupUser({
@@ -73,9 +102,8 @@ const SingUpScreen = ({ navigation }) => {
         phone,
         street,
         city,
-      }),
+      })
     ).unwrap();
-
     navigation.navigate("Login");
   };
 
@@ -106,7 +134,7 @@ const SingUpScreen = ({ navigation }) => {
   const handleNationalId = (value) => {
     setNationalId(value);
     setNationalIdError(
-      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid,
+      validateEcuadorianCedula(value) ? "" : text.nationalIdInvalid
     );
   };
 
@@ -161,11 +189,21 @@ const SingUpScreen = ({ navigation }) => {
     city &&
     street;
 
+  const showBanner = (type, message) => {
+    setBanner({ visible: true, type, message });
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
+      <TopBanner
+        visible={banner.visible}
+        type={banner.type}
+        message={banner.message}
+        onHide={() => setBanner({ ...banner, visible: false })}
+      />
       <LinearGradient
         colors={COLORS.main}
         start={{ x: 0, y: 0 }}

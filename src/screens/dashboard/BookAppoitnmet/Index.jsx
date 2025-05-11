@@ -21,6 +21,7 @@ import { ICONS, COLORS, SIZES, FONT_SIZES } from "../../../styles/theme";
 import STRINGS from "../../../constants/strings";
 import styles from "./styles";
 import { getCurrentTimeHHSS } from "../../../utils/helpers";
+import TopBanner from "../components/TopBanner/Index";
 
 const BookAppointmentScreen = ({ route, navigation }) => {
   const { doctor, location } = route.params;
@@ -33,12 +34,36 @@ const BookAppointmentScreen = ({ route, navigation }) => {
   const [selectedTime, setSelectedTime] = useState(null);
   const [treatments, setTreatments] = useState([]);
   const [treatmentTime, setTreatmentTime] = useState(null);
+  const [banner, setBanner] = useState({
+    visible: false,
+    type: "",
+    message: "",
+  });
+
   const futureDate = new Date();
   futureDate.setDate(futureDate.getDate() + 182);
 
-  const { availableDates, availableTimes, loading } = useSelector(
-    (state) => state.appointments,
+  const { availableDates, availableTimes, loading, error } = useSelector(
+    (state) => state.appointments
   );
+
+  useEffect(() => {
+    if (error.calendar) {
+      showBanner("error", STRINGS[language].bookAppointment.errorDataDates);
+    }
+    if (error.time) {
+      showBanner("error", STRINGS[language].bookAppointment.errorDatatimes);
+    }
+  }, [error.calendar, error.time]);
+
+  const showBanner = (type, message) => {
+    setBanner({ visible: true, type, message });
+  };
+
+  const handleCloseBanner = () => {
+    setBanner({ ...banner, visible: false });
+    dispatch(clearAppointmentsErrors());
+  };
 
   useEffect(() => {
     if (doctorId) {
@@ -51,7 +76,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
       (item, index) => ({
         label: item.treatmentName,
         value: item.treatmentTime,
-      }),
+      })
     );
     setTreatments(formatedTreatments);
   }, [doctor]);
@@ -61,7 +86,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
     if (!availableDates.includes(dateStr)) {
       Alert.alert(
         "Unavailable",
-        "There are no available appointments on this date.",
+        "There are no available appointments on this date."
       );
       return;
     }
@@ -98,11 +123,11 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         doctorName: doctor.name,
         doctorSpeciality: doctor.profile.specialtyId,
         dateTime: new Date(
-          `${selectedDate}T${selectedTime}:00.000Z`,
+          `${selectedDate}T${selectedTime}:00.000Z`
         ).toISOString(),
         location,
         duration: treatmentTime,
-      }),
+      })
     );
     navigation.navigate("Dashboard", { screen: "Appointments" });
   };
@@ -122,7 +147,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           location,
           duration: treatmentTime,
           currentTime: getCurrentTimeHHSS(),
-        }),
+        })
       );
     }
   }, [treatmentTime]);
@@ -169,6 +194,12 @@ const BookAppointmentScreen = ({ route, navigation }) => {
           color={COLORS.black}
         />
       </TouchableOpacity>
+      <TopBanner
+        visible={banner.visible}
+        type={banner.type}
+        message={banner.message}
+        onHide={() => handleCloseBanner()}
+      />
 
       <View style={styles.doctorCard}>
         <Text style={styles.doctorName}>{doctor?.name}</Text>
@@ -182,19 +213,23 @@ const BookAppointmentScreen = ({ route, navigation }) => {
         {STRINGS[language].bookAppointment.selectDate}
       </Text>
 
-      <Calendar
-        onDayPress={onDateSelected}
-        markedDates={markedDates}
-        disableAllTouchEventsForDisabledDays
-        hideExtraDays={true}
-        minDate={new Date().toISOString().split("T")[0]}
-        maxDate={futureDate.toISOString().split("T")[0]}
-        theme={{
-          selectedDayBackgroundColor: COLORS.secondary,
-          selectedDayTextColor: COLORS.white,
-          todayTextColor: COLORS.secondary,
-        }}
-      />
+      {!loading.calendar ? (
+        <Calendar
+          onDayPress={onDateSelected}
+          markedDates={markedDates}
+          disableAllTouchEventsForDisabledDays
+          hideExtraDays={true}
+          minDate={new Date().toISOString().split("T")[0]}
+          maxDate={futureDate.toISOString().split("T")[0]}
+          theme={{
+            selectedDayBackgroundColor: COLORS.secondary,
+            selectedDayTextColor: COLORS.white,
+            todayTextColor: COLORS.secondary,
+          }}
+        />
+      ) : (
+        <ActivityIndicator size="large" />
+      )}
 
       {selectedDate && (
         <>
@@ -225,7 +260,7 @@ const BookAppointmentScreen = ({ route, navigation }) => {
             {STRINGS[language].bookAppointment.timeSlots}
           </Text>
 
-          {loading.calendar ? (
+          {loading.time ? (
             <ActivityIndicator size="large" />
           ) : (
             calendarElement()

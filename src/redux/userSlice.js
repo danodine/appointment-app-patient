@@ -1,27 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { BASE_URL, VERSION_URL } from "../../config";
+import { BASE_URL } from "../../config";
 import * as SecureStore from "expo-secure-store";
-import axios from "axios";
 import {
   appendProfileFields,
   appendSimpleFields,
   appendPhoto,
 } from "../utils/helpers";
-
-const USER_ENDPOINT = `${BASE_URL}${VERSION_URL}/users`;
+import axiosInstance from "../utils/axiosInstance";
 
 export const getCurrentUser = createAsyncThunk(
   "users/getCurrentUser",
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${USER_ENDPOINT}/me`);
+      const response = await axiosInstance.get(`/users/me`);
       return response.data.data.user;
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "An error has occurred",
+        err.response?.data?.message
       );
     }
-  },
+  }
 );
 
 export const updateUser = createAsyncThunk(
@@ -34,32 +32,32 @@ export const updateUser = createAsyncThunk(
       appendProfileFields(formData, userData.profile);
       appendPhoto(formData, userData.profileImageUri);
 
-      const response = await axios.patch(
-        `${USER_ENDPOINT}/updateMe`,
+      const response = await axiosInstance.patch(
+        `/users/updateMe`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
-        },
+        }
       );
 
       return response.data.data.user;
     } catch (err) {
-      return rejectWithValue(err.response?.data?.message || "Update failed");
+      return rejectWithValue(err.response?.data?.message);
     }
-  },
+  }
 );
 
 export const deleteMe = createAsyncThunk(
-  "user/deleteMe",
+  "users/deleteMe",
   async (_, { rejectWithValue }) => {
     try {
-      await axios.delete(`${USER_ENDPOINT}/deleteMe`);
+      await axiosInstance.delete(`/users/deleteMe`);
       await SecureStore.deleteItemAsync("token");
       return true;
     } catch (error) {
-      return rejectWithValue(error.response?.data || "Error deleting user");
+      return rejectWithValue(error.response?.data);
     }
-  },
+  }
 );
 
 const userSlice = createSlice({
@@ -77,6 +75,10 @@ const userSlice = createSlice({
       update: null,
       delete: null,
     },
+    userBanner: {
+      type: null,
+      message: null,
+    },
   },
   reducers: {
     clearUserError: (state) => {
@@ -87,6 +89,12 @@ const userSlice = createSlice({
     },
     setCachedProfileImageUri: (state, action) => {
       state.cachedProfileImageUri = action.payload;
+    },
+    clearUserBanner: (state) => {
+      state.userBanner = {
+        type: null,
+        message: null,
+      };
     },
   },
   extraReducers: (builder) => {
@@ -118,10 +126,18 @@ const userSlice = createSlice({
           ? `${BASE_URL}/img/users/${action.payload.profile.photo}`
           : null;
         state.cachedProfileImageUri = imageUri;
+        state.userBanner = {
+          type: "success",
+          message: "banerSuccess",
+        };
       })
       .addCase(updateUser.rejected, (state, action) => {
         state.loading.update = false;
         state.error.update = action.payload;
+        state.userBanner = {
+          type: "error",
+          message: "banerError",
+        };
       })
 
       .addCase(deleteMe.pending, (state) => {
@@ -139,5 +155,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { clearUserError, clearCurrentUser } = userSlice.actions;
+export const { clearUserError, clearCurrentUser, clearUserBanner } =
+  userSlice.actions;
 export default userSlice.reducer;

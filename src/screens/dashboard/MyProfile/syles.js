@@ -228,6 +228,10 @@ const styles = StyleSheet.create({
   closeCalendatButtonText: {
     color: COLORS.whiteText,
   },
+  loaderContainer: {
+    paddingTop: 90,
+    transform: [{ scale: 2 }]
+  },
 });
 
 export default styles;

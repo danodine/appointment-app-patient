@@ -11,6 +11,7 @@ import {
   Image,
   LayoutAnimation,
   UIManager,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
@@ -19,16 +20,22 @@ import { isStrongPassword } from "../../../utils/helpers";
 import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { getCurrentUser, updateUser, deleteMe } from "../../../redux/userSlice";
+import {
+  getCurrentUser,
+  updateUser,
+  deleteMe,
+  clearUserBanner,
+  clearUserError,
+} from "../../../redux/userSlice";
 import {
   changePassword,
   logoutUser,
   clearAuth,
+  clearAuthBanner,
 } from "../../../redux/authSlice";
 import PropTypes from "prop-types";
 import { CommonActions } from "@react-navigation/native";
 import TopBanner from "../components/TopBanner/Index";
-import { BASE_URL } from "../../../../config";
 import { ICONS, COLORS, SIZES, FONT_SIZES } from "../../../styles/theme";
 import styles from "./syles";
 import STRINGS from "../../../constants/strings";
@@ -41,13 +48,12 @@ if (
 }
 
 export default function ProfileScreen({ navigation }) {
-  const { currentUser, cachedProfileImageUri } = useSelector(
-    (state) => state.users,
+  const { currentUser, cachedProfileImageUri, userBanner } = useSelector(
+    (state) => state.users
   );
-  const { changePasswordError } = useSelector((state) => state.auth);
+  const { authBanner, error, loading } = useSelector((state) => state.auth);
   const language = useSelector((state) => state.language.language);
 
-  console.log(changePasswordError);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -88,6 +94,10 @@ export default function ProfileScreen({ navigation }) {
   const [vaccineDate, setVaccineDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
 
+  const [bannerIsVisible, setBannerIsVisible] = useState(false);
+
+  const [banner, setBanner] = useState(false);
+
   const dispatch = useDispatch();
 
   const inputRefs = {
@@ -101,7 +111,7 @@ export default function ProfileScreen({ navigation }) {
 
   const [newCondition, setNewCondition] = useState("");
   const [selectedCategory, setSelectedCategory] = useState(
-    STRINGS[language].medicalCategories[0]?.value || [],
+    STRINGS[language].medicalCategories[0]?.value || []
   );
 
   useEffect(() => {
@@ -111,18 +121,41 @@ export default function ProfileScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
+    if (authBanner?.message) {
+      setBannerIsVisible(true);
+      setBanner({
+        type: authBanner?.type,
+        message: authBanner?.message,
+      });
+    }
+    if (error?.get) {
+      setBannerIsVisible(true);
+      setBanner({
+        type: "error",
+        message: STRINGS[language].myProfile.banerErrorGetUser,
+      });
+    }
+    if (userBanner?.message) {
+      setBannerIsVisible(true);
+      setBanner({
+        type: userBanner?.type,
+        message:
+          userBanner?.message == "banerSuccess"
+            ? STRINGS[language].myProfile.banerSuccess
+            : STRINGS[language].myProfile.banerError,
+      });
+    }
+  }, [authBanner, userBanner]);
+
+  useEffect(() => {
     setName(currentUser?.name);
     setEmail(currentUser?.email);
     setPhone(currentUser?.phone);
     setHeight(
-      isNaN(currentUser?.profile?.heightCm)
-        ? 0
-        : currentUser?.profile?.heightCm,
+      isNaN(currentUser?.profile?.heightCm) ? 0 : currentUser?.profile?.heightCm
     );
     setWeight(
-      isNaN(currentUser?.profile?.weightKg)
-        ? 0
-        : currentUser?.profile?.weightKg,
+      isNaN(currentUser?.profile?.weightKg) ? 0 : currentUser?.profile?.weightKg
     );
     setAddress(currentUser?.profile?.address?.street);
     setProvince(currentUser?.profile?.address?.city);
@@ -131,7 +164,7 @@ export default function ProfileScreen({ navigation }) {
     setMedicalConditions(
       currentUser?.profile?.medicalConditions === undefined
         ? {}
-        : currentUser?.profile?.medicalConditions,
+        : currentUser?.profile?.medicalConditions
     );
     setVaccines(currentUser?.profile?.vaccines || []);
     setProfileImage(profileImageUri || cachedProfileImageUri);
@@ -139,7 +172,7 @@ export default function ProfileScreen({ navigation }) {
 
   const addMedicalCondition = () => {
     if (!newCondition.trim()) {
-      Alert.alert("Error", "Please enter a condition.");
+      Alert.alert("Error", STRINGS[language].medicalCategories.noCondition);
       return;
     }
 
@@ -155,7 +188,7 @@ export default function ProfileScreen({ navigation }) {
 
     setNewCondition("");
   };
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     const userData = {
       name,
       email,
@@ -174,22 +207,9 @@ export default function ProfileScreen({ navigation }) {
       },
       profileImageUri,
     };
-
-    dispatch(updateUser(userData))
-      .unwrap()
-
-      .then(() => {
-        // use a modal for succes and error
-        // Alert.alert("Success", "Profile updated successfully!");
-        showBanner("success", "Data saved successfully!");
-        dispatch(getCurrentUser());
-        setProfileImageUri(null);
-      })
-      .catch((err) => {
-        showBanner("error", "Failed to save data!");
-        // use a modal for succes and error
-        // Alert.alert("Error", err);
-      });
+    await dispatch(updateUser(userData)).unwrap();
+    dispatch(getCurrentUser());
+    setProfileImageUri(null);
   };
 
   const handleChangePassword = () => {
@@ -208,7 +228,7 @@ export default function ProfileScreen({ navigation }) {
         passwordCurrent: oldPassword,
         password: newPassword,
         passwordConfirm: confirmPassword,
-      }),
+      })
     );
     setOldPassword("");
     setOldPasswordError("");
@@ -221,23 +241,21 @@ export default function ProfileScreen({ navigation }) {
   const handleOldPassword = (value) => {
     setOldPassword(value);
     setOldPasswordError(
-      value === "" ? STRINGS[language].myProfile.oldPasswordInvalid : "",
+      value === "" ? STRINGS[language].myProfile.oldPasswordInvalid : ""
     );
   };
 
   const handlePassword = (value) => {
     setNewPassword(value);
     setPasswordError(
-      isStrongPassword(value)
-        ? ""
-        : STRINGS[language].myProfile.passwordInvalid,
+      isStrongPassword(value) ? "" : STRINGS[language].myProfile.passwordInvalid
     );
   };
 
   const handlePasswordConfirm = (value) => {
     setConfirmPassword(value);
     setPasswordConfirmError(
-      value === newPassword ? "" : STRINGS[language].myProfile.passwordMismatch,
+      value === newPassword ? "" : STRINGS[language].myProfile.passwordMismatch
     );
   };
 
@@ -258,7 +276,7 @@ export default function ProfileScreen({ navigation }) {
       CommonActions.reset({
         index: 0,
         routes: [{ name: "Login" }],
-      }),
+      })
     );
   };
 
@@ -414,13 +432,12 @@ export default function ProfileScreen({ navigation }) {
   const renderVaccines = () => {
     const addVaccine = () => {
       if (!newVaccineName.trim()) {
-        // create error modal
-        Alert.alert("Error", "Please enter vaccine name.");
+        Alert.alert("Error", STRINGS[language].myProfile.noVaccine);
         return;
       }
 
       const formattedDate = new Intl.DateTimeFormat("en-GB").format(
-        vaccineDate,
+        vaccineDate
       );
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
@@ -540,14 +557,12 @@ export default function ProfileScreen({ navigation }) {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     setDetailsExpandedVaccines(!detailsExpandedVaccines);
   };
-  const [banner, setBanner] = useState({
-    visible: false,
-    type: "",
-    message: "",
-  });
 
-  const showBanner = (type, message) => {
-    setBanner({ visible: true, type, message });
+  const showBanner = () => {
+    dispatch(clearAuthBanner());
+    dispatch(clearUserBanner());
+    dispatch(clearUserError());
+    setBannerIsVisible(false);
   };
 
   return (
@@ -556,298 +571,312 @@ export default function ProfileScreen({ navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
       <TopBanner
-        visible={banner.visible}
+        visible={bannerIsVisible}
         type={banner.type}
         message={banner.message}
-        onHide={() => setBanner({ ...banner, visible: false })}
+        onHide={() => showBanner()}
       />
-      <ScrollView style={styles.mainContainer}>
-        <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-          <Ionicons
-            name={ICONS.backArrow}
-            size={SIZES.icon20}
-            color={COLORS.black}
-          />
-        </TouchableOpacity>
-
-        <View style={styles.container}>
-          <View style={styles.avatarContainer}>
-            {profileImage ? (
-              <Image
-                source={{
-                  uri: profileImage,
-                }}
-                style={styles.avatar}
-              />
-            ) : (
-              <View style={styles.avatarPlaceholder}>
-                <Ionicons
-                  name={ICONS.person}
-                  size={SIZES.icon50}
-                  color={COLORS.iconGrey}
-                />
-              </View>
-            )}
-            <TouchableOpacity style={styles.editIcon} onPress={handlePickImage}>
-              <Ionicons
-                name={ICONS.pencil}
-                size={SIZES.icon20}
-                color={COLORS.white}
-              />
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity
-            onPress={toggleDetailsExpanded}
-            style={styles.dropdownHeader}
-          >
-            <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>
-                {STRINGS[language].myProfile.details}
-              </Text>
-              <Ionicons
-                name={detailsExpanded ? ICONS.arrowUp : ICONS.arrowDown}
-                size={SIZES.icon20}
-                color={COLORS.black}
-              />
-            </View>
+      {loading.get && (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color={COLORS.secondary} />
+        </View>
+      )}
+      {!loading.get && (
+        <ScrollView style={styles.mainContainer}>
+          <TouchableOpacity style={styles.backButton} onPress={handleBack}>
+            <Ionicons
+              name={ICONS.backArrow}
+              size={SIZES.icon20}
+              color={COLORS.black}
+            />
           </TouchableOpacity>
-          {detailsExpanded && (
-            <View style={styles.expandElementContainer}>
-              {renderField(
-                STRINGS[language].myProfile.name,
-                name,
-                setName,
-                "name",
-              )}
-              {renderField(
-                STRINGS[language].myProfile.email,
-                email,
-                setEmail,
-                "email",
-              )}
-              {renderField(
-                STRINGS[language].myProfile.phone,
-                phone,
-                setPhone,
-                "phone",
-              )}
-              {renderField(
-                STRINGS[language].myProfile.address,
-                address,
-                setAddress,
-                "address",
-              )}
-              <View style={styles.valueContainerDrop}>
-                <Text style={styles.fieldLabel}>
-                  {STRINGS[language].myProfile.province}
-                </Text>
-                <Dropdown
-                  style={styles.inputDropdown}
-                  data={provinces}
-                  labelField="label"
-                  valueField="value"
-                  value={province}
-                  onChange={(item) => setProvince(item.value)}
-                  itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
-                  selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
-                  placeholderStyle={{
-                    fontSize: FONT_SIZES.inputText,
-                    color: COLORS.ligthGreyText,
+
+          <View style={styles.container}>
+            <View style={styles.avatarContainer}>
+              {profileImage ? (
+                <Image
+                  source={{
+                    uri: profileImage,
                   }}
+                  style={styles.avatar}
                 />
-              </View>
-              <View style={styles.valueContainerDrop}>
-                <Text style={styles.fieldLabel}>
-                  {STRINGS[language].myProfile.country}
-                </Text>
-                <Dropdown
-                  style={styles.inputDropdown}
-                  data={countrys}
-                  labelField="label"
-                  valueField="value"
-                  value={country}
-                  onChange={(item) => setCountry(item.value)}
-                  itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
-                  selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
-                  placeholderStyle={{
-                    fontSize: FONT_SIZES.inputText,
-                    color: COLORS.ligthGreyText,
-                  }}
-                />
-              </View>
-              {renderField(
-                STRINGS[language].myProfile.height,
-                height,
-                setHeight,
-                "height",
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <Ionicons
+                    name={ICONS.person}
+                    size={SIZES.icon50}
+                    color={COLORS.iconGrey}
+                  />
+                </View>
               )}
-              {renderField(
-                STRINGS[language].myProfile.weight,
-                weight,
-                setWeight,
-                "weight",
-              )}
-              <View style={styles.valueContainerDrop}>
-                <Text style={styles.fieldLabel}>
-                  {STRINGS[language].myProfile.bloodType}
-                </Text>
-                <Dropdown
-                  style={styles.inputDropdown}
-                  data={bloodTypes}
-                  labelField="label"
-                  valueField="value"
-                  value={blood}
-                  onChange={(item) => setBlood(item.value)}
-                  itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
-                  selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
-                  placeholderStyle={{
-                    fontSize: FONT_SIZES.inputText,
-                    color: COLORS.ligthGreyText,
-                  }}
-                />
-              </View>
-            </View>
-          )}
-
-          <TouchableOpacity
-            onPress={toggleDetailsExpandedCondition}
-            style={styles.dropdownHeader}
-          >
-            <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>
-                {STRINGS[language].myProfile.medicalConditions}
-              </Text>
-              <Ionicons
-                name={
-                  detailsExpandedConditions ? ICONS.arrowUp : ICONS.arrowDown
-                }
-                size={SIZES.icon20}
-                color={COLORS.black}
-              />
-            </View>
-          </TouchableOpacity>
-          {detailsExpandedConditions && renderMedicalConditions()}
-
-          <TouchableOpacity
-            onPress={toggleDetailsExpandedVaccines}
-            style={styles.dropdownHeader}
-          >
-            <View style={styles.dropdownContent}>
-              <Text style={styles.labelDetails}>
-                {STRINGS[language].myProfile.vaccines}
-              </Text>
-              <Ionicons
-                name={detailsExpandedVaccines ? ICONS.arrowUp : ICONS.arrowDown}
-                size={SIZES.icon20}
-                color={COLORS.black}
-              />
-            </View>
-          </TouchableOpacity>
-
-          {detailsExpandedVaccines && renderVaccines()}
-
-          <TouchableOpacity
-            style={styles.saveButton}
-            onPress={handleSaveChanges}
-          >
-            <Text style={styles.saveButtonText}>
-              {STRINGS[language].myProfile.save}
-            </Text>
-          </TouchableOpacity>
-
-          {changePass && (
-            <View style={styles.expandElementContainer}>
-              <Text style={styles.label}>
-                {STRINGS[language].myProfile.oldPassword}
-              </Text>
-              <TextInput
-                style={[
-                  styles.inputPass,
-                  oldPasswordError && oldPasswordTouched
-                    ? styles.errorBorder
-                    : null,
-                ]}
-                value={oldPassword}
-                onChangeText={handleOldPassword}
-                onBlur={() => setOldPasswordTouched(true)}
-                secureTextEntry
-              />
-              {oldPasswordError && oldPasswordTouched && (
-                <Text style={styles.errorText}>{oldPasswordError}</Text>
-              )}
-
-              <Text style={styles.label}>
-                {STRINGS[language].myProfile.newPassword}
-              </Text>
-              <TextInput
-                style={[
-                  styles.inputPass,
-                  passwordError && passwordTouched ? styles.errorBorder : null,
-                ]}
-                value={newPassword}
-                onChangeText={handlePassword}
-                onBlur={() => setPasswordTouched(true)}
-                secureTextEntry
-              />
-              {passwordError && passwordTouched && (
-                <Text style={styles.errorText}>{passwordError}</Text>
-              )}
-
-              <Text style={styles.label}>
-                {STRINGS[language].myProfile.newPasswordConfirm}
-              </Text>
-              <TextInput
-                style={[
-                  styles.inputPass,
-                  passwordConfirmError && passwordConfirmTouched
-                    ? styles.errorBorder
-                    : null,
-                ]}
-                value={confirmPassword}
-                onChangeText={handlePasswordConfirm}
-                secureTextEntry
-                onBlur={() => setPasswordConfirmTouched(true)}
-              />
-              {passwordConfirmError && passwordConfirmTouched && (
-                <Text style={styles.errorText}>{passwordConfirmError}</Text>
-              )}
-
               <TouchableOpacity
-                style={[
-                  styles.saveButton,
-                  !isFormValid && styles.buttonOpacity,
-                ]}
-                onPress={handleSaveNewPassword}
-                disabled={!isFormValid}
+                style={styles.editIcon}
+                onPress={handlePickImage}
               >
-                <Text style={styles.saveButtonText}>
-                  {STRINGS[language].myProfile.savePassword}
-                </Text>
+                <Ionicons
+                  name={ICONS.pencil}
+                  size={SIZES.icon20}
+                  color={COLORS.white}
+                />
               </TouchableOpacity>
             </View>
-          )}
+            <TouchableOpacity
+              onPress={toggleDetailsExpanded}
+              style={styles.dropdownHeader}
+            >
+              <View style={styles.dropdownContent}>
+                <Text style={styles.labelDetails}>
+                  {STRINGS[language].myProfile.details}
+                </Text>
+                <Ionicons
+                  name={detailsExpanded ? ICONS.arrowUp : ICONS.arrowDown}
+                  size={SIZES.icon20}
+                  color={COLORS.black}
+                />
+              </View>
+            </TouchableOpacity>
+            {detailsExpanded && (
+              <View style={styles.expandElementContainer}>
+                {renderField(
+                  STRINGS[language].myProfile.name,
+                  name,
+                  setName,
+                  "name"
+                )}
+                {renderField(
+                  STRINGS[language].myProfile.email,
+                  email,
+                  setEmail,
+                  "email"
+                )}
+                {renderField(
+                  STRINGS[language].myProfile.phone,
+                  phone,
+                  setPhone,
+                  "phone"
+                )}
+                {renderField(
+                  STRINGS[language].myProfile.address,
+                  address,
+                  setAddress,
+                  "address"
+                )}
+                <View style={styles.valueContainerDrop}>
+                  <Text style={styles.fieldLabel}>
+                    {STRINGS[language].myProfile.province}
+                  </Text>
+                  <Dropdown
+                    style={styles.inputDropdown}
+                    data={provinces}
+                    labelField="label"
+                    valueField="value"
+                    value={province}
+                    onChange={(item) => setProvince(item.value)}
+                    itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                    selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                    placeholderStyle={{
+                      fontSize: FONT_SIZES.inputText,
+                      color: COLORS.ligthGreyText,
+                    }}
+                  />
+                </View>
+                <View style={styles.valueContainerDrop}>
+                  <Text style={styles.fieldLabel}>
+                    {STRINGS[language].myProfile.country}
+                  </Text>
+                  <Dropdown
+                    style={styles.inputDropdown}
+                    data={countrys}
+                    labelField="label"
+                    valueField="value"
+                    value={country}
+                    onChange={(item) => setCountry(item.value)}
+                    itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                    selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                    placeholderStyle={{
+                      fontSize: FONT_SIZES.inputText,
+                      color: COLORS.ligthGreyText,
+                    }}
+                  />
+                </View>
+                {renderField(
+                  STRINGS[language].myProfile.height,
+                  height,
+                  setHeight,
+                  "height"
+                )}
+                {renderField(
+                  STRINGS[language].myProfile.weight,
+                  weight,
+                  setWeight,
+                  "weight"
+                )}
+                <View style={styles.valueContainerDrop}>
+                  <Text style={styles.fieldLabel}>
+                    {STRINGS[language].myProfile.bloodType}
+                  </Text>
+                  <Dropdown
+                    style={styles.inputDropdown}
+                    data={bloodTypes}
+                    labelField="label"
+                    valueField="value"
+                    value={blood}
+                    onChange={(item) => setBlood(item.value)}
+                    itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                    selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+                    placeholderStyle={{
+                      fontSize: FONT_SIZES.inputText,
+                      color: COLORS.ligthGreyText,
+                    }}
+                  />
+                </View>
+              </View>
+            )}
 
-          <TouchableOpacity
-            style={styles.secondaryButton}
-            onPress={handleChangePassword}
-          >
-            <Text style={styles.secondaryButtonText}>
-              {changePass
-                ? STRINGS[language].myProfile.cancel
-                : STRINGS[language].myProfile.changePassword}
-            </Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={toggleDetailsExpandedCondition}
+              style={styles.dropdownHeader}
+            >
+              <View style={styles.dropdownContent}>
+                <Text style={styles.labelDetails}>
+                  {STRINGS[language].myProfile.medicalConditions}
+                </Text>
+                <Ionicons
+                  name={
+                    detailsExpandedConditions ? ICONS.arrowUp : ICONS.arrowDown
+                  }
+                  size={SIZES.icon20}
+                  color={COLORS.black}
+                />
+              </View>
+            </TouchableOpacity>
+            {detailsExpandedConditions && renderMedicalConditions()}
 
-          <TouchableOpacity
-            style={styles.closeButton}
-            onPress={handleCloseAccount}
-          >
-            <Text style={styles.closeButtonText}>
-              {STRINGS[language].myProfile.closeAccount}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </ScrollView>
+            <TouchableOpacity
+              onPress={toggleDetailsExpandedVaccines}
+              style={styles.dropdownHeader}
+            >
+              <View style={styles.dropdownContent}>
+                <Text style={styles.labelDetails}>
+                  {STRINGS[language].myProfile.vaccines}
+                </Text>
+                <Ionicons
+                  name={
+                    detailsExpandedVaccines ? ICONS.arrowUp : ICONS.arrowDown
+                  }
+                  size={SIZES.icon20}
+                  color={COLORS.black}
+                />
+              </View>
+            </TouchableOpacity>
+
+            {detailsExpandedVaccines && renderVaccines()}
+
+            <TouchableOpacity
+              style={styles.saveButton}
+              onPress={handleSaveChanges}
+            >
+              <Text style={styles.saveButtonText}>
+                {STRINGS[language].myProfile.save}
+              </Text>
+            </TouchableOpacity>
+
+            {changePass && (
+              <View style={styles.expandElementContainer}>
+                <Text style={styles.label}>
+                  {STRINGS[language].myProfile.oldPassword}
+                </Text>
+                <TextInput
+                  style={[
+                    styles.inputPass,
+                    oldPasswordError && oldPasswordTouched
+                      ? styles.errorBorder
+                      : null,
+                  ]}
+                  value={oldPassword}
+                  onChangeText={handleOldPassword}
+                  onBlur={() => setOldPasswordTouched(true)}
+                  secureTextEntry
+                />
+                {!!oldPasswordError && !!oldPasswordTouched && (
+                  <Text style={styles.errorText}>{oldPasswordError}</Text>
+                )}
+
+                <Text style={styles.label}>
+                  {STRINGS[language].myProfile.newPassword}
+                </Text>
+                <TextInput
+                  style={[
+                    styles.inputPass,
+                    passwordError && passwordTouched
+                      ? styles.errorBorder
+                      : null,
+                  ]}
+                  value={newPassword}
+                  onChangeText={handlePassword}
+                  onBlur={() => setPasswordTouched(true)}
+                  secureTextEntry
+                />
+                {!!passwordError && !!passwordTouched && (
+                  <Text style={styles.errorText}>{passwordError}</Text>
+                )}
+
+                <Text style={styles.label}>
+                  {STRINGS[language].myProfile.newPasswordConfirm}
+                </Text>
+                <TextInput
+                  style={[
+                    styles.inputPass,
+                    passwordConfirmError && passwordConfirmTouched
+                      ? styles.errorBorder
+                      : null,
+                  ]}
+                  value={confirmPassword}
+                  onChangeText={handlePasswordConfirm}
+                  secureTextEntry
+                  onBlur={() => setPasswordConfirmTouched(true)}
+                />
+                {!!passwordConfirmError && !!passwordConfirmTouched && (
+                  <Text style={styles.errorText}>{passwordConfirmError}</Text>
+                )}
+
+                <TouchableOpacity
+                  style={[
+                    styles.saveButton,
+                    !isFormValid && styles.buttonOpacity,
+                  ]}
+                  onPress={handleSaveNewPassword}
+                  disabled={!isFormValid}
+                >
+                  <Text style={styles.saveButtonText}>
+                    {STRINGS[language].myProfile.savePassword}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            <TouchableOpacity
+              style={styles.secondaryButton}
+              onPress={handleChangePassword}
+            >
+              <Text style={styles.secondaryButtonText}>
+                {changePass
+                  ? STRINGS[language].myProfile.cancel
+                  : STRINGS[language].myProfile.changePassword}
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.closeButton}
+              onPress={handleCloseAccount}
+            >
+              <Text style={styles.closeButtonText}>
+                {STRINGS[language].myProfile.closeAccount}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </ScrollView>
+      )}
     </KeyboardAvoidingView>
   );
 }

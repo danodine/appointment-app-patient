@@ -8,6 +8,7 @@ import {
   Modal,
   Linking,
   Platform,
+  ActivityIndicator,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,8 +16,9 @@ import {
   getPastAppointments,
   clearAppointmentsState,
   cancelAppointment,
+  clearAppointmentsErrors,
 } from "../../../redux/appointmentsSlice";
-import { getDoctorById } from "../../../redux/doctorSlice";
+import { getDoctorById, clearDoctorError } from "../../../redux/doctorSlice";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   formatDateText,
@@ -30,15 +32,17 @@ import { BASE_URL } from "../../../../config";
 import { Ionicons } from "@expo/vector-icons";
 import STRINGS from "../../../constants/strings";
 import styles from "./styles";
+import TopBanner from "../components/TopBanner/Index";
 import { COLORS, ICONS, SIZES } from "../../../styles/theme";
 import PropTypes from "prop-types";
 
 const AppointmentsScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
+  const { error: doctorError } = useSelector((state) => state.doctor);
+  
   const { showActionSheetWithOptions } = useActionSheet();
-  const { upcomingAppointmentsList, pastAppointmentsList } = useSelector(
-    (state) => state.appointments,
-  );
+  const { upcomingAppointmentsList, pastAppointmentsList, error, loading } =
+    useSelector((state) => state.appointments);
   const language = useSelector((state) => state.language.language);
 
   const [appointments, setAppointments] = useState(upcomingAppointmentsList);
@@ -51,7 +55,39 @@ const AppointmentsScreen = ({ navigation }) => {
   const [confirmCancelAppointment, setConfirmCancelAppointment] =
     useState(false);
 
+  const [banner, setBanner] = useState({
+    visible: false,
+    type: "",
+    message: "",
+  });
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (error?.upcoming || error?.past) {
+      showBanner("error", STRINGS[language].doctorProfile.errorLoadingData);
+    }
+    if (error?.booking) {
+      showBanner("error", STRINGS[language].doctorProfile.errorBooking);
+    }
+  }, [error?.upcoming, error?.past, error?.booking]);
+
+  const showBanner = (type, message) => {
+    setBanner({ visible: true, type, message });
+  };
+
+  useEffect(() => {
+    if (doctorError?.getById) {
+      showBanner("error", STRINGS[language].doctorProfile.errorLoadingData);
+    }
+  }, [doctorError]);
+
+  const handleCloseBanner = () => {
+    setBanner({ ...banner, visible: false });
+    dispatch(clearAppointmentsErrors());
+    dispatch(clearDoctorError());
+
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -67,7 +103,7 @@ const AppointmentsScreen = ({ navigation }) => {
       return () => {
         dispatch(clearAppointmentsState());
       };
-    }, [dispatch, user?._id]),
+    }, [dispatch, user?._id])
   );
 
   useEffect(() => {
@@ -128,7 +164,7 @@ const AppointmentsScreen = ({ navigation }) => {
 
   const handleBookAppointment = async () => {
     const resultAction = await dispatch(
-      getDoctorById({ id: modalData?.doctor?._id }),
+      getDoctorById({ id: modalData?.doctor?._id })
     );
     const data = unwrapResult(resultAction);
     const doctorData = data.data;
@@ -200,11 +236,99 @@ const AppointmentsScreen = ({ navigation }) => {
           const appleMapsUrl = `http://maps.apple.com/?q=${query}`;
           Linking.openURL(appleMapsUrl);
         }
-      },
+      }
     );
   };
+
+  const renderAppoitnments = () => {
+    if (appointments?.length > 0) {
+      return (
+        <FlatList
+          data={appointments}
+          keyExtractor={(item) => item?._id}
+          style={styles.flatlistElement}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.cardItem}
+              onPress={() => handleAppointment(item)}
+            >
+              {item?.doctorPhoto ? (
+                <Image
+                  source={{
+                    uri: `${BASE_URL}/img/users/${item?.doctorPhoto}`,
+                  }}
+                  style={styles.avatar}
+                />
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <Ionicons
+                    name={ICONS.person}
+                    size={SIZES.icon50}
+                    color={COLORS.iconGrey}
+                  />
+                </View>
+              )}
+              <View style={styles.statusTagContainer}>
+                <Text
+                  style={[
+                    styles.statusTagText,
+                    {
+                      color:
+                        item.status === "cancelled"
+                          ? COLORS.error
+                          : COLORS.green,
+                    },
+                  ]}
+                >
+                  {activeTab === 0
+                    ? STRINGS[language].appointments[item.status].cero
+                    : STRINGS[language].appointments[item.status].uno}
+                </Text>
+                <Text style={styles.item1}>{item.doctorName}</Text>
+                <Text>
+                  {STRINGS[language].speciality[item.doctorSpeciality]}
+                </Text>
+                <Text>{formatDateText(item.dateTime, language)}</Text>
+                <Text>
+                  {formatTime(item?.dateTime)} -{" "}
+                  {formatTime(item?.dateTime, item?.duration)}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          )}
+        />
+      );
+    } else if (loading?.upcoming || loading?.past) {
+      return (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color={COLORS.secondary} />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.noDataContainer}>
+          <Image
+            source={require("../../../assets/noAppointmentsData.png")}
+            style={styles.nodataImage}
+          />
+          {activeTab === 0 ? (
+            <Text>{STRINGS[language].appointments.noCurrent}</Text>
+          ) : (
+            <Text>{STRINGS[language].appointments.noPasst}</Text>
+          )}
+        </View>
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
+      <TopBanner
+        visible={banner.visible}
+        type={banner.type}
+        message={banner.message}
+        onHide={() => handleCloseBanner()}
+      />
       <Modal
         visible={modalVisible}
         transparent
@@ -244,7 +368,7 @@ const AppointmentsScreen = ({ navigation }) => {
               <TouchableOpacity
                 onPress={() =>
                   openMapPrompt(
-                    `${modalData?.doctorAdrress?.street}, ${modalData?.doctorAdrress?.city}, ${modalData?.doctorAdrress?.country}`,
+                    `${modalData?.doctorAdrress?.street}, ${modalData?.doctorAdrress?.city}, ${modalData?.doctorAdrress?.country}`
                   )
                 }
               >
@@ -383,75 +507,7 @@ const AppointmentsScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-
-        {appointments?.length > 0 ? (
-          <FlatList
-            data={appointments}
-            keyExtractor={(item) => item?._id}
-            style={styles.flatlistElement}
-            renderItem={({ item }) => (
-              <TouchableOpacity
-                style={styles.cardItem}
-                onPress={() => handleAppointment(item)}
-              >
-                {item?.doctorPhoto ? (
-                  <Image
-                    source={{
-                      uri: `${BASE_URL}/img/users/${item?.doctorPhoto}`,
-                    }}
-                    style={styles.avatar}
-                  />
-                ) : (
-                  <View style={styles.avatarPlaceholder}>
-                    <Ionicons
-                      name={ICONS.person}
-                      size={SIZES.icon50}
-                      color={COLORS.iconGrey}
-                    />
-                  </View>
-                )}
-                <View style={styles.statusTagContainer}>
-                  <Text
-                    style={[
-                      styles.statusTagText,
-                      {
-                        color:
-                          item.status === "cancelled"
-                            ? COLORS.error
-                            : COLORS.green,
-                      },
-                    ]}
-                  >
-                    {activeTab === 0
-                      ? STRINGS[language].appointments[item.status].cero
-                      : STRINGS[language].appointments[item.status].uno}
-                  </Text>
-                  <Text style={styles.item1}>{item.doctorName}</Text>
-                  <Text>
-                    {STRINGS[language].speciality[item.doctorSpeciality]}
-                  </Text>
-                  <Text>{formatDateText(item.dateTime, language)}</Text>
-                  <Text>
-                    {formatTime(item?.dateTime)} -{" "}
-                    {formatTime(item?.dateTime, item?.duration)}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            )}
-          />
-        ) : (
-          <View style={styles.noDataContainer}>
-            <Image
-              source={require("../../../assets/noAppointmentsData.png")}
-              style={styles.nodataImage}
-            />
-            {activeTab === 0 ? (
-              <Text>{STRINGS[language].appointments.noCurrent}</Text>
-            ) : (
-              <Text>{STRINGS[language].appointments.noPasst}</Text>
-            )}
-          </View>
-        )}
+        {renderAppoitnments()}
       </View>
       <TouchableOpacity
         style={styles.newAppointmentButton}
