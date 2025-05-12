@@ -82,6 +82,11 @@ const STRINGS = {
       seachPlaceholder: "Buscar",
       SearchQueryIsRequired: "Se requiere un criterio de busqueda",
       errorOcured: "Ocurrió un error, intente nuevamente",
+      filtersTitle: "Filtros",
+      province: "Provincia",
+      noDataFound: "No se encontraron resultados",
+      cleanFiltersTitle: "Borrar filtros",
+      offices: "Consultorios",
     },
     doctorProfile: {
       bookAppointment: "Agendar Cita",
@@ -390,6 +395,11 @@ const STRINGS = {
       seachPlaceholder: "Search",
       SearchQueryIsRequired: "Search query is required",
       errorOcured: "An error occurred, please try again",
+      filtersTitle: "Filters",
+      province: "Province",
+      noDataFound: "No results found",
+      cleanFiltersTitle: "Clear filters",
+      offices: "Offices",
     },
     doctorProfile: {
       bookAppointment: "Book Appointment",

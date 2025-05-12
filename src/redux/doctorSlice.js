@@ -3,9 +3,17 @@ import axiosInstance from "../utils/axiosInstance";
 
 export const searchDoctors = createAsyncThunk(
   "doctors/searchDoctors",
-  async ({ text }, { rejectWithValue }) => {
+  async ({ text, city }, { rejectWithValue }) => {
     try {
-      const response = await axiosInstance.get(`/users/search?q=${text}`);
+      const queryParams = [];
+
+      if (text) queryParams.push(`q=${encodeURIComponent(text)}`);
+      if (city)
+        queryParams.push(`city=${encodeURIComponent(city)}`);
+
+      const queryString = queryParams.length ? `?${queryParams.join("&")}` : "";
+
+      const response = await axiosInstance.get(`/users/search${queryString}`);
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Search failed");

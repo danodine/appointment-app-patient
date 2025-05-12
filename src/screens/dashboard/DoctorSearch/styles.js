@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
   },
   backButton: { ...VALUES.backButtonColor, left: 20 },
   inputText: {
-    paddingTop: 30,
+    paddingTop: 10,
     paddingBottom: 5,
     fontSize: FONT_SIZES.inputTitle,
     fontWeight: FONT_WEIGHT.boldFont,
@@ -80,14 +80,57 @@ const styles = StyleSheet.create({
     marginTop: -100,
   },
   nodataImage: {
-    width: "80%",
+    width: 200,
     maxHeight: 300,
     marginBottom: 20,
     resizeMode: "contain",
   },
   loaderContainer: {
-    paddingTop: 30,
-    transform: [{ scale: 2 }]
+    paddingTop: 20,
+    transform: [{ scale: 2 }],
+  },
+  filterContainer: {
+    marginBottom: 15,
+  },
+  filterLabel: {
+    fontSize: FONT_SIZES.inputTitle,
+    fontWeight: FONT_WEIGHT.boldFont,
+    marginBottom: 5,
+    marginTop: 10,
+  },
+  dropdown: {
+    backgroundColor: COLORS.inputBackgeound,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    width: "50%",
+  },
+  dropdownHeader: {
+    width: "100%",
+    paddingTop: 10,
+    borderRadius: 8,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 20,
+  },
+
+  clearFiltersButton: {
+    paddingVertical: PADDINGS.mainButtonVertical,
+    paddingHorizontal: PADDINGS.mainButtonHorizontal,
+    backgroundColor: COLORS.secondary,
+    borderRadius: 20,
+    justifyContent: "center",
+  },
+  
+  clearFiltersText: {
+    fontSize: FONT_SIZES.inputText,
+    color: COLORS.black,
+  },
+  boldText: {
+    fontWeight: FONT_WEIGHT.boldFont,
   },
 });
 

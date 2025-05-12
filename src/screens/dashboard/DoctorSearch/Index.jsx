@@ -8,7 +8,11 @@ import {
   TextInput,
   FlatList,
   ActivityIndicator,
+  UIManager,
+  Platform,
+  LayoutAnimation,
 } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 import { useDispatch, useSelector } from "react-redux";
 import { searchDoctors, clearSearch } from "../../../redux/doctorSlice";
 import { Ionicons } from "@expo/vector-icons";
@@ -16,8 +20,16 @@ import styles from "./styles";
 import PropTypes from "prop-types";
 import { BASE_URL } from "../../../../config";
 import STRINGS from "../../../constants/strings";
-import { ICONS, COLORS, SIZES } from "../../../styles/theme";
+import { ICONS, COLORS, SIZES, FONT_SIZES } from "../../../styles/theme";
 import TopBanner from "../components/TopBanner/Index";
+import { provinces } from "../../../constants/vars";
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 const HomeSearch = ({ navigation }) => {
   const { doctorsList, error, loading } = useSelector((state) => state.doctor);
@@ -27,6 +39,8 @@ const HomeSearch = ({ navigation }) => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [serachIsActive, setSerachIsActive] = useState(false);
+
+  const [city, setCity] = useState("");
 
   const [banner, setBanner] = useState({
     visible: false,
@@ -67,7 +81,7 @@ const HomeSearch = ({ navigation }) => {
     }
     if (text.length >= 3) {
       setSerachIsActive(true);
-      dispatch(searchDoctors({ text }));
+      dispatch(searchDoctors({ text, city }));
     }
   };
 
@@ -80,6 +94,25 @@ const HomeSearch = ({ navigation }) => {
     dispatch(clearSearch());
     navigation.goBack();
   };
+
+  const handleLocations = (locations) => {
+    const uniqueLocations = [
+      ...new Set(
+        locations
+          ?.flatMap((day) => day.timeSlots.map((slot) => slot.location))
+          ?.filter(Boolean)
+      ),
+    ];
+
+    return (
+      <>
+        {uniqueLocations.map((loc, index) => (
+          <Text key={index}>{loc}</Text>
+        ))}
+      </>
+    );
+  };
+
   return (
     <View style={styles.mainContainer} keyboardShouldPersistTaps="handled">
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
@@ -96,6 +129,49 @@ const HomeSearch = ({ navigation }) => {
         onHide={() => setBanner({ ...banner, visible: false })}
       />
       <View style={styles.containerCard}>
+        <View style={styles.filterContainer}>
+          <Text style={styles.filterLabel}>
+            {STRINGS[language].doctorSearch.province}
+          </Text>
+          <View style={styles.rowContainer}>
+            <Dropdown
+              style={styles.dropdown}
+              data={provinces}
+              labelField="label"
+              valueField="value"
+              value={city}
+              onChange={(item) => {
+                setCity(item.value);
+                if (searchTerm.length >= 3 || item.value) {
+                  dispatch(
+                    searchDoctors({ text: searchTerm, city: item.value })
+                  );
+                  setSerachIsActive(true);
+                }
+              }}
+              itemTextStyle={{ fontSize: FONT_SIZES.inputText }}
+              selectedTextStyle={{ fontSize: FONT_SIZES.inputText }}
+              placeholderStyle={{
+                fontSize: FONT_SIZES.inputText,
+                color: COLORS.ligthGreyText,
+              }}
+            />
+            <TouchableOpacity
+              style={styles.clearFiltersButton}
+              onPress={() => {
+                setCity("");
+                setSearchTerm("");
+                setSerachIsActive(false);
+                dispatch(clearSearch());
+              }}
+            >
+              <Text style={styles.clearFiltersText}>
+                {STRINGS[language].doctorSearch.cleanFiltersTitle}
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <Text style={styles.inputText}>
           {STRINGS[language].doctorSearch.searchLabel}
         </Text>
@@ -143,8 +219,12 @@ const HomeSearch = ({ navigation }) => {
                     {STRINGS[language].speciality[item?.profile?.specialtyId]}
                   </Text>
                   <Text>
-                    {item.profile.address.city} {item.profile.address.country}
+                    {item?.profile?.address?.city.charAt(0).toUpperCase() +
+                      item?.profile?.address?.city.slice(1)}{" "}
+                    {item?.profile?.address?.country}
                   </Text>
+                  <Text style={styles.boldText}>{STRINGS[language].speciality[item?.profile?.offices]}</Text>
+                  {handleLocations(item.profile.availability)}
                 </View>
               </TouchableOpacity>
             )}
@@ -158,7 +238,7 @@ const HomeSearch = ({ navigation }) => {
                 source={require("../../../assets/NoDoctors.png")}
                 style={styles.nodataImage}
               />
-              <Text>No se encontraron resultados</Text>
+              <Text>{STRINGS[language].doctorSearch.noDataFound}</Text>
             </View>
           )
         )}
