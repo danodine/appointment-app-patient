@@ -1,6 +1,6 @@
 # appointment-app-patient
 
-Tis is a eork in progress.
+This is a work in progress!
 
 appointment-app-patient is a healthcare appointment booking application. It enables users to search for doctors, view profiles, and book appointments, while allowing doctors to manage their availability and profile information.
 
