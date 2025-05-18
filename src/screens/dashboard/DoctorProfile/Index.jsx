@@ -7,7 +7,10 @@ import {
   ScrollView,
   Alert,
   Image,
+  Linking,
+  Platform,
 } from "react-native";
+import { useActionSheet } from "@expo/react-native-action-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import { callPhone, sendEmail } from "../../../utils/helpers";
 import PropTypes from "prop-types";
@@ -20,13 +23,15 @@ const DoctorProfileScreen = ({ route, navigation }) => {
   const { doctor } = route.params;
   const language = useSelector((state) => state.language.language);
 
+  const { showActionSheetWithOptions } = useActionSheet();
+
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [times, setTimes] = useState([]);
   const locationList = useMemo(() => {
     if (!doctor?.profile?.availability) return [];
 
     const allLocations = doctor?.profile?.availability?.flatMap(
-      (item) => item?.timeSlots?.map((val) => val.location) || [],
+      (item) => item?.timeSlots?.map((val) => val.location) || []
     );
 
     return [...new Set(allLocations)];
@@ -67,6 +72,55 @@ const DoctorProfileScreen = ({ route, navigation }) => {
     } else {
       Alert.alert(STRINGS[language].doctorProfile.selectLocationAlert);
     }
+  };
+
+  const openMapPrompt = async (address) => {
+    const query = encodeURIComponent(address);
+
+    const options = [
+      STRINGS[language].maps.openGoogleMaps,
+      STRINGS[language].maps.openWays,
+    ];
+    if (Platform.OS === "ios") {
+      options.push(STRINGS[language].maps.openAppleMaps);
+    }
+    options.push(STRINGS[language].appointments.cancel);
+
+    const cancelButtonIndex = options.length - 1;
+
+    showActionSheetWithOptions(
+      {
+        options,
+        cancelButtonIndex,
+      },
+      async (buttonIndex) => {
+        if (buttonIndex === 0) {
+          const googleMapsAppUrl = `comgooglemaps://?q=${query}`;
+          const googleMapsWebUrl = `https://www.google.com/maps/search/?api=1&query=${query}`;
+
+          const canOpen = await Linking.canOpenURL("comgooglemaps://");
+          if (canOpen) {
+            Linking.openURL(googleMapsAppUrl);
+          } else {
+            Linking.openURL(googleMapsWebUrl);
+          }
+        } else if (buttonIndex === 1) {
+          // Waze
+          const wazeAppUrl = `waze://?q=${query}&navigate=yes`;
+          const wazeWebUrl = `https://waze.com/ul?q=${query}&navigate=yes`;
+
+          const canOpen = await Linking.canOpenURL("waze://");
+          if (canOpen) {
+            Linking.openURL(wazeAppUrl);
+          } else {
+            Linking.openURL(wazeWebUrl);
+          }
+        } else if (Platform.OS === "ios" && buttonIndex === 2) {
+          const appleMapsUrl = `http://maps.apple.com/?q=${query}`;
+          Linking.openURL(appleMapsUrl);
+        }
+      }
+    );
   };
 
   const getTagLabel = (slot) => {
@@ -144,12 +198,23 @@ const DoctorProfileScreen = ({ route, navigation }) => {
                 onPress={() => setSelectedLocation(location)}
                 style={styles.radioButtons}
               >
-                <View style={styles.locotionView}>
-                  {selectedLocation === location && (
-                    <View style={styles.selectedLocation} />
-                  )}
+                <View style={styles.locationRow}>
+                  <View style={styles.locotionView}>
+                    {selectedLocation === location && (
+                      <View style={styles.selectedLocation} />
+                    )}
+                  </View>
+                  <Text style={styles.locationText}>{location}</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      openMapPrompt(
+                        `${location}, ${doctor?.profile?.address?.city}, ${doctor?.profile?.address?.country}`
+                      )
+                    }
+                  >
+                    <Text style={styles.seeLocationLink}>{STRINGS[language].doctorProfile.seeLocation}</Text>
+                  </TouchableOpacity>
                 </View>
-                <Text>{location}</Text>
               </TouchableOpacity>
             ))}
           </View>

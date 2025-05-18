@@ -4,6 +4,7 @@ import {
   FONT_SIZES,
   FONT_WEIGHT,
   PADDINGS,
+  SIZES,
   VALUES,
 } from "../../../styles/theme";
 
@@ -176,6 +177,21 @@ const styles = StyleSheet.create({
   },
   timeChart: { gap: 12, marginTop: 8 },
   timeChartIcon: { marginRight: 8 },
+  locationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    flexWrap: "wrap",
+    gap: 8,
+  },
+  
+  locationText: {
+    fontSize: 14,
+    marginRight: 8,
+  },
+  
+  seeLocationLink: {
+    color: COLORS.externalLink,
+  },
 });
 
 export default styles;

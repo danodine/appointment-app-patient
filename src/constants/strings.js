@@ -106,6 +106,7 @@ const STRINGS = {
       errorLoadingData:
         "Ocurrió un error al cargar los datos, intente nuevamente",
       errorBooking: "Ocurrió un error, intente nuevamente",
+      seeLocation: "Ver ubicación",
     },
     appointments: {
       myAppointments: "Mis Citas",
@@ -133,9 +134,6 @@ const STRINGS = {
         uno: "Cancelada",
       },
       bookNewAppointment: "Agendar cita",
-      openGoogleMaps: "Abrir con Google Maps",
-      openWays: "Abrir con Waze",
-      openAppleMaps: "Abrir con Apple Maps",
       cancel: "Cancelar",
       noCurrent: "Actualmente no tiene citas",
       noPasst: "No tiene citas pasadas",
@@ -312,6 +310,12 @@ const STRINGS = {
       PAIN: "Trastornos del Dolor",
       TOXI: "Condiciones Toxicológicas",
     },
+    maps: {
+      openGoogleMaps: "Abrir con Google Maps",
+      openWays: "Abrir con Waze",
+      openAppleMaps: "Abrir con Apple Maps",
+      cencel: "Cancelar",
+    }
   },
   en: {
     speciality: {
@@ -419,6 +423,7 @@ const STRINGS = {
       errorLoadingData:
         "An error occurred while loading the data, please try again",
       errorBooking: "An error occurred, please try again",
+      seeLocation: "See location",
     },
     appointments: {
       myAppointments: "My Appointments",
@@ -446,9 +451,6 @@ const STRINGS = {
         uno: "Canceled",
       },
       bookNewAppointment: "Book appointment",
-      openGoogleMaps: "Open with Google Maps",
-      openWays: "Open with Waze",
-      openAppleMaps: "Open with Apple Maps",
       cancel: "Cancel",
       noCurrent: "You have no booked appointments",
       noPasst: "You have no past appointments",
@@ -582,6 +584,12 @@ const STRINGS = {
       PAIN: "Pain Disorders",
       TOXI: "Toxicological Conditions",
     },
+    maps: {
+      openGoogleMaps: "Open with Google Maps",
+      openWays: "Open with Waze",
+      openAppleMaps: "Open with Apple Maps",
+      cencel: "Cancel",
+    }
   },
 };
 

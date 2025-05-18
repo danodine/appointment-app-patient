@@ -195,13 +195,13 @@ const AppointmentsScreen = ({ navigation }) => {
     const query = encodeURIComponent(address);
 
     const options = [
-      STRINGS[language].appointments.openGoogleMaps,
-      STRINGS[language].appointments.openWays,
+      STRINGS[language].maps.openGoogleMaps,
+      STRINGS[language].maps.openWays,
     ];
     if (Platform.OS === "ios") {
-      options.push(STRINGS[language].appointments.openAppleMaps);
+      options.push(STRINGS[language].maps.openAppleMaps);
     }
-    options.push(STRINGS[language].appointments.cancel);
+    options.push(STRINGS[language].maps.cancel);
 
     const cancelButtonIndex = options.length - 1;
 
