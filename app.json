@@ -22,17 +22,15 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "googleServicesFile": "./google-services.json"
       },
       "package": "com.davidnodine.holadoc"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      "expo-secure-store",
-      "expo-asset"
-    ],
+    "plugins": ["expo-secure-store", "expo-asset"],
     "extra": {
       "eas": {
         "projectId": "014a8053-b492-4610-a736-aacac1b0f54d"
