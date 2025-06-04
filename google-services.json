@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "824127791177",
+    "project_id": "holadock-6d041",
+    "storage_bucket": "holadock-6d041.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:824127791177:android:1a40a42646759cb13a5f98",
+        "android_client_info": {
+          "package_name": "com.holadoc"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEgEKUMPtzGkPGrPg0I4ZHjyqZ1Q1oQ9M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
