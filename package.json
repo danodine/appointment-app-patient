@@ -7,7 +7,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "format": "npx prettier . --write"
+    "format": "npx prettier . --write",
+    "prebuild": "node scripts/decode-google-services.js"
   },
   "dependencies": {
     "@expo/react-native-action-sheet": "^4.1.1",
