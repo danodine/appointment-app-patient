@@ -39,7 +39,7 @@ import PropTypes from "prop-types";
 const AppointmentsScreen = ({ navigation }) => {
   const { user } = useSelector((state) => state.auth);
   const { error: doctorError } = useSelector((state) => state.doctor);
-  
+
   const { showActionSheetWithOptions } = useActionSheet();
   const { upcomingAppointmentsList, pastAppointmentsList, error, loading } =
     useSelector((state) => state.appointments);
@@ -201,7 +201,7 @@ const AppointmentsScreen = ({ navigation }) => {
     if (Platform.OS === "ios") {
       options.push(STRINGS[language].maps.openAppleMaps);
     }
-    options.push(STRINGS[language].maps.cancel);
+    options.push(STRINGS[language].appointments.cancel);
 
     const cancelButtonIndex = options.length - 1;
 

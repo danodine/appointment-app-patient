@@ -21,7 +21,7 @@ export const loginUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Login failed");
     }
-  },
+  }
 );
 
 export const signupUser = createAsyncThunk(
@@ -38,7 +38,7 @@ export const signupUser = createAsyncThunk(
       street,
       city,
     },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const response = await axios.post(`${USER_URL}/signup`, {
@@ -65,14 +65,14 @@ export const signupUser = createAsyncThunk(
     } catch (err) {
       return rejectWithValue(err.response?.data?.message || "Signup failed");
     }
-  },
+  }
 );
 
 export const changePassword = createAsyncThunk(
   "auth/changePassword",
   async (
     { passwordCurrent, password, passwordConfirm },
-    { rejectWithValue },
+    { rejectWithValue }
   ) => {
     try {
       const token = await SecureStore.getItemAsync("token");
@@ -83,7 +83,7 @@ export const changePassword = createAsyncThunk(
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        },
+        }
       );
       const { token: newToken, data } = response.data;
       const user = data.user;
@@ -92,10 +92,48 @@ export const changePassword = createAsyncThunk(
       return { token: newToken, user };
     } catch (err) {
       return rejectWithValue(
-        err.response?.data?.message || "Password change failed",
+        err.response?.data?.message || "Password change failed"
       );
     }
-  },
+  }
+);
+
+// Request password reset code
+export const requestPasswordReset = createAsyncThunk(
+  "auth/requestPasswordReset",
+  async ({ email }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/users/forgotPassword", {
+        email,
+      });
+      return response.data.message;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to send reset code"
+      );
+    }
+  }
+);
+
+// Submit new password with reset code
+export const resetPassword = createAsyncThunk(
+  "auth/resetPassword",
+  async ({ resetCode, password, passwordConfirm }, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.patch(
+        `/users/resetPassword/${resetCode}`,
+        {
+          password,
+          passwordConfirm,
+        }
+      );
+      return response.data.message;
+    } catch (err) {
+      return rejectWithValue(
+        err.response?.data?.message || "Password reset failed"
+      );
+    }
+  }
 );
 
 export const logoutUser = createAsyncThunk("auth/logoutUser", async () => {
@@ -111,11 +149,15 @@ const authSlice = createSlice({
       login: false,
       signup: false,
       changePassword: false,
+      requestPasswordReset: false,
+      resetPassword: false,
     },
     error: {
       login: null,
       signup: null,
       changePassword: null,
+      requestPasswordReset: null,
+      resetPassword: null,
     },
     authBanner: {
       type: null,
@@ -222,6 +264,30 @@ const authSlice = createSlice({
           signup: null,
           changePassword: null,
         };
+      })
+      .addCase(requestPasswordReset.pending, (state) => {
+        state.loading.requestPasswordReset = true;
+        state.error.requestPasswordReset = null;
+      })
+      .addCase(requestPasswordReset.fulfilled, (state) => {
+        state.loading.requestPasswordReset = false;
+      })
+      .addCase(requestPasswordReset.rejected, (state, action) => {
+        state.loading.requestPasswordReset = false;
+        state.error.requestPasswordReset = action.payload;
+      })
+
+      // Reset password
+      .addCase(resetPassword.pending, (state) => {
+        state.loading.resetPassword = true;
+        state.error.resetPassword = null;
+      })
+      .addCase(resetPassword.fulfilled, (state) => {
+        state.loading.resetPassword = false;
+      })
+      .addCase(resetPassword.rejected, (state, action) => {
+        state.loading.resetPassword = false;
+        state.error.resetPassword = action.payload;
       });
   },
 });

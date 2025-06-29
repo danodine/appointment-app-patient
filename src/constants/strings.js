@@ -349,7 +349,7 @@ const STRINGS = {
       createAccount: "Create account",
       country: "Country",
       countryName: "🇪🇨 Ecuador",
-      language: "Language",
+      language: "Language ",
       selectedLanguage: "English",
     },
     home: {

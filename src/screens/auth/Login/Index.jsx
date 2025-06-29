@@ -39,17 +39,24 @@ const LoginScreen = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       dispatch(clearLoginError());
-    }, []),
+    }, [])
   );
 
   const handleLogin = () => {
     dispatch(loginUser({ email, password }));
-
   };
+  
   const handleSingUp = () => {
     navigation.reset({
       index: 0,
       routes: [{ name: "SingUp" }],
+    });
+  };
+
+  const handleForgotPassword = () => {
+    navigation.reset({
+      index: 0,
+      routes: [{ name: "ForgotPasswordRequest" }],
     });
   };
 
@@ -127,9 +134,11 @@ const LoginScreen = ({ navigation }) => {
                 {STRINGS[language].login.logIn}
               </Text>
             </TouchableOpacity>
-            <Text style={styles.forgotPassword}>
-              {STRINGS[language].login.forgotPassword}
-            </Text>
+            <TouchableOpacity onPress={handleForgotPassword}>
+              <Text style={styles.forgotPassword}>
+                {STRINGS[language].login.forgotPassword}
+              </Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handleSingUp}>
               <Text style={styles.signup}>
                 {STRINGS[language].login.createAccount}

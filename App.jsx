@@ -5,7 +5,6 @@ import { Provider } from "react-redux";
 import store from "./src/redux/store";
 import StackNavigator from "./src/navigation/StackNavigator";
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import NotificationSetup from "./src/shared/NotificationSetup";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -14,7 +13,6 @@ export default function App() {
     <ActionSheetProvider>
       <Provider store={store}>
         <NavigationContainer>
-          <NotificationSetup />
           <StackNavigator />
         </NavigationContainer>
       </Provider>
